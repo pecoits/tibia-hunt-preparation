@@ -1,0 +1,247 @@
+import { calculateRecommendation, type HuntSelection } from '../domain/calculateRecommendation';
+import { ELEMENT_LABELS } from '../domain/elements';
+import type { Importance, Monster, MonsterDatabase } from '../domain/types';
+
+const IMPORTANCE_OPTIONS: Array<{ value: Importance; label: string }> = [
+  { value: 'low', label: 'Low' },
+  { value: 'normal', label: 'Normal' },
+  { value: 'high', label: 'High' }
+];
+
+interface SelectedMonster {
+  monster: Monster;
+  importance: Importance;
+}
+
+function appendText(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, text: string, className?: string): HTMLElement {
+  const element = document.createElement(tagName);
+  element.textContent = text;
+  if (className) element.className = className;
+  parent.append(element);
+  return element;
+}
+
+function formatScore(score: number): string {
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(score);
+}
+
+function findMonster(database: MonsterDatabase, query: string): Monster | undefined {
+  const normalized = query.trim().toLocaleLowerCase();
+  return database.monsters.find(
+    (monster) => monster.name.toLocaleLowerCase() === normalized || monster.id.toLocaleLowerCase() === normalized
+  );
+}
+
+function shouldShowInAutocomplete(monster: Monster, includeAdvanced: boolean): boolean {
+  if (includeAdvanced) return true;
+  return monster.huntRelevant && !monster.special && !monster.incomplete;
+}
+
+function renderAttribution(parent: HTMLElement, database: MonsterDatabase, className: string): void {
+  const paragraph = appendText(parent, 'p', 'Data: ', className);
+  const link = document.createElement('a');
+  link.href = database.source.url;
+  link.rel = 'noreferrer';
+  link.textContent = database.source.name;
+  paragraph.append(link, document.createTextNode(`. ${database.source.license}.`));
+}
+
+export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
+  const selected: SelectedMonster[] = [];
+  let includeAdvanced = false;
+
+  const container = root.tagName.toLocaleLowerCase() === 'main' ? root : document.createElement('main');
+  container.className = 'app-shell';
+  if (container !== root) {
+    root.replaceChildren(container);
+  }
+
+  const rerender = (): void => {
+    container.replaceChildren();
+
+    const header = document.createElement('header');
+    header.className = 'app-header';
+    appendText(header, 'h1', 'Tibia Hunt Preparation');
+    appendText(header, 'p', 'Select hunt monsters and compare raw elemental damage recommendations.');
+    container.append(header);
+
+    const layout = document.createElement('section');
+    layout.className = 'tool-layout';
+    container.append(layout);
+
+    const builder = document.createElement('section');
+    builder.className = 'tool-panel builder-panel';
+    builder.setAttribute('aria-labelledby', 'builder-title');
+    appendText(builder, 'h2', 'Hunt builder').id = 'builder-title';
+
+    const controls = document.createElement('div');
+    controls.className = 'add-controls';
+
+    const inputLabel = document.createElement('label');
+    inputLabel.className = 'field-label';
+    inputLabel.textContent = 'Monster';
+    const input = document.createElement('input');
+    input.name = 'monster-search';
+    input.type = 'text';
+    input.setAttribute('list', 'monster-options');
+    input.autocomplete = 'off';
+    input.placeholder = 'Type a monster name';
+    inputLabel.append(input);
+
+    const datalist = document.createElement('datalist');
+    datalist.id = 'monster-options';
+    for (const monster of database.monsters.filter((candidate) => shouldShowInAutocomplete(candidate, includeAdvanced))) {
+      const option = document.createElement('option');
+      option.value = monster.name;
+      datalist.append(option);
+    }
+
+    const addButton = document.createElement('button');
+    addButton.type = 'button';
+    addButton.dataset.action = 'add-monster';
+    addButton.textContent = 'Add';
+    addButton.addEventListener('click', () => {
+      const monster = findMonster(database, input.value);
+      if (!monster) return;
+      if (!selected.some((selection) => selection.monster.id === monster.id)) {
+        selected.push({ monster, importance: 'normal' });
+      }
+      input.value = '';
+      rerender();
+    });
+
+    controls.append(inputLabel, addButton, datalist);
+    builder.append(controls);
+
+    const advancedLabel = document.createElement('label');
+    advancedLabel.className = 'toggle-row';
+    const advancedInput = document.createElement('input');
+    advancedInput.type = 'checkbox';
+    advancedInput.checked = includeAdvanced;
+    advancedInput.addEventListener('change', () => {
+      includeAdvanced = advancedInput.checked;
+      rerender();
+    });
+    advancedLabel.append(advancedInput, document.createTextNode('Include special and incomplete creatures'));
+    builder.append(advancedLabel);
+
+    const selectedList = document.createElement('div');
+    selectedList.className = 'selected-list';
+    if (selected.length === 0) {
+      appendText(selectedList, 'p', 'No monsters selected yet.', 'empty-state');
+    } else {
+      for (const selection of selected) {
+        const row = document.createElement('article');
+        row.className = 'selected-monster';
+
+        const details = document.createElement('div');
+        appendText(details, 'h3', selection.monster.name);
+        const flags = [
+          selection.monster.special ? 'Special' : '',
+          selection.monster.incomplete ? 'Incomplete' : '',
+          selection.monster.huntRelevant ? '' : 'Not hunt relevant'
+        ].filter(Boolean);
+        appendText(details, 'p', flags.length > 0 ? flags.join(' · ') : 'Standard hunt creature', 'monster-flags');
+
+        const actions = document.createElement('div');
+        actions.className = 'selected-actions';
+
+        const importanceLabel = document.createElement('label');
+        importanceLabel.className = 'select-label';
+        importanceLabel.textContent = 'Importance';
+        const select = document.createElement('select');
+        select.value = selection.importance;
+        for (const optionValue of IMPORTANCE_OPTIONS) {
+          const option = document.createElement('option');
+          option.value = optionValue.value;
+          option.textContent = optionValue.label;
+          select.append(option);
+        }
+        select.addEventListener('change', () => {
+          selection.importance = select.value as Importance;
+          rerender();
+        });
+        importanceLabel.append(select);
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'secondary-button';
+        removeButton.textContent = 'Remove';
+        removeButton.addEventListener('click', () => {
+          const index = selected.findIndex((item) => item.monster.id === selection.monster.id);
+          if (index >= 0) selected.splice(index, 1);
+          rerender();
+        });
+
+        actions.append(importanceLabel, removeButton);
+        row.append(details, actions);
+        selectedList.append(row);
+      }
+    }
+    builder.append(selectedList);
+    layout.append(builder);
+
+    const resultPanel = document.createElement('section');
+    resultPanel.className = 'tool-panel result-panel';
+    resultPanel.setAttribute('aria-labelledby', 'result-title');
+    appendText(resultPanel, 'h2', 'Results').id = 'result-title';
+
+    const recommendation = calculateRecommendation(selected as HuntSelection[]);
+    if (!recommendation.recommended) {
+      appendText(resultPanel, 'p', 'Add at least one complete monster to calculate a recommendation.', 'empty-state');
+    } else {
+      const recommendedLabel = ELEMENT_LABELS[recommendation.recommended.element];
+      appendText(resultPanel, 'p', 'Recommended', 'eyebrow');
+      appendText(resultPanel, 'h3', recommendedLabel, 'recommended-element');
+      appendText(resultPanel, 'p', `Top raw score: ${formatScore(recommendation.recommended.score)}`, 'score-note');
+
+      appendText(resultPanel, 'h3', 'Full ranking', 'section-heading');
+      const rankingList = document.createElement('ol');
+      rankingList.className = 'ranking-list';
+      for (const item of recommendation.ranking) {
+        const rankingItem = document.createElement('li');
+        const label = document.createElement('span');
+        label.textContent = ELEMENT_LABELS[item.element];
+        const score = document.createElement('strong');
+        score.textContent = formatScore(item.score);
+        rankingItem.append(label, score);
+        rankingList.append(rankingItem);
+      }
+      resultPanel.append(rankingList);
+
+      appendText(resultPanel, 'h3', 'Monster summary', 'section-heading');
+      const summaryList = document.createElement('ul');
+      summaryList.className = 'summary-list';
+      for (const contribution of recommendation.contributions) {
+        const item = document.createElement('li');
+        item.textContent = `${contribution.monsterName}: ${contribution.recommendedModifier}% ${contribution.summary}, ${contribution.selectedImportance} importance, contribution ${formatScore(contribution.contribution)}.`;
+        summaryList.append(item);
+      }
+      resultPanel.append(summaryList);
+    }
+
+    if (recommendation.excludedMonsters.length > 0) {
+      const warning = document.createElement('div');
+      warning.className = 'warning';
+      appendText(warning, 'h3', 'Excluded monsters');
+      const list = document.createElement('ul');
+      for (const monster of recommendation.excludedMonsters) {
+        const item = document.createElement('li');
+        item.textContent = `${monster.name}: ${monster.reason}`;
+        list.append(item);
+      }
+      warning.append(list);
+      resultPanel.append(warning);
+    }
+
+    renderAttribution(resultPanel, database, 'credit-line');
+    layout.append(resultPanel);
+
+    const footer = document.createElement('footer');
+    footer.className = 'app-footer';
+    renderAttribution(footer, database, 'credit-line');
+    container.append(footer);
+  };
+
+  rerender();
+}
