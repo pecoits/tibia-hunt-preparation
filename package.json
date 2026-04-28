@@ -1,0 +1,21 @@
+{
+  "name": "tibia-hunt-preparation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "update-data": "node scripts/update-monsters.mjs",
+    "validate-data": "node scripts/validate-monsters.mjs public/data/monsters.json"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.3",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.19",
+    "vitest": "^2.1.9"
+  }
+}
