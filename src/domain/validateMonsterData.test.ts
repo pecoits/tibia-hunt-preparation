@@ -70,4 +70,37 @@ describe('validateMonsterDatabase', () => {
     expect(result.ok).toBe(false);
     expect(result.errors).toContain('Monster Dragon Lord is missing death modifier.');
   });
+
+  it('rejects malformed monsters without throwing', () => {
+    expect(() =>
+      validateMonsterDatabase({
+        ...validDatabase,
+        monsters: {}
+      })
+    ).not.toThrow();
+
+    const result = validateMonsterDatabase({
+      ...validDatabase,
+      monsters: {}
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toContain('monsters must be a non-empty array.');
+  });
+
+  it('rejects hunt relevant monsters with missing elements without throwing', () => {
+    const result = validateMonsterDatabase({
+      ...validDatabase,
+      monsters: [
+        {
+          ...validDatabase.monsters[0],
+          elements: undefined
+        }
+      ]
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toContain('Monster Dragon Lord is missing physical modifier.');
+    expect(result.errors).toContain('Monster Dragon Lord is missing death modifier.');
+  });
 });

@@ -13,8 +13,9 @@ function validateMonsterDatabase(database) {
     errors.push('monsters must be a non-empty array.');
   }
 
+  const monsters = Array.isArray(database.monsters) ? database.monsters : [];
   const seenIds = new Set();
-  for (const monster of database.monsters ?? []) {
+  for (const monster of monsters) {
     if (seenIds.has(monster.id)) errors.push(`Duplicate monster id: ${monster.id}`);
     seenIds.add(monster.id);
 
@@ -28,7 +29,8 @@ function validateMonsterDatabase(database) {
       }
 
       for (const element of requiredElements) {
-        if (typeof monster.elements?.[element] !== 'number' || !Number.isFinite(monster.elements[element])) {
+        const modifier = monster.elements?.[element];
+        if (typeof modifier !== 'number' || !Number.isFinite(modifier)) {
           errors.push(`Monster ${monster.name} is missing ${element} modifier.`);
         }
       }

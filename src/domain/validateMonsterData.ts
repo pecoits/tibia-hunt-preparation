@@ -16,7 +16,7 @@ function validateMonster(monster: Monster, errors: string[]): void {
     }
 
     for (const element of ELEMENTS) {
-      const modifier = monster.elements[element];
+      const modifier = monster.elements?.[element];
       if (typeof modifier !== 'number' || !Number.isFinite(modifier)) {
         errors.push(`Monster ${monster.name} is missing ${element} modifier.`);
       }
@@ -40,8 +40,9 @@ export function validateMonsterDatabase(input: unknown): ValidationResult {
     errors.push('monsters must be a non-empty array.');
   }
 
+  const monsters = Array.isArray(database.monsters) ? database.monsters : [];
   const seenIds = new Set<string>();
-  for (const monster of database.monsters ?? []) {
+  for (const monster of monsters) {
     if (seenIds.has(monster.id)) {
       errors.push(`Duplicate monster id: ${monster.id}`);
     }
