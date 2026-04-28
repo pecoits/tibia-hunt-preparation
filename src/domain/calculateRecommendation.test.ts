@@ -40,6 +40,16 @@ const iceGolem: Monster = {
   incomplete: false
 };
 
+const neutralElements: Monster['elements'] = {
+  physical: 0,
+  earth: 0,
+  fire: 0,
+  energy: 0,
+  ice: 100,
+  holy: 0,
+  death: 0
+};
+
 describe('calculateRecommendation', () => {
   it('uses raw wiki percentage modifiers when ranking a single monster', () => {
     const result = calculateRecommendation([{ monster: dragonLord, importance: 'normal' }]);
@@ -110,7 +120,74 @@ describe('calculateRecommendation', () => {
     expect(firePriority.recommended?.element).toBe('fire');
   });
 
-  it('excludes incomplete monsters from the calculation and reports them', () => {
+  it('reports contributions for the recommended element with raw scores and summaries', () => {
+    const iceWeak: Monster = {
+      id: 'ice-weak',
+      name: 'Ice Weak',
+      hitpoints: 100,
+      elements: { ...neutralElements, ice: 120 },
+      sourceUrl: 'https://example.com/ice-weak',
+      huntRelevant: true,
+      special: false,
+      incomplete: false
+    };
+    const iceNeutral: Monster = {
+      id: 'ice-neutral',
+      name: 'Ice Neutral',
+      hitpoints: 80,
+      elements: { ...neutralElements, ice: 100 },
+      sourceUrl: 'https://example.com/ice-neutral',
+      huntRelevant: true,
+      special: false,
+      incomplete: false
+    };
+    const iceResistant: Monster = {
+      id: 'ice-resistant',
+      name: 'Ice Resistant',
+      hitpoints: 50,
+      elements: { ...neutralElements, ice: 80 },
+      sourceUrl: 'https://example.com/ice-resistant',
+      huntRelevant: true,
+      special: false,
+      incomplete: false
+    };
+
+    const result = calculateRecommendation([
+      { monster: iceWeak, importance: 'high' },
+      { monster: iceNeutral, importance: 'normal' },
+      { monster: iceResistant, importance: 'low' }
+    ]);
+
+    expect(result.recommended?.element).toBe('ice');
+    expect(result.contributions).toEqual([
+      {
+        monsterId: 'ice-weak',
+        monsterName: 'Ice Weak',
+        selectedImportance: 'high',
+        recommendedModifier: 120,
+        contribution: 100 * 2 * 120,
+        summary: 'favors'
+      },
+      {
+        monsterId: 'ice-neutral',
+        monsterName: 'Ice Neutral',
+        selectedImportance: 'normal',
+        recommendedModifier: 100,
+        contribution: 80 * 1 * 100,
+        summary: 'neutral'
+      },
+      {
+        monsterId: 'ice-resistant',
+        monsterName: 'Ice Resistant',
+        selectedImportance: 'low',
+        recommendedModifier: 80,
+        contribution: 50 * 0.5 * 80,
+        summary: 'resists'
+      }
+    ]);
+  });
+
+  it('excludes incomplete monsters with missing hitpoints and reports the missing hitpoints reason', () => {
     const incomplete: Monster = {
       ...dragonLord,
       id: 'unknown',
@@ -123,5 +200,21 @@ describe('calculateRecommendation', () => {
 
     expect(result.recommended).toBeNull();
     expect(result.excludedMonsters).toEqual([{ id: 'unknown', name: 'Unknown', reason: 'Missing hitpoints.' }]);
+  });
+
+  it('excludes monsters flagged as incomplete even when all calculation fields are present', () => {
+    const incomplete: Monster = {
+      ...dragonLord,
+      id: 'flagged-incomplete',
+      name: 'Flagged Incomplete',
+      incomplete: true
+    };
+
+    const result = calculateRecommendation([{ monster: incomplete, importance: 'normal' }]);
+
+    expect(result.recommended).toBeNull();
+    expect(result.excludedMonsters).toEqual([
+      { id: 'flagged-incomplete', name: 'Flagged Incomplete', reason: 'Incomplete monster data.' }
+    ]);
   });
 });

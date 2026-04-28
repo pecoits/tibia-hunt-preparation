@@ -45,6 +45,10 @@ function getExclusionReason(monster: Monster): string | null {
     }
   }
 
+  if (monster.incomplete) {
+    return 'Incomplete monster data.';
+  }
+
   return null;
 }
 
