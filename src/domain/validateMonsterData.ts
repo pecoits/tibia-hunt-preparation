@@ -42,11 +42,20 @@ export function validateMonsterDatabase(input: unknown): ValidationResult {
 
   const monsters = Array.isArray(database.monsters) ? database.monsters : [];
   const seenIds = new Set<string>();
-  for (const monster of monsters) {
-    if (seenIds.has(monster.id)) {
-      errors.push(`Duplicate monster id: ${monster.id}`);
+  for (const monsterInput of monsters) {
+    if (!isObject(monsterInput)) {
+      errors.push('Monster record must be an object.');
+      continue;
     }
-    seenIds.add(monster.id);
+
+    const monster = monsterInput as unknown as Monster;
+    if (monster.id) {
+      if (seenIds.has(monster.id)) {
+        errors.push(`Duplicate monster id: ${monster.id}`);
+      }
+      seenIds.add(monster.id);
+    }
+
     validateMonster(monster, errors);
   }
 

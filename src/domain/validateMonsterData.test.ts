@@ -39,6 +39,15 @@ describe('validateMonsterDatabase', () => {
     expect(result.errors).toEqual([]);
   });
 
+  it('rejects a null database without throwing', () => {
+    expect(() => validateMonsterDatabase(null)).not.toThrow();
+
+    const result = validateMonsterDatabase(null);
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toEqual(['Database must be an object.']);
+  });
+
   it('rejects duplicate monster ids', () => {
     const result = validateMonsterDatabase({
       ...validDatabase,
@@ -86,6 +95,53 @@ describe('validateMonsterDatabase', () => {
 
     expect(result.ok).toBe(false);
     expect(result.errors).toContain('monsters must be a non-empty array.');
+  });
+
+  it('rejects null monster records without throwing', () => {
+    expect(() =>
+      validateMonsterDatabase({
+        ...validDatabase,
+        monsters: [null]
+      })
+    ).not.toThrow();
+
+    const result = validateMonsterDatabase({
+      ...validDatabase,
+      monsters: [null]
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toContain('Monster record must be an object.');
+    expect(result.errors).not.toContain('Duplicate monster id: undefined');
+  });
+
+  it('rejects string monster records without throwing', () => {
+    expect(() =>
+      validateMonsterDatabase({
+        ...validDatabase,
+        monsters: ['bad']
+      })
+    ).not.toThrow();
+
+    const result = validateMonsterDatabase({
+      ...validDatabase,
+      monsters: ['bad']
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toContain('Monster record must be an object.');
+    expect(result.errors).not.toContain('Duplicate monster id: undefined');
+  });
+
+  it('does not report duplicate undefined ids for malformed object records', () => {
+    const result = validateMonsterDatabase({
+      ...validDatabase,
+      monsters: [{}, {}]
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toContain('Monster is missing id.');
+    expect(result.errors).not.toContain('Duplicate monster id: undefined');
   });
 
   it('rejects hunt relevant monsters with missing elements without throwing', () => {
