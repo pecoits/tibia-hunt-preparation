@@ -17,6 +17,8 @@ npm run build
 npm run validate-data
 ```
 
+`npm run validate-data` performs a scaffold-level JSON check until the full monster data validator is added.
+
 ## Data Attribution
 
 Creature data and damage modifiers are sourced from TibiaWiki/Fandom:
