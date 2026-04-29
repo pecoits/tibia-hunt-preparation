@@ -1,10 +1,10 @@
-import { ELEMENTS, IMPORTANCE_WEIGHTS } from './elements';
-import type { ElementType, Importance, Monster } from './types';
+import { ELEMENTS } from './elements';
+import type { ElementType, Monster } from './types';
 const NON_RECOMMENDABLE_ELEMENTS: ReadonlySet<ElementType> = new Set(['holy']);
 
 export interface HuntSelection {
   monster: Monster;
-  importance: Importance;
+  weight: number;
 }
 
 export interface ElementScore {
@@ -15,7 +15,7 @@ export interface ElementScore {
 export interface MonsterContribution {
   monsterId: string;
   monsterName: string;
-  selectedImportance: Importance;
+  selectedWeight: number;
   recommendedModifier: number;
   contribution: number;
   summary: 'favors' | 'neutral' | 'resists';
@@ -59,8 +59,14 @@ function summarizeModifier(modifier: number): MonsterContribution['summary'] {
   return 'neutral';
 }
 
-function calculateElementContribution(hitpoints: number, importance: Importance, modifier: number): number {
-  return hitpoints * IMPORTANCE_WEIGHTS[importance] * modifier;
+function normalizeWeight(weight: number): number {
+  if (!Number.isFinite(weight)) return 0;
+  return Math.min(100, Math.max(0, weight));
+}
+
+function calculateElementContribution(hitpoints: number, weight: number, modifier: number): number {
+  const normalizedWeight = normalizeWeight(weight);
+  return hitpoints * (normalizedWeight / 50) * modifier;
 }
 
 export function calculateRecommendation(selections: HuntSelection[]): RecommendationResult {
@@ -82,7 +88,7 @@ export function calculateRecommendation(selections: HuntSelection[]): Recommenda
     validSelections.push(selection);
     for (const element of ELEMENTS) {
       const modifier = selection.monster.elements[element] as number;
-      const score = calculateElementContribution(selection.monster.hitpoints as number, selection.importance, modifier);
+      const score = calculateElementContribution(selection.monster.hitpoints as number, selection.weight, modifier);
       scores.set(element, (scores.get(element) ?? 0) + score);
     }
   }
@@ -100,9 +106,9 @@ export function calculateRecommendation(selections: HuntSelection[]): Recommenda
         return {
           monsterId: selection.monster.id,
           monsterName: selection.monster.name,
-          selectedImportance: selection.importance,
+          selectedWeight: normalizeWeight(selection.weight),
           recommendedModifier: modifier,
-          contribution: calculateElementContribution(selection.monster.hitpoints as number, selection.importance, modifier),
+          contribution: calculateElementContribution(selection.monster.hitpoints as number, selection.weight, modifier),
           summary: summarizeModifier(modifier)
         };
       })

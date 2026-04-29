@@ -52,7 +52,7 @@ const neutralElements: Monster['elements'] = {
 
 describe('calculateRecommendation', () => {
   it('uses raw wiki percentage modifiers when ranking a single monster', () => {
-    const result = calculateRecommendation([{ monster: dragonLord, importance: 'normal' }]);
+    const result = calculateRecommendation([{ monster: dragonLord, weight: 50 }]);
 
     expect(result.recommended?.element).toBe('ice');
     expect(result.ranking[0].element).toBe('ice');
@@ -61,15 +61,15 @@ describe('calculateRecommendation', () => {
 
   it('can recommend physical when it has the highest total raw score in a mixed hunt', () => {
     const result = calculateRecommendation([
-      { monster: dragonLord, importance: 'normal' },
-      { monster: iceGolem, importance: 'normal' }
+      { monster: dragonLord, weight: 50 },
+      { monster: iceGolem, weight: 50 }
     ]);
 
     expect(result.recommended?.element).toBe('physical');
     expect(result.ranking[0]).toEqual({ element: 'physical', score: 1900 * 1 * 100 + 300 * 1 * 100 });
   });
 
-  it('uses user importance weights with raw percentage modifiers to change the winner', () => {
+  it('uses user numeric weights with raw percentage modifiers to change the winner', () => {
     const iceFocused: Monster = {
       id: 'ice-focused',
       name: 'Ice Focused',
@@ -108,12 +108,12 @@ describe('calculateRecommendation', () => {
     };
 
     const icePriority = calculateRecommendation([
-      { monster: iceFocused, importance: 'high' },
-      { monster: fireFocused, importance: 'low' }
+      { monster: iceFocused, weight: 75 },
+      { monster: fireFocused, weight: 25 }
     ]);
     const firePriority = calculateRecommendation([
-      { monster: iceFocused, importance: 'low' },
-      { monster: fireFocused, importance: 'high' }
+      { monster: iceFocused, weight: 25 },
+      { monster: fireFocused, weight: 75 }
     ]);
 
     expect(icePriority.recommended?.element).toBe('ice');
@@ -140,7 +140,7 @@ describe('calculateRecommendation', () => {
       incomplete: false
     };
 
-    const result = calculateRecommendation([{ monster: holyTop, importance: 'normal' }]);
+    const result = calculateRecommendation([{ monster: holyTop, weight: 50 }]);
 
     expect(result.ranking[0]).toEqual({ element: 'holy', score: 100 * 1 * 220 });
     expect(result.recommended?.element).toBe('physical');
@@ -179,9 +179,9 @@ describe('calculateRecommendation', () => {
     };
 
     const result = calculateRecommendation([
-      { monster: iceWeak, importance: 'high' },
-      { monster: iceNeutral, importance: 'normal' },
-      { monster: iceResistant, importance: 'low' }
+      { monster: iceWeak, weight: 75 },
+      { monster: iceNeutral, weight: 50 },
+      { monster: iceResistant, weight: 25 }
     ]);
 
     expect(result.recommended?.element).toBe('ice');
@@ -189,15 +189,15 @@ describe('calculateRecommendation', () => {
       {
         monsterId: 'ice-weak',
         monsterName: 'Ice Weak',
-        selectedImportance: 'high',
+        selectedWeight: 75,
         recommendedModifier: 120,
-        contribution: 100 * 2 * 120,
+        contribution: 100 * 1.5 * 120,
         summary: 'favors'
       },
       {
         monsterId: 'ice-neutral',
         monsterName: 'Ice Neutral',
-        selectedImportance: 'normal',
+        selectedWeight: 50,
         recommendedModifier: 100,
         contribution: 80 * 1 * 100,
         summary: 'neutral'
@@ -205,7 +205,7 @@ describe('calculateRecommendation', () => {
       {
         monsterId: 'ice-resistant',
         monsterName: 'Ice Resistant',
-        selectedImportance: 'low',
+        selectedWeight: 25,
         recommendedModifier: 80,
         contribution: 50 * 0.5 * 80,
         summary: 'resists'
@@ -222,7 +222,7 @@ describe('calculateRecommendation', () => {
       incomplete: true
     };
 
-    const result = calculateRecommendation([{ monster: incomplete, importance: 'normal' }]);
+    const result = calculateRecommendation([{ monster: incomplete, weight: 50 }]);
 
     expect(result.recommended).toBeNull();
     expect(result.excludedMonsters).toEqual([{ id: 'unknown', name: 'Unknown', reason: 'Missing hitpoints.' }]);
@@ -236,7 +236,7 @@ describe('calculateRecommendation', () => {
       incomplete: true
     };
 
-    const result = calculateRecommendation([{ monster: incomplete, importance: 'normal' }]);
+    const result = calculateRecommendation([{ monster: incomplete, weight: 50 }]);
 
     expect(result.recommended).toBeNull();
     expect(result.excludedMonsters).toEqual([

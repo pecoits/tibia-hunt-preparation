@@ -194,6 +194,20 @@ button:focus-visible {
   accent-color: var(--accent);
 }
 
+.sharing-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0 0;
+  flex-wrap: wrap;
+}
+
+.share-feedback {
+  margin: 0;
+  color: #cad7df;
+  font-size: 0.88rem;
+}
+
 .selected-list {
   display: grid;
   gap: 10px;
@@ -256,27 +270,52 @@ button:focus-visible {
 }
 
 .importance-control {
-  display: inline-flex;
+  display: grid;
   gap: 8px;
-  align-items: center;
+  align-items: start;
   padding: 6px;
   border: 1px solid #3c4751;
   border-radius: 8px;
   background: #151b1f;
 }
 
-.stepper-button {
-  min-width: 34px;
+.weight-label {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  color: #cdd8e0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.weight-input {
+  width: 84px;
   min-height: 34px;
-  padding: 0;
+  border: 1px solid #4a5660;
   border-radius: 6px;
-  font-size: 1.2rem;
-  line-height: 1;
+  background: #12171a;
+  color: #e6edf1;
+  padding: 0 8px;
+}
+
+.weight-preset-row {
+  display: flex;
+  gap: 6px;
+}
+
+.weight-preset {
+  min-height: 30px;
+  padding: 0 8px;
+  font-size: 0.78rem;
+  border: 1px solid #4a5660;
+  background: #1b2228;
+  color: #d8e2e8;
 }
 
 .importance-value {
   margin: 0;
-  min-width: 132px;
+  min-width: 0;
   color: #d4dee6;
   font-weight: 700;
   font-size: 0.9rem;
@@ -421,12 +460,16 @@ button:focus-visible {
     width: 100%;
   }
 
+  .sharing-row .secondary-button {
+    width: auto;
+  }
+
   .selected-actions {
     display: grid;
     grid-template-columns: 1fr;
   }
 
   .importance-control {
-    justify-content: space-between;
+    width: 100%;
   }
 }

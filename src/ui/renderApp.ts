@@ -1,21 +1,28 @@
 import { calculateRecommendation, type HuntSelection } from '../domain/calculateRecommendation';
 import { ELEMENT_LABELS } from '../domain/elements';
-import type { Importance, Monster, MonsterDatabase } from '../domain/types';
+import type { Monster, MonsterDatabase } from '../domain/types';
 
-const IMPORTANCE_LEVELS: Importance[] = ['low', 'normal', 'high'];
-const IMPORTANCE_LABELS: Record<Importance, string> = {
-  low: 'Low',
-  normal: 'Normal',
-  high: 'High'
-};
+const WEIGHT_PRESETS = [
+  { label: 'Low', value: 25 },
+  { label: 'Normal', value: 50 },
+  { label: 'High', value: 75 }
+] as const;
+const DEFAULT_WEIGHT = 50;
 const FALLBACK_SOURCE_URL = 'https://tibia.fandom.com/wiki/Main_Page';
 const WIKI_FILE_PATH_URL = 'https://tibia.fandom.com/wiki/Special:FilePath/';
 const REPOSITORY_URL = 'https://github.com/pecoits/tibia-hunt-preparation';
 const LICENSE_LABEL = 'CC BY-NC 4.0 International';
+const SHARE_PARAM = 'hunt';
 
 interface SelectedMonster {
   monster: Monster;
-  importance: Importance;
+  weight: number;
+}
+
+interface SharedHuntPayload {
+  v: 1;
+  a: 0 | 1;
+  s: Array<[string, number]>;
 }
 
 function appendText(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, text: string, className?: string): HTMLElement {
@@ -24,6 +31,11 @@ function appendText(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, t
   if (className) element.className = className;
   parent.append(element);
   return element;
+}
+
+function clampWeight(value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return Math.min(100, Math.max(0, Math.round(value)));
 }
 
 function formatScore(score: number): string {
@@ -130,12 +142,6 @@ function createMonsterSprite(monster: Monster): HTMLElement {
   return frame;
 }
 
-function getNextImportance(current: Importance, direction: -1 | 1): Importance {
-  const currentIndex = IMPORTANCE_LEVELS.indexOf(current);
-  const nextIndex = Math.min(IMPORTANCE_LEVELS.length - 1, Math.max(0, currentIndex + direction));
-  return IMPORTANCE_LEVELS[nextIndex];
-}
-
 function renderProjectMeta(parent: HTMLElement, className: string): void {
   const paragraph = document.createElement('p');
   paragraph.className = className;
@@ -153,10 +159,69 @@ function renderProjectMeta(parent: HTMLElement, className: string): void {
   parent.append(paragraph);
 }
 
+function serializeHuntState(selected: SelectedMonster[], includeAdvanced: boolean): string | null {
+  if (selected.length === 0 && !includeAdvanced) return null;
+  const payload: SharedHuntPayload = {
+    v: 1,
+    a: includeAdvanced ? 1 : 0,
+    s: selected.map((item) => [item.monster.id, clampWeight(item.weight)])
+  };
+  return JSON.stringify(payload);
+}
+
+function parseHuntState(database: MonsterDatabase, raw: string | null): { selected: SelectedMonster[]; includeAdvanced: boolean } | null {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as SharedHuntPayload;
+    if (parsed.v !== 1 || !Array.isArray(parsed.s)) return null;
+
+    const selected: SelectedMonster[] = [];
+    const seen = new Set<string>();
+    for (const entry of parsed.s) {
+      if (!Array.isArray(entry) || entry.length !== 2) continue;
+      const [monsterId, weight] = entry;
+      if (typeof monsterId !== 'string' || seen.has(monsterId)) continue;
+      const monster = database.monsters.find((candidate) => candidate.id === monsterId);
+      if (!monster) continue;
+      selected.push({ monster, weight: clampWeight(Number(weight)) });
+      seen.add(monsterId);
+    }
+
+    return {
+      selected,
+      includeAdvanced: parsed.a === 1
+    };
+  } catch {
+    return null;
+  }
+}
+
+function getHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean): string {
+  const url = new URL(window.location.href);
+  const serialized = serializeHuntState(selected, includeAdvanced);
+  if (serialized) {
+    url.searchParams.set(SHARE_PARAM, serialized);
+  } else {
+    url.searchParams.delete(SHARE_PARAM);
+  }
+  return url.toString();
+}
+
+function persistHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean): void {
+  try {
+    const url = getHuntUrl(selected, includeAdvanced);
+    window.history.replaceState(null, '', url);
+  } catch {
+    // Ignore environments without writable location/history.
+  }
+}
+
 export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
-  const selected: SelectedMonster[] = [];
-  let includeAdvanced = false;
+  const urlState = parseHuntState(database, new URL(window.location.href).searchParams.get(SHARE_PARAM));
+  const selected: SelectedMonster[] = urlState?.selected ?? [];
+  let includeAdvanced = urlState?.includeAdvanced ?? false;
   let draftQuery = '';
+  let shareFeedback = '';
 
   const container = root.tagName.toLocaleLowerCase() === 'main' ? root : document.createElement('main');
   container.className = 'app-shell';
@@ -165,6 +230,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   }
 
   const rerender = (): void => {
+    persistHuntUrl(selected, includeAdvanced);
     container.replaceChildren();
 
     const header = document.createElement('header');
@@ -199,10 +265,10 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       const monster = findVisibleMonster(database, input.value, includeAdvanced);
       if (!monster) return;
       if (!selected.some((selection) => selection.monster.id === monster.id)) {
-        selected.push({ monster, importance: 'normal' });
+        selected.push({ monster, weight: DEFAULT_WEIGHT });
       }
       draftQuery = '';
-      input.value = '';
+      shareFeedback = '';
       rerender();
     };
     input.addEventListener('input', () => {
@@ -234,7 +300,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       button.textContent = monster.name;
       button.addEventListener('click', () => {
         draftQuery = monster.name;
-        input.value = monster.name;
         addSelectedMonster();
       });
       item.append(button);
@@ -253,6 +318,32 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       builder.append(suggestions);
     }
 
+    const sharingRow = document.createElement('div');
+    sharingRow.className = 'sharing-row';
+    const shareButton = document.createElement('button');
+    shareButton.type = 'button';
+    shareButton.className = 'secondary-button';
+    shareButton.textContent = 'Copy hunt link';
+    shareButton.addEventListener('click', async () => {
+      const url = getHuntUrl(selected, includeAdvanced);
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url);
+          shareFeedback = 'Link copied.';
+        } else {
+          shareFeedback = url;
+        }
+      } catch {
+        shareFeedback = url;
+      }
+      rerender();
+    });
+    sharingRow.append(shareButton);
+    if (shareFeedback) {
+      appendText(sharingRow, 'p', shareFeedback, 'share-feedback');
+    }
+    builder.append(sharingRow);
+
     const advancedLabel = document.createElement('label');
     advancedLabel.className = 'toggle-row';
     const advancedInput = document.createElement('input');
@@ -260,6 +351,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     advancedInput.checked = includeAdvanced;
     advancedInput.addEventListener('change', () => {
       includeAdvanced = advancedInput.checked;
+      shareFeedback = '';
       rerender();
     });
     advancedLabel.append(advancedInput, document.createTextNode('Include special and incomplete creatures'));
@@ -287,32 +379,45 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         const actions = document.createElement('div');
         actions.className = 'selected-actions';
 
-        const importanceControl = document.createElement('div');
-        importanceControl.className = 'importance-control';
-        const lowButton = document.createElement('button');
-        lowButton.type = 'button';
-        lowButton.className = 'stepper-button';
-        lowButton.textContent = '-';
-        lowButton.disabled = selection.importance === 'low';
-        lowButton.addEventListener('click', () => {
-          selection.importance = getNextImportance(selection.importance, -1);
+        const weightControl = document.createElement('div');
+        weightControl.className = 'importance-control';
+
+        const weightLabel = document.createElement('label');
+        weightLabel.className = 'weight-label';
+        weightLabel.textContent = 'Weight';
+        const weightInput = document.createElement('input');
+        weightInput.type = 'number';
+        weightInput.min = '0';
+        weightInput.max = '100';
+        weightInput.step = '1';
+        weightInput.className = 'weight-input';
+        weightInput.value = String(clampWeight(selection.weight));
+        weightInput.addEventListener('change', () => {
+          selection.weight = clampWeight(Number(weightInput.value));
           rerender();
         });
+        weightLabel.append(weightInput);
 
-        const importanceValue = document.createElement('p');
-        importanceValue.className = 'importance-value';
-        importanceValue.textContent = `Importance: ${IMPORTANCE_LABELS[selection.importance]}`;
+        const presetRow = document.createElement('div');
+        presetRow.className = 'weight-preset-row';
+        for (const preset of WEIGHT_PRESETS) {
+          const presetButton = document.createElement('button');
+          presetButton.type = 'button';
+          presetButton.className = 'weight-preset';
+          presetButton.textContent = preset.label;
+          presetButton.disabled = clampWeight(selection.weight) === preset.value;
+          presetButton.addEventListener('click', () => {
+            selection.weight = preset.value;
+            rerender();
+          });
+          presetRow.append(presetButton);
+        }
 
-        const highButton = document.createElement('button');
-        highButton.type = 'button';
-        highButton.className = 'stepper-button';
-        highButton.textContent = '+';
-        highButton.disabled = selection.importance === 'high';
-        highButton.addEventListener('click', () => {
-          selection.importance = getNextImportance(selection.importance, 1);
-          rerender();
-        });
-        importanceControl.append(lowButton, importanceValue, highButton);
+        const weightValue = document.createElement('p');
+        weightValue.className = 'importance-value';
+        weightValue.textContent = `Weight: ${clampWeight(selection.weight)}`;
+
+        weightControl.append(weightLabel, presetRow, weightValue);
 
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
@@ -321,10 +426,11 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         removeButton.addEventListener('click', () => {
           const index = selected.findIndex((item) => item.monster.id === selection.monster.id);
           if (index >= 0) selected.splice(index, 1);
+          shareFeedback = '';
           rerender();
         });
 
-        actions.append(importanceControl, removeButton);
+        actions.append(weightControl, removeButton);
         row.append(media, details, actions);
         selectedList.append(row);
       }
@@ -374,7 +480,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         item.append(
           link,
           document.createTextNode(
-            `: ${contribution.recommendedModifier}% ${contribution.summary}, ${contribution.selectedImportance} importance, contribution ${formatScore(contribution.contribution)}.`
+            `: ${contribution.recommendedModifier}% ${contribution.summary}, weight ${contribution.selectedWeight}, contribution ${formatScore(contribution.contribution)}.`
           )
         );
         summaryList.append(item);

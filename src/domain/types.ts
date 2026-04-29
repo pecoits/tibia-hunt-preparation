@@ -1,7 +1,6 @@
 import type { ELEMENTS } from './elements';
 
 export type ElementType = (typeof ELEMENTS)[number];
-export type Importance = 'low' | 'normal' | 'high';
 
 export type ElementModifiers = Record<ElementType, number>;
 
