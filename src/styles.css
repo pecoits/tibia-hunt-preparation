@@ -182,7 +182,20 @@ input[type="password"] {
   padding: 0 12px;
 }
 
+input[type="number"],
+select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #44505a;
+  border-radius: 8px;
+  background: #12171a;
+  color: var(--text);
+  padding: 0 12px;
+}
+
 input[type="text"]:focus-visible,
+input[type="number"]:focus-visible,
+select:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent-strong);
   outline-offset: 2px;
@@ -226,6 +239,21 @@ button:focus-visible {
   background: #13191d;
   display: grid;
   gap: 8px;
+}
+
+.player-rules {
+  margin-top: 12px;
+}
+
+.player-rules .section-heading {
+  margin-top: 0;
+}
+
+.player-rules-fields {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 10px;
 }
 
 .admin-panel summary {
@@ -521,5 +549,9 @@ button:focus-visible {
 
   .importance-control {
     width: 100%;
+  }
+
+  .player-rules-fields {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,6 +1,7 @@
 import type { ELEMENTS } from './elements';
 
 export type ElementType = (typeof ELEMENTS)[number];
+export type PlayerVocation = 'any' | 'knight' | 'paladin' | 'druid' | 'sorcerer';
 
 export type ElementModifiers = Record<ElementType, number>;
 

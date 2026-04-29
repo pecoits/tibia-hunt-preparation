@@ -1,6 +1,6 @@
 import { calculateRecommendation, type HuntSelection } from '../domain/calculateRecommendation';
 import { ELEMENT_LABELS } from '../domain/elements';
-import type { Monster, MonsterDatabase } from '../domain/types';
+import type { Monster, MonsterDatabase, PlayerVocation } from '../domain/types';
 
 const WEIGHT_PRESETS = [
   { label: 'Low', value: 25 },
@@ -16,6 +16,15 @@ const SHARE_PARAM = 'hunt';
 const ADMIN_UNLOCK_PHRASE = 'UPDATE';
 const UPDATE_WORKFLOW_ENDPOINT =
   'https://api.github.com/repos/pecoits/tibia-hunt-preparation/actions/workflows/update-monsters.yml/dispatches';
+const DEFAULT_VOCATION: PlayerVocation = 'any';
+const DEFAULT_LEVEL = 200;
+const VOCATION_OPTIONS: Array<{ value: PlayerVocation; label: string }> = [
+  { value: 'any', label: 'Any vocation' },
+  { value: 'knight', label: 'Knight' },
+  { value: 'paladin', label: 'Paladin' },
+  { value: 'druid', label: 'Druid' },
+  { value: 'sorcerer', label: 'Sorcerer' }
+];
 
 interface SelectedMonster {
   monster: Monster;
@@ -23,9 +32,11 @@ interface SelectedMonster {
 }
 
 interface SharedHuntPayload {
-  v: 1;
+  v: 1 | 2;
   a: 0 | 1;
   s: Array<[string, number]>;
+  c?: PlayerVocation;
+  l?: number;
 }
 
 function appendText(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, text: string, className?: string): HTMLElement {
@@ -39,6 +50,15 @@ function appendText(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, t
 function clampWeight(value: number): number {
   if (!Number.isFinite(value)) return 0;
   return Math.min(100, Math.max(0, Math.round(value)));
+}
+
+function clampLevel(value: number): number {
+  if (!Number.isFinite(value)) return 1;
+  return Math.min(2000, Math.max(1, Math.floor(value)));
+}
+
+function isPlayerVocation(value: string): value is PlayerVocation {
+  return VOCATION_OPTIONS.some((option) => option.value === value);
 }
 
 function formatScore(score: number): string {
@@ -171,21 +191,32 @@ function renderProjectMeta(parent: HTMLElement, className: string): void {
   parent.append(paragraph);
 }
 
-function serializeHuntState(selected: SelectedMonster[], includeAdvanced: boolean): string | null {
-  if (selected.length === 0 && !includeAdvanced) return null;
+function serializeHuntState(
+  selected: SelectedMonster[],
+  includeAdvanced: boolean,
+  vocation: PlayerVocation,
+  level: number
+): string | null {
+  const normalizedLevel = clampLevel(level);
+  if (selected.length === 0 && !includeAdvanced && vocation === DEFAULT_VOCATION && normalizedLevel === DEFAULT_LEVEL) return null;
   const payload: SharedHuntPayload = {
-    v: 1,
+    v: 2,
     a: includeAdvanced ? 1 : 0,
-    s: selected.map((item) => [item.monster.id, clampWeight(item.weight)])
+    s: selected.map((item) => [item.monster.id, clampWeight(item.weight)]),
+    c: vocation,
+    l: normalizedLevel
   };
   return JSON.stringify(payload);
 }
 
-function parseHuntState(database: MonsterDatabase, raw: string | null): { selected: SelectedMonster[]; includeAdvanced: boolean } | null {
+function parseHuntState(
+  database: MonsterDatabase,
+  raw: string | null
+): { selected: SelectedMonster[]; includeAdvanced: boolean; vocation: PlayerVocation; level: number } | null {
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw) as SharedHuntPayload;
-    if (parsed.v !== 1 || !Array.isArray(parsed.s)) return null;
+    if ((parsed.v !== 1 && parsed.v !== 2) || !Array.isArray(parsed.s)) return null;
 
     const selected: SelectedMonster[] = [];
     const seen = new Set<string>();
@@ -201,16 +232,18 @@ function parseHuntState(database: MonsterDatabase, raw: string | null): { select
 
     return {
       selected,
-      includeAdvanced: parsed.a === 1
+      includeAdvanced: parsed.a === 1,
+      vocation: isPlayerVocation(parsed.c ?? '') ? (parsed.c as PlayerVocation) : DEFAULT_VOCATION,
+      level: clampLevel(Number(parsed.l ?? DEFAULT_LEVEL))
     };
   } catch {
     return null;
   }
 }
 
-function getHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean): string {
+function getHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean, vocation: PlayerVocation, level: number): string {
   const url = new URL(window.location.href);
-  const serialized = serializeHuntState(selected, includeAdvanced);
+  const serialized = serializeHuntState(selected, includeAdvanced, vocation, level);
   if (serialized) {
     url.searchParams.set(SHARE_PARAM, serialized);
   } else {
@@ -219,9 +252,9 @@ function getHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean): stri
   return url.toString();
 }
 
-function persistHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean): void {
+function persistHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean, vocation: PlayerVocation, level: number): void {
   try {
-    const url = getHuntUrl(selected, includeAdvanced);
+    const url = getHuntUrl(selected, includeAdvanced, vocation, level);
     window.history.replaceState(null, '', url);
   } catch {
     // Ignore environments without writable location/history.
@@ -232,6 +265,8 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   const urlState = parseHuntState(database, new URL(window.location.href).searchParams.get(SHARE_PARAM));
   const selected: SelectedMonster[] = urlState?.selected ?? [];
   let includeAdvanced = urlState?.includeAdvanced ?? false;
+  let vocation: PlayerVocation = urlState?.vocation ?? DEFAULT_VOCATION;
+  let level = clampLevel(urlState?.level ?? DEFAULT_LEVEL);
   let draftQuery = '';
   let shareFeedback = '';
   let adminToken = '';
@@ -247,7 +282,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   }
 
   const rerender = (): void => {
-    persistHuntUrl(selected, includeAdvanced);
+    persistHuntUrl(selected, includeAdvanced, vocation, level);
     container.replaceChildren();
 
     const header = document.createElement('header');
@@ -342,7 +377,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     shareButton.className = 'secondary-button';
     shareButton.textContent = 'Copy hunt link';
     shareButton.addEventListener('click', async () => {
-      const url = getHuntUrl(selected, includeAdvanced);
+      const url = getHuntUrl(selected, includeAdvanced, vocation, level);
       try {
         if (navigator.clipboard?.writeText) {
           await navigator.clipboard.writeText(url);
@@ -360,6 +395,53 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       appendText(sharingRow, 'p', shareFeedback, 'share-feedback');
     }
     builder.append(sharingRow);
+
+    const playerRules = document.createElement('div');
+    playerRules.className = 'player-rules';
+    appendText(playerRules, 'h3', 'Vocation and level', 'section-heading');
+
+    const playerFields = document.createElement('div');
+    playerFields.className = 'player-rules-fields';
+
+    const vocationLabel = document.createElement('label');
+    vocationLabel.className = 'field-label';
+    vocationLabel.textContent = 'Vocation';
+    const vocationSelect = document.createElement('select');
+    vocationSelect.name = 'player-vocation';
+    for (const option of VOCATION_OPTIONS) {
+      const node = document.createElement('option');
+      node.value = option.value;
+      node.textContent = option.label;
+      node.selected = option.value === vocation;
+      vocationSelect.append(node);
+    }
+    vocationSelect.addEventListener('change', () => {
+      vocation = isPlayerVocation(vocationSelect.value) ? vocationSelect.value : DEFAULT_VOCATION;
+      shareFeedback = '';
+      rerender();
+    });
+    vocationLabel.append(vocationSelect);
+
+    const levelLabel = document.createElement('label');
+    levelLabel.className = 'field-label';
+    levelLabel.textContent = 'Level';
+    const levelInput = document.createElement('input');
+    levelInput.type = 'number';
+    levelInput.name = 'player-level';
+    levelInput.min = '1';
+    levelInput.max = '2000';
+    levelInput.step = '1';
+    levelInput.value = String(level);
+    levelInput.addEventListener('change', () => {
+      level = clampLevel(Number(levelInput.value));
+      shareFeedback = '';
+      rerender();
+    });
+    levelLabel.append(levelInput);
+
+    playerFields.append(vocationLabel, levelLabel);
+    playerRules.append(playerFields);
+    builder.append(playerRules);
 
     const adminPanel = document.createElement('details');
     adminPanel.className = 'admin-panel';
@@ -565,7 +647,9 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     resultPanel.setAttribute('aria-labelledby', 'result-title');
     appendText(resultPanel, 'h2', 'Results').id = 'result-title';
 
-    const recommendation = calculateRecommendation(selected as HuntSelection[]);
+    const recommendation = calculateRecommendation(selected as HuntSelection[], {
+      player: { vocation, level }
+    });
     if (!recommendation.recommended) {
       appendText(resultPanel, 'p', 'Add at least one complete monster to calculate a recommendation.', 'empty-state');
     } else {
@@ -574,9 +658,22 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       const primaryAlternative = recommendation.topAlternatives.find(
         (item) => item.element !== recommendation.recommended?.element
       );
+      const activeVocationLabel =
+        VOCATION_OPTIONS.find((option) => option.value === vocation)?.label ?? VOCATION_OPTIONS[0].label;
+      const topRaw = recommendation.ranking[0];
+      const topRawEligibility = recommendation.eligibility.find((item) => item.element === topRaw.element);
       appendText(resultPanel, 'p', 'Recommended', 'eyebrow');
       appendText(resultPanel, 'h3', recommendedLabel, 'recommended-element');
       appendText(resultPanel, 'p', `Top raw score: ${formatScore(recommendation.recommended.score)}`, 'score-note');
+      appendText(resultPanel, 'p', `Profile: ${activeVocationLabel}, level ${level}.`, 'score-note');
+      if (topRaw.element !== recommendation.recommended.element && topRawEligibility && !topRawEligibility.eligible) {
+        appendText(
+          resultPanel,
+          'p',
+          `${ELEMENT_LABELS[topRaw.element]} has the best raw score but is not eligible for this profile (${topRawEligibility.reason ?? 'restricted'}).`,
+          'score-note'
+        );
+      }
 
       appendText(resultPanel, 'h3', 'Why this element?', 'section-heading');
       const explanation = document.createElement('div');

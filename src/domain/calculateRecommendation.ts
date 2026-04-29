@@ -1,6 +1,17 @@
 import { ELEMENTS } from './elements';
-import type { ElementType, Monster } from './types';
-const NON_RECOMMENDABLE_ELEMENTS: ReadonlySet<ElementType> = new Set(['holy']);
+import type { ElementType, Monster, PlayerVocation } from './types';
+
+const DEFAULT_PLAYER: PlayerProfile = { vocation: 'any', level: 999 };
+
+const ELEMENT_RULES: Record<ElementType, { minLevel: number; allowedVocations: ReadonlySet<PlayerVocation> }> = {
+  physical: { minLevel: 1, allowedVocations: new Set(['any', 'knight', 'paladin', 'druid', 'sorcerer']) },
+  earth: { minLevel: 8, allowedVocations: new Set(['any', 'knight', 'paladin', 'druid', 'sorcerer']) },
+  fire: { minLevel: 8, allowedVocations: new Set(['any', 'knight', 'paladin', 'druid', 'sorcerer']) },
+  energy: { minLevel: 8, allowedVocations: new Set(['any', 'knight', 'paladin', 'druid', 'sorcerer']) },
+  ice: { minLevel: 8, allowedVocations: new Set(['any', 'knight', 'paladin', 'druid', 'sorcerer']) },
+  holy: { minLevel: 20, allowedVocations: new Set(['paladin']) },
+  death: { minLevel: 8, allowedVocations: new Set(['any', 'knight', 'paladin', 'druid', 'sorcerer']) }
+};
 
 export interface HuntSelection {
   monster: Monster;
@@ -25,6 +36,21 @@ export interface MonsterContribution {
   summary: 'favors' | 'neutral' | 'resists';
 }
 
+export interface PlayerProfile {
+  vocation: PlayerVocation;
+  level: number;
+}
+
+export interface RecommendationOptions {
+  player?: PlayerProfile;
+}
+
+export interface ElementEligibility {
+  element: ElementType;
+  eligible: boolean;
+  reason: string | null;
+}
+
 export interface ExcludedMonster {
   id: string;
   name: string;
@@ -36,6 +62,7 @@ export interface RecommendationResult {
   ranking: ElementScore[];
   topAlternatives: RankedElement[];
   contributions: MonsterContribution[];
+  eligibility: ElementEligibility[];
   excludedMonsters: ExcludedMonster[];
 }
 
@@ -74,7 +101,37 @@ function calculateElementContribution(hitpoints: number, weight: number, modifie
   return hitpoints * (normalizedWeight / 50) * modifier;
 }
 
-export function calculateRecommendation(selections: HuntSelection[]): RecommendationResult {
+function getPlayerProfile(player?: PlayerProfile): PlayerProfile {
+  if (!player) return DEFAULT_PLAYER;
+  return {
+    vocation: player.vocation,
+    level: Number.isFinite(player.level) ? Math.max(1, Math.floor(player.level)) : 1
+  };
+}
+
+function getElementEligibility(element: ElementType, player: PlayerProfile): ElementEligibility {
+  const rule = ELEMENT_RULES[element];
+  if (!rule.allowedVocations.has(player.vocation)) {
+    return {
+      element,
+      eligible: false,
+      reason: `Requires ${Array.from(rule.allowedVocations).join(', ')} vocation.`
+    };
+  }
+
+  if (player.level < rule.minLevel) {
+    return {
+      element,
+      eligible: false,
+      reason: `Requires level ${rule.minLevel}+.`
+    };
+  }
+
+  return { element, eligible: true, reason: null };
+}
+
+export function calculateRecommendation(selections: HuntSelection[], options: RecommendationOptions = {}): RecommendationResult {
+  const player = getPlayerProfile(options.player);
   const scores = new Map<ElementType, number>(ELEMENTS.map((element) => [element, 0]));
   const validSelections: HuntSelection[] = [];
   const excludedMonsters: ExcludedMonster[] = [];
@@ -102,9 +159,11 @@ export function calculateRecommendation(selections: HuntSelection[]): Recommenda
     element,
     score: scores.get(element) ?? 0
   })).sort((a, b) => b.score - a.score);
+  const eligibility = ELEMENTS.map((element) => getElementEligibility(element, player));
+  const eligibleByElement = new Map(eligibility.map((item) => [item.element, item.eligible]));
 
   const recommended =
-    validSelections.length > 0 ? ranking.find((item) => !NON_RECOMMENDABLE_ELEMENTS.has(item.element)) ?? null : null;
+    validSelections.length > 0 ? ranking.find((item) => eligibleByElement.get(item.element) === true) ?? null : null;
   const contributions: MonsterContribution[] = recommended
     ? validSelections.map((selection) => {
         const modifier = selection.monster.elements[recommended.element] as number;
@@ -132,6 +191,7 @@ export function calculateRecommendation(selections: HuntSelection[]): Recommenda
     ranking,
     topAlternatives,
     contributions,
+    eligibility,
     excludedMonsters
   };
 }

@@ -155,6 +155,37 @@ describe('calculateRecommendation', () => {
     expect(result.recommended?.element).toBe('physical');
   });
 
+  it('allows holy recommendation only for paladin with required level', () => {
+    const holyTop: Monster = withMeta({
+      id: 'holy-paladin',
+      name: 'Holy Paladin',
+      hitpoints: 100,
+      elements: {
+        physical: 100,
+        earth: 100,
+        fire: 100,
+        energy: 100,
+        ice: 100,
+        holy: 220,
+        death: 100
+      },
+      sourceUrl: 'https://example.com/holy-paladin',
+      huntRelevant: true,
+      special: false,
+      incomplete: false
+    });
+
+    const paladinLowLevel = calculateRecommendation([{ monster: holyTop, weight: 50 }], {
+      player: { vocation: 'paladin', level: 10 }
+    });
+    const paladinEligible = calculateRecommendation([{ monster: holyTop, weight: 50 }], {
+      player: { vocation: 'paladin', level: 200 }
+    });
+
+    expect(paladinLowLevel.recommended?.element).toBe('physical');
+    expect(paladinEligible.recommended?.element).toBe('holy');
+  });
+
   it('reports contributions for the recommended element with raw scores and summaries', () => {
     const iceWeak: Monster = withMeta({
       id: 'ice-weak',

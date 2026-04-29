@@ -36,6 +36,27 @@ const database: MonsterDatabase = {
       incomplete: false
     },
     {
+      id: 'holy-scout',
+      name: 'Holy Scout',
+      hitpoints: 700,
+      elements: {
+        physical: 100,
+        earth: 100,
+        fire: 100,
+        energy: 100,
+        ice: 100,
+        holy: 220,
+        death: 100
+      },
+      sourceUrl: 'https://tibia.fandom.com/wiki/Holy_Scout',
+      spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Holy_Scout.gif',
+      aliases: ['Holy Scout'],
+      dataCompletenessScore: 100,
+      huntRelevant: true,
+      special: false,
+      incomplete: false
+    },
+    {
       id: 'test-raid-boss',
       name: 'Test Raid Boss',
       hitpoints: 5000,
@@ -194,6 +215,31 @@ describe('renderApp', () => {
 
     expect(root.textContent).toContain('Weight: 25');
     expect(root.textContent).toContain('Top raw score: 104,500');
+  });
+
+  it('updates recommendation when vocation eligibility changes', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+    const addButton = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+    if (!input || !addButton) throw new Error('Expected add controls.');
+
+    input.value = 'Holy Scout';
+    addButton.click();
+
+    expect(root.textContent).toContain('Physical');
+
+    const vocationSelect = root.querySelector<HTMLSelectElement>('select[name="player-vocation"]');
+    const levelInput = root.querySelector<HTMLInputElement>('input[name="player-level"]');
+    if (!vocationSelect || !levelInput) throw new Error('Expected vocation controls.');
+
+    vocationSelect.value = 'paladin';
+    vocationSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    levelInput.value = '200';
+    levelInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(root.textContent).toContain('Holy');
   });
 
   it.each(['Test Raid Boss', 'Test Incomplete Creature'])(
