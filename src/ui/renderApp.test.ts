@@ -77,6 +77,10 @@ describe('renderApp', () => {
     expect(root.querySelector('input[list="monster-options"]')).not.toBeNull();
     expect(root.querySelector('button[data-action="add-monster"]')?.textContent).toContain('Add');
     expect(root.textContent).toContain('TibiaWiki/Fandom');
+    expect(root.textContent).toContain('Developed by Pecoits');
+    expect(root.textContent).toContain('CC BY-NC 4.0 International');
+    const githubLink = root.querySelector<HTMLAnchorElement>('footer a[href="https://github.com/pecoits/tibia-hunt-preparation"]');
+    expect(githubLink).not.toBeNull();
   });
 
   it('adds a selected monster and calculates the recommendation', () => {
@@ -95,6 +99,37 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('Dragon Lord');
     expect(root.textContent).toContain('Recommended');
     expect(root.textContent).toContain('Ice');
+  });
+
+  it('updates importance via stepper controls and recalculates score', () => {
+    const root = document.createElement('main');
+
+    renderApp(root, database);
+
+    const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+    const addButton = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+    if (!input || !addButton) throw new Error('Expected add controls.');
+
+    input.value = 'Dragon Lord';
+    addButton.click();
+
+    expect(root.textContent).toContain('Importance: Normal');
+    expect(root.textContent).toContain('Top raw score: 209,000');
+
+    let stepperButtons = root.querySelectorAll<HTMLButtonElement>('.importance-control .stepper-button');
+    if (stepperButtons.length !== 2) throw new Error('Expected two stepper buttons.');
+    stepperButtons[1].click();
+
+    expect(root.textContent).toContain('Importance: High');
+    expect(root.textContent).toContain('Top raw score: 418,000');
+
+    stepperButtons = root.querySelectorAll<HTMLButtonElement>('.importance-control .stepper-button');
+    stepperButtons[0].click();
+    stepperButtons = root.querySelectorAll<HTMLButtonElement>('.importance-control .stepper-button');
+    stepperButtons[0].click();
+
+    expect(root.textContent).toContain('Importance: Low');
+    expect(root.textContent).toContain('Top raw score: 104,500');
   });
 
   it.each(['Test Raid Boss', 'Test Incomplete Creature'])(

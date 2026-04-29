@@ -2,12 +2,15 @@ import { calculateRecommendation, type HuntSelection } from '../domain/calculate
 import { ELEMENT_LABELS } from '../domain/elements';
 import type { Importance, Monster, MonsterDatabase } from '../domain/types';
 
-const IMPORTANCE_OPTIONS: Array<{ value: Importance; label: string }> = [
-  { value: 'low', label: 'Low' },
-  { value: 'normal', label: 'Normal' },
-  { value: 'high', label: 'High' }
-];
+const IMPORTANCE_LEVELS: Importance[] = ['low', 'normal', 'high'];
+const IMPORTANCE_LABELS: Record<Importance, string> = {
+  low: 'Low',
+  normal: 'Normal',
+  high: 'High'
+};
 const FALLBACK_SOURCE_URL = 'https://tibia.fandom.com/wiki/Main_Page';
+const REPOSITORY_URL = 'https://github.com/pecoits/tibia-hunt-preparation';
+const LICENSE_LABEL = 'CC BY-NC 4.0 International';
 
 interface SelectedMonster {
   monster: Monster;
@@ -62,6 +65,29 @@ function renderAttribution(parent: HTMLElement, database: MonsterDatabase, class
   paragraph.append(link, document.createTextNode(`. ${database.source.license}.`));
 }
 
+function getNextImportance(current: Importance, direction: -1 | 1): Importance {
+  const currentIndex = IMPORTANCE_LEVELS.indexOf(current);
+  const nextIndex = Math.min(IMPORTANCE_LEVELS.length - 1, Math.max(0, currentIndex + direction));
+  return IMPORTANCE_LEVELS[nextIndex];
+}
+
+function renderProjectMeta(parent: HTMLElement, className: string): void {
+  const paragraph = document.createElement('p');
+  paragraph.className = className;
+  paragraph.append('Developed by Pecoits under ');
+
+  const license = document.createElement('strong');
+  license.textContent = LICENSE_LABEL;
+  paragraph.append(license, document.createTextNode('. '));
+
+  const link = document.createElement('a');
+  link.href = REPOSITORY_URL;
+  link.rel = 'noreferrer';
+  link.textContent = 'GitHub';
+  paragraph.append(link);
+  parent.append(paragraph);
+}
+
 export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   const selected: SelectedMonster[] = [];
   let includeAdvanced = false;
@@ -78,7 +104,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const header = document.createElement('header');
     header.className = 'app-header';
     appendText(header, 'h1', 'Tibia Hunt Preparation');
-    appendText(header, 'p', 'Select hunt monsters and compare raw elemental damage recommendations.');
+    appendText(header, 'p', 'Plan your hunt loadout with weighted monster importance and elemental ranking.');
     container.append(header);
 
     const layout = document.createElement('section');
@@ -168,22 +194,32 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         const actions = document.createElement('div');
         actions.className = 'selected-actions';
 
-        const importanceLabel = document.createElement('label');
-        importanceLabel.className = 'select-label';
-        importanceLabel.textContent = 'Importance';
-        const select = document.createElement('select');
-        select.value = selection.importance;
-        for (const optionValue of IMPORTANCE_OPTIONS) {
-          const option = document.createElement('option');
-          option.value = optionValue.value;
-          option.textContent = optionValue.label;
-          select.append(option);
-        }
-        select.addEventListener('change', () => {
-          selection.importance = select.value as Importance;
+        const importanceControl = document.createElement('div');
+        importanceControl.className = 'importance-control';
+        const lowButton = document.createElement('button');
+        lowButton.type = 'button';
+        lowButton.className = 'stepper-button';
+        lowButton.textContent = '-';
+        lowButton.disabled = selection.importance === 'low';
+        lowButton.addEventListener('click', () => {
+          selection.importance = getNextImportance(selection.importance, -1);
           rerender();
         });
-        importanceLabel.append(select);
+
+        const importanceValue = document.createElement('p');
+        importanceValue.className = 'importance-value';
+        importanceValue.textContent = `Importance: ${IMPORTANCE_LABELS[selection.importance]}`;
+
+        const highButton = document.createElement('button');
+        highButton.type = 'button';
+        highButton.className = 'stepper-button';
+        highButton.textContent = '+';
+        highButton.disabled = selection.importance === 'high';
+        highButton.addEventListener('click', () => {
+          selection.importance = getNextImportance(selection.importance, 1);
+          rerender();
+        });
+        importanceControl.append(lowButton, importanceValue, highButton);
 
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
@@ -195,7 +231,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
           rerender();
         });
 
-        actions.append(importanceLabel, removeButton);
+        actions.append(importanceControl, removeButton);
         row.append(details, actions);
         selectedList.append(row);
       }
@@ -261,6 +297,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
     const footer = document.createElement('footer');
     footer.className = 'app-footer';
+    renderProjectMeta(footer, 'project-meta');
     renderAttribution(footer, database, 'credit-line');
     container.append(footer);
   };
