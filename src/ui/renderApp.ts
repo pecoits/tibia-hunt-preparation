@@ -77,6 +77,18 @@ function formatPercent(value: number): string {
   return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value)}%`;
 }
 
+function formatDataVersion(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
 function findVisibleMonster(database: MonsterDatabase, query: string, includeAdvanced: boolean): Monster | undefined {
   const normalized = query.trim().toLocaleLowerCase();
   return database.monsters.find(
@@ -871,6 +883,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const footer = document.createElement('footer');
     footer.className = 'app-footer';
     renderProjectMeta(footer, 'project-meta');
+    appendText(footer, 'p', `Data version: ${formatDataVersion(database.generatedAt)}`, 'project-meta');
     renderAttribution(footer, database, 'credit-line');
     container.append(footer);
   };

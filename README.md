@@ -30,6 +30,14 @@ The app also includes an `Admin tools` panel that can trigger the same workflow 
 
 The `Deploy GitHub Pages` workflow runs on pushes to `main` and manual runs from `main`. It tests, builds, and publishes the static site from `dist`.
 
+## Offline usage (PWA)
+
+The app ships with a lightweight service worker:
+
+1. After the first successful load, the app shell is cached for offline access.
+2. `public/data/monsters.json` uses `NetworkFirst` with cache fallback to support unstable mobile networks.
+3. The footer displays `Data version` based on `generatedAt` from the loaded dataset.
+
 ## Data Attribution
 
 Creature data and damage modifiers are sourced from TibiaWiki/Fandom:

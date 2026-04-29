@@ -118,6 +118,7 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('TibiaWiki/Fandom');
     expect(root.textContent).toContain('Developed by Pecoits');
     expect(root.textContent).toContain('CC BY-NC 4.0 International');
+    expect(root.textContent).toContain('Data version:');
   });
 
   it('keeps admin update action disabled until token and unlock phrase are valid', () => {

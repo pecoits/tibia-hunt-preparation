@@ -1,4 +1,5 @@
 import './styles.css';
+import { registerSW } from 'virtual:pwa-register';
 import { loadMonsters } from './data/loadMonsters';
 import { renderApp } from './ui/renderApp';
 
@@ -9,6 +10,7 @@ if (!app) {
 }
 
 const appRoot = app;
+registerSW({ immediate: true });
 
 appRoot.innerHTML = '<main class="app-shell"><p>Loading monster data...</p></main>';
 
