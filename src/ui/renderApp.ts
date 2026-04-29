@@ -757,8 +757,17 @@ function persistHuntUrl(
   }
 }
 
+function isAdminMode(url: URL): boolean {
+  if (url.searchParams.get('admin') === '1') return true;
+  if (url.hash.toLowerCase().includes('admin')) return true;
+  const pathname = url.pathname.toLowerCase().replace(/\/+$/, '');
+  return pathname.endsWith('/admin');
+}
+
 export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
-  const urlState = parseHuntState(database, new URL(window.location.href).searchParams.get(SHARE_PARAM));
+  const currentUrl = new URL(window.location.href);
+  const urlState = parseHuntState(database, currentUrl.searchParams.get(SHARE_PARAM));
+  const adminMode = isAdminMode(currentUrl);
   const selected: SelectedMonster[] = urlState?.selected ?? [];
   let includeAdvanced = urlState?.includeAdvanced ?? false;
   let vocation: PlayerVocation = urlState?.vocation ?? DEFAULT_VOCATION;
@@ -772,7 +781,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   let adminUnlock = '';
   let adminStatus = '';
   let adminBusy = false;
-  let adminPanelOpen = false;
   let batchPanelOpen = false;
   let tutorialOpen = !readTutorialCompleted();
   let tutorialStepIndex = 0;
@@ -1216,35 +1224,12 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     playerRules.append(playerFields);
     builder.append(playerRules);
 
-    const adminAccessRow = document.createElement('div');
-    adminAccessRow.className = 'admin-access-row';
-    const adminAccessButton = document.createElement('button');
-    adminAccessButton.type = 'button';
-    adminAccessButton.className = 'admin-access-link';
-    adminAccessButton.dataset.action = 'admin-access';
-    adminAccessButton.textContent = t(language, 'adminAccess');
-    adminAccessButton.addEventListener('click', () => {
-      adminPanelOpen = !adminPanelOpen;
-      rerender();
-    });
-    adminAccessRow.append(adminAccessButton);
-    builder.append(adminAccessRow);
-
-    if (adminPanelOpen) {
+    if (adminMode) {
       const adminPanel = document.createElement('div');
       adminPanel.className = 'admin-panel';
       const adminHeader = document.createElement('div');
       adminHeader.className = 'admin-panel-header';
       appendText(adminHeader, 'h3', t(language, 'adminTools'));
-      const hideAdminButton = document.createElement('button');
-      hideAdminButton.type = 'button';
-      hideAdminButton.className = 'secondary-button';
-      hideAdminButton.textContent = t(language, 'hideAdmin');
-      hideAdminButton.addEventListener('click', () => {
-        adminPanelOpen = false;
-        rerender();
-      });
-      adminHeader.append(hideAdminButton);
       adminPanel.append(adminHeader);
       appendText(adminPanel, 'p', t(language, 'adminNote'), 'admin-note');
 
@@ -1259,7 +1244,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       tokenInput.value = adminToken;
       tokenInput.addEventListener('input', () => {
         adminToken = tokenInput.value;
-        adminPanelOpen = true;
         const caret = tokenInput.selectionStart ?? adminToken.length;
         rerender();
         const refreshed = container.querySelector<HTMLInputElement>('input[name="admin-token"]');
@@ -1282,7 +1266,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       unlockInput.value = adminUnlock;
       unlockInput.addEventListener('input', () => {
         adminUnlock = unlockInput.value;
-        adminPanelOpen = true;
         const caret = unlockInput.selectionStart ?? adminUnlock.length;
         rerender();
         const refreshed = container.querySelector<HTMLInputElement>('input[name="admin-unlock"]');

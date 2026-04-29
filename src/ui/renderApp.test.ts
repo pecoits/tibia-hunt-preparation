@@ -120,7 +120,6 @@ describe('renderApp', () => {
     expect(root.querySelector('input[name="monster-search"]')).not.toBeNull();
     expect(root.querySelector('button[data-action="add-monster"]')?.textContent).toContain('Add');
     expect(root.textContent).toContain('Copy hunt link');
-    expect(root.textContent).toContain('Admin access');
     expect(root.textContent).not.toContain('Admin tools');
     expect(root.textContent).toContain('TibiaWiki/Fandom');
     expect(root.textContent).toContain('Developed by Pecoits');
@@ -148,13 +147,9 @@ describe('renderApp', () => {
   });
 
   it('keeps admin update action disabled until token and unlock phrase are valid', () => {
+    window.history.replaceState({}, '', '/?admin=1');
     const root = document.createElement('main');
     renderApp(root, database);
-
-    expect(root.querySelector('.admin-panel')).toBeNull();
-    const accessButton = root.querySelector<HTMLButtonElement>('button[data-action="admin-access"]');
-    if (!accessButton) throw new Error('Expected admin access link.');
-    accessButton.click();
 
     const actionButton = root.querySelector<HTMLButtonElement>('button[data-action="admin-run-update"]');
     const tokenInput = root.querySelector<HTMLInputElement>('input[name="admin-token"]');
