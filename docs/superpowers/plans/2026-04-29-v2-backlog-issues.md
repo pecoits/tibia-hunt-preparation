@@ -164,8 +164,31 @@ Ordem de prioridade definida: `2 -> 3 -> 5 -> 6 -> 7 -> 1 -> 4 -> 8`.
   - `src/ui/renderApp.ts`
   - `README.md`
 - **Criterios de aceite:**
-  - App abre offline apos primeira carga.
-  - Atualizacao de base nao deixa cache quebrado.
+- App abre offline apos primeira carga.
+- Atualizacao de base nao deixa cache quebrado.
+
+## Backlog Final (ultimo passo)
+
+### Issue 9 - Minitutorial guiado de uso da ferramenta
+- **Prioridade:** P4 (ultima)
+- **Sprint:** Pos Sprint 4
+- **Estimativa:** P/M
+- **Dependencias:** Issue 1, Issue 2, Issue 4, Issue 6
+- **Objetivo:** Facilitar onboarding rapido para novos usuarios sem exigir leitura externa.
+- **Escopo tecnico:**
+  - Criar minitutorial em passos curtos dentro da aplicacao.
+  - Cobrir fluxo base: adicionar monstro, ajustar peso, interpretar recomendacao e copiar link.
+  - Incluir dica sobre regras de vocacao (quando filtros estiverem ativos).
+  - Permitir fechar/pular tutorial e nao exibir novamente apos concluir (persistencia local).
+- **Arquivos provaveis:**
+  - `src/ui/renderApp.ts` (ou modulo dedicado de tutorial)
+  - `src/styles.css`
+  - `src/ui/renderApp.test.ts`
+  - `README.md`
+- **Criterios de aceite:**
+  - Primeiro acesso exibe tutorial curto e objetivo.
+  - Usuario consegue pular e retomar tutorial manualmente.
+  - Estado "ja concluido" persiste entre recarregamentos no mesmo navegador.
 
 ---
 
@@ -178,6 +201,7 @@ Ordem de prioridade definida: `2 -> 3 -> 5 -> 6 -> 7 -> 1 -> 4 -> 8`.
 6. Issue 6
 7. Issue 7
 8. Issue 8
+9. Issue 9
 
 ## Definicao de pronto (DoD) por issue
 - Testes automatizados relevantes atualizados e passando.
