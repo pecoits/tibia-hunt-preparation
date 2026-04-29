@@ -193,8 +193,20 @@ select {
   padding: 0 12px;
 }
 
+textarea {
+  width: 100%;
+  border: 1px solid #44505a;
+  border-radius: 8px;
+  background: #12171a;
+  color: var(--text);
+  padding: 10px 12px;
+  resize: vertical;
+  min-height: 96px;
+}
+
 input[type="text"]:focus-visible,
 input[type="number"]:focus-visible,
+textarea:focus-visible,
 select:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent-strong);
@@ -254,6 +266,21 @@ button:focus-visible {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 140px;
   gap: 10px;
+}
+
+.batch-import {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.batch-import .section-heading {
+  margin-top: 0;
+}
+
+.warning-inline {
+  margin: 0;
+  color: #f0cfc7;
 }
 
 .admin-panel summary {

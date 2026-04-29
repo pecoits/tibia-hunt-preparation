@@ -29,7 +29,7 @@ const database: MonsterDatabase = {
       },
       sourceUrl: 'https://tibia.fandom.com/wiki/Dragon_Lord',
       spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Dragon_Lord.gif',
-      aliases: ['Dragon Lord'],
+      aliases: ['Dragon Lord', 'DL'],
       dataCompletenessScore: 100,
       huntRelevant: true,
       special: false,
@@ -240,6 +240,23 @@ describe('renderApp', () => {
     levelInput.dispatchEvent(new Event('change', { bubbles: true }));
 
     expect(root.textContent).toContain('Holy');
+  });
+
+  it('imports monsters in batch and reports missing entries', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    const textarea = root.querySelector<HTMLTextAreaElement>('textarea[name="batch-import"]');
+    const importButton = root.querySelector<HTMLButtonElement>('button[data-action="import-monsters"]');
+    if (!textarea || !importButton) throw new Error('Expected batch import controls.');
+
+    textarea.value = 'DL, Holy Scout\nUnknown Creature';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    importButton.click();
+
+    expect(root.querySelectorAll('.selected-monster')).toHaveLength(2);
+    expect(root.textContent).toContain('Processed 3. Matched 2, added 2, duplicates 0, missing 1.');
+    expect(root.textContent).toContain('Missing: Unknown Creature.');
   });
 
   it.each(['Test Raid Boss', 'Test Incomplete Creature'])(

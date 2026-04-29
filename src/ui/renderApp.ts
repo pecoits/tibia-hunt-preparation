@@ -39,6 +39,14 @@ interface SharedHuntPayload {
   l?: number;
 }
 
+interface BatchImportReport {
+  total: number;
+  matched: number;
+  added: number;
+  duplicates: string[];
+  missing: string[];
+}
+
 function appendText(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, text: string, className?: string): HTMLElement {
   const element = document.createElement(tagName);
   element.textContent = text;
@@ -98,6 +106,29 @@ function findAutocompleteMatches(database: MonsterDatabase, query: string, inclu
   }
 
   return [...exact, ...contains].slice(0, 8);
+}
+
+function findMonsterByToken(database: MonsterDatabase, token: string, includeAdvanced: boolean): Monster | undefined {
+  const normalized = token.trim().toLocaleLowerCase();
+  if (!normalized) return undefined;
+
+  for (const monster of database.monsters) {
+    if (!shouldShowInAutocomplete(monster, includeAdvanced)) continue;
+    if (monster.name.toLocaleLowerCase() === normalized || monster.id.toLocaleLowerCase() === normalized) {
+      return monster;
+    }
+    if (monster.aliases.some((alias) => alias.toLocaleLowerCase() === normalized)) {
+      return monster;
+    }
+  }
+  return undefined;
+}
+
+function parseBatchTokens(text: string): string[] {
+  return text
+    .split(/[\n,]+/g)
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
 }
 
 function shouldShowInAutocomplete(monster: Monster, includeAdvanced: boolean): boolean {
@@ -269,6 +300,8 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   let level = clampLevel(urlState?.level ?? DEFAULT_LEVEL);
   let draftQuery = '';
   let shareFeedback = '';
+  let batchInput = '';
+  let batchReport: BatchImportReport | null = null;
   let adminToken = '';
   let adminUnlock = '';
   let adminStatus = '';
@@ -395,6 +428,78 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       appendText(sharingRow, 'p', shareFeedback, 'share-feedback');
     }
     builder.append(sharingRow);
+
+    const batchSection = document.createElement('section');
+    batchSection.className = 'batch-import';
+    appendText(batchSection, 'h3', 'Bulk import', 'section-heading');
+    appendText(batchSection, 'p', 'Paste monster names or IDs separated by commas or new lines.', 'score-note');
+
+    const batchInputLabel = document.createElement('label');
+    batchInputLabel.className = 'field-label';
+    batchInputLabel.textContent = 'Monster list';
+    const batchTextarea = document.createElement('textarea');
+    batchTextarea.name = 'batch-import';
+    batchTextarea.placeholder = 'Dragon Lord, Ice Golem\nJuggernaut';
+    batchTextarea.value = batchInput;
+    batchTextarea.rows = 4;
+    batchTextarea.addEventListener('input', () => {
+      batchInput = batchTextarea.value;
+    });
+    batchInputLabel.append(batchTextarea);
+    batchSection.append(batchInputLabel);
+
+    const batchButton = document.createElement('button');
+    batchButton.type = 'button';
+    batchButton.className = 'secondary-button';
+    batchButton.dataset.action = 'import-monsters';
+    batchButton.textContent = 'Import list';
+    batchButton.addEventListener('click', () => {
+      const tokens = parseBatchTokens(batchInput);
+      const duplicates: string[] = [];
+      const missing: string[] = [];
+      let matched = 0;
+      let added = 0;
+
+      for (const token of tokens) {
+        const monster = findMonsterByToken(database, token, includeAdvanced);
+        if (!monster) {
+          missing.push(token);
+          continue;
+        }
+        matched += 1;
+        if (selected.some((entry) => entry.monster.id === monster.id)) {
+          duplicates.push(token);
+          continue;
+        }
+        selected.push({ monster, weight: DEFAULT_WEIGHT });
+        added += 1;
+      }
+
+      batchReport = {
+        total: tokens.length,
+        matched,
+        added,
+        duplicates,
+        missing
+      };
+      shareFeedback = '';
+      rerender();
+    });
+    batchSection.append(batchButton);
+
+    if (batchReport) {
+      appendText(
+        batchSection,
+        'p',
+        `Processed ${batchReport.total}. Matched ${batchReport.matched}, added ${batchReport.added}, duplicates ${batchReport.duplicates.length}, missing ${batchReport.missing.length}.`,
+        'score-note'
+      );
+      if (batchReport.missing.length > 0) {
+        appendText(batchSection, 'p', `Missing: ${batchReport.missing.join(', ')}.`, 'warning-inline');
+      }
+    }
+
+    builder.append(batchSection);
 
     const playerRules = document.createElement('div');
     playerRules.className = 'player-rules';
