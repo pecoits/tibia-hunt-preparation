@@ -102,7 +102,6 @@ function formatDataVersion(value: string, language: AppLanguage): string {
 const I18N = {
   pt: {
     appTitle: 'Hunt Element Planner',
-    appSubtitle: 'Planeje sua hunt com peso por monstro e ranking elemental.',
     howToUse: 'Como usar',
     language: 'Idioma',
     stepLabel: 'Passo {current} de {total}',
@@ -117,6 +116,8 @@ const I18N = {
     copyHuntLink: 'Copiar link da hunt',
     linkCopied: 'Link copiado.',
     bulkImport: 'Importação em lote',
+    batchAccess: 'Adicionar por lote',
+    hideBatch: 'Ocultar lote',
     bulkImportHint: 'Cole nomes ou IDs de monstros separados por vírgula ou quebra de linha.',
     monsterList: 'Lista de monstros',
     importList: 'Importar lista',
@@ -126,7 +127,9 @@ const I18N = {
     vocation: 'Vocação',
     level: 'Nível',
     anyVocation: 'Qualquer vocação',
+    adminAccess: 'Acesso admin',
     adminTools: 'Ferramentas de admin',
+    hideAdmin: 'Ocultar admin',
     adminNote: 'Requer token GitHub com actions:write para este repositório. Use apenas para atualização controlada da base.',
     githubToken: 'Token GitHub',
     typeUpdateToEnable: 'Digite UPDATE para habilitar',
@@ -151,17 +154,10 @@ const I18N = {
     topRawScore: 'Melhor score bruto: {score}',
     profile: 'Perfil: {vocation}, nível {level}.',
     ineligibleTopRaw: '{element} tem o melhor score bruto, mas não é elegível para este perfil ({reason}).',
-    whyThisElement: 'Por que este elemento?',
-    leadsBy: '{recommended} está à frente de {alternative} por {delta} pontos.',
-    onlyRankedRecommendation: '{recommended} é atualmente a única recomendação ranqueada com dados válidos.',
-    impactFormula: 'Fórmula por monstro: Hitpoints × (Peso / 50) × Modificador Elemental.',
-    top3Elements: 'Top 3 elementos',
-    baseline: 'base',
-    behind: '{delta} atrás',
     fullRanking: 'Ranking completo',
     monsterSummary: 'Resumo por monstro',
     contributionLine:
-      '{modifier}% {summary}, peso {weight} (x{factor}), contribuição {contribution} ({share} do score recomendado).',
+      '{modifier}% ({summary}), peso {weight} (x{factor}), contribuição {contribution} ({share} do total recomendado).',
     excludedMonsters: 'Monstros excluídos',
     dataVersion: 'Versão da base: {version}',
     dataPrefix: 'Dados: ',
@@ -169,16 +165,15 @@ const I18N = {
     missingHitpoints: 'HP ausente.',
     missingModifier: 'Modificador {element} ausente.',
     incompleteData: 'Dados incompletos do monstro.',
-    favors: 'favorece',
+    favors: 'vulnerável',
     neutral: 'neutro',
-    resists: 'resiste',
+    resists: 'resistente',
     requiresVocation: 'requer vocação',
     requiresLevel: 'requer nível',
     tutorialTip: 'Dica: regras atuais {vocation}, nível {level}. Elementos não elegíveis ficam no ranking, mas nunca são recomendados.'
   },
   en: {
     appTitle: 'Hunt Element Planner',
-    appSubtitle: 'Plan your hunt loadout with weighted monster importance and elemental ranking.',
     howToUse: 'How to use',
     language: 'Language',
     stepLabel: 'Step {current} of {total}',
@@ -193,6 +188,8 @@ const I18N = {
     copyHuntLink: 'Copy hunt link',
     linkCopied: 'Link copied.',
     bulkImport: 'Bulk import',
+    batchAccess: 'Add in bulk',
+    hideBatch: 'Hide bulk',
     bulkImportHint: 'Paste monster names or IDs separated by commas or new lines.',
     monsterList: 'Monster list',
     importList: 'Import list',
@@ -202,7 +199,9 @@ const I18N = {
     vocation: 'Vocation',
     level: 'Level',
     anyVocation: 'Any vocation',
+    adminAccess: 'Admin access',
     adminTools: 'Admin tools',
+    hideAdmin: 'Hide admin',
     adminNote: 'Requires a GitHub token with actions:write for this repository. Use only for controlled data refresh.',
     githubToken: 'GitHub token',
     typeUpdateToEnable: 'Type UPDATE to enable',
@@ -227,17 +226,10 @@ const I18N = {
     topRawScore: 'Top raw score: {score}',
     profile: 'Profile: {vocation}, level {level}.',
     ineligibleTopRaw: '{element} has the best raw score but is not eligible for this profile ({reason}).',
-    whyThisElement: 'Why this element?',
-    leadsBy: '{recommended} leads {alternative} by {delta} score points.',
-    onlyRankedRecommendation: '{recommended} is currently the only ranked recommendation with valid hunt data.',
-    impactFormula: 'Impact formula used per monster: Hitpoints × (Weight / 50) × Element Modifier.',
-    top3Elements: 'Top 3 elements',
-    baseline: 'baseline',
-    behind: '{delta} behind',
     fullRanking: 'Full ranking',
     monsterSummary: 'Monster summary',
     contributionLine:
-      '{modifier}% {summary}, weight {weight} (x{factor}), contribution {contribution} ({share} of recommended score).',
+      '{modifier}% ({summary}), weight {weight} (x{factor}), contribution {contribution} ({share} of recommended total).',
     excludedMonsters: 'Excluded monsters',
     dataVersion: 'Data version: {version}',
     dataPrefix: 'Data: ',
@@ -255,7 +247,6 @@ const I18N = {
   },
   pl: {
     appTitle: 'Hunt Element Planner',
-    appSubtitle: 'Planuj hunta z wagą potworów i rankingiem żywiołów.',
     howToUse: 'Jak używać',
     language: 'Język',
     stepLabel: 'Krok {current} z {total}',
@@ -270,6 +261,8 @@ const I18N = {
     copyHuntLink: 'Kopiuj link hunta',
     linkCopied: 'Link skopiowany.',
     bulkImport: 'Import zbiorczy',
+    batchAccess: 'Dodaj hurtowo',
+    hideBatch: 'Ukryj import',
     bulkImportHint: 'Wklej nazwy lub ID potworów oddzielone przecinkami lub nowymi liniami.',
     monsterList: 'Lista potworów',
     importList: 'Importuj listę',
@@ -279,7 +272,9 @@ const I18N = {
     vocation: 'Profesja',
     level: 'Poziom',
     anyVocation: 'Dowolna profesja',
+    adminAccess: 'Dostęp admina',
     adminTools: 'Narzędzia admina',
+    hideAdmin: 'Ukryj admina',
     adminNote: 'Wymaga tokenu GitHub z actions:write dla tego repozytorium. Używaj tylko do kontrolowanej aktualizacji danych.',
     githubToken: 'Token GitHub',
     typeUpdateToEnable: 'Wpisz UPDATE aby włączyć',
@@ -304,17 +299,10 @@ const I18N = {
     topRawScore: 'Najlepszy surowy wynik: {score}',
     profile: 'Profil: {vocation}, poziom {level}.',
     ineligibleTopRaw: '{element} ma najlepszy surowy wynik, ale nie jest dostępny dla tego profilu ({reason}).',
-    whyThisElement: 'Dlaczego ten żywioł?',
-    leadsBy: '{recommended} wyprzedza {alternative} o {delta} punktów.',
-    onlyRankedRecommendation: '{recommended} to obecnie jedyna sklasyfikowana rekomendacja z prawidłowymi danymi.',
-    impactFormula: 'Wzór wpływu na potwora: Hitpoints × (Waga / 50) × Modyfikator żywiołu.',
-    top3Elements: 'Top 3 żywioły',
-    baseline: 'bazowy',
-    behind: '{delta} mniej',
     fullRanking: 'Pełny ranking',
     monsterSummary: 'Podsumowanie potworów',
     contributionLine:
-      '{modifier}% {summary}, waga {weight} (x{factor}), wkład {contribution} ({share} zalecanego wyniku).',
+      '{modifier}% ({summary}), waga {weight} (x{factor}), wkład {contribution} ({share} zalecanej sumy).',
     excludedMonsters: 'Wykluczone potwory',
     dataVersion: 'Wersja danych: {version}',
     dataPrefix: 'Dane: ',
@@ -495,11 +483,17 @@ function getTutorialSteps(language: AppLanguage): TutorialStep[] {
 
 function findVisibleMonster(database: MonsterDatabase, query: string, includeAdvanced: boolean): Monster | undefined {
   const normalized = query.trim().toLocaleLowerCase();
-  return database.monsters.find(
+  const exact = database.monsters.find(
     (monster) =>
       shouldShowInAutocomplete(monster, includeAdvanced) &&
-      (monster.name.toLocaleLowerCase() === normalized || monster.id.toLocaleLowerCase() === normalized)
+      (monster.name.toLocaleLowerCase() === normalized ||
+        monster.id.toLocaleLowerCase() === normalized ||
+        monster.aliases.some((alias) => alias.toLocaleLowerCase() === normalized))
   );
+  if (exact) return exact;
+
+  const matches = findAutocompleteMatches(database, query, includeAdvanced);
+  return matches[0];
 }
 
 function findAutocompleteMatches(database: MonsterDatabase, query: string, includeAdvanced: boolean): Monster[] {
@@ -779,6 +773,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   let adminStatus = '';
   let adminBusy = false;
   let adminPanelOpen = false;
+  let batchPanelOpen = false;
   let tutorialOpen = !readTutorialCompleted();
   let tutorialStepIndex = 0;
 
@@ -797,7 +792,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const header = document.createElement('header');
     header.className = 'app-header';
     appendText(header, 'h1', t(language, 'appTitle'));
-    appendText(header, 'p', t(language, 'appSubtitle'));
     const headerActions = document.createElement('div');
     headerActions.className = 'header-actions';
     const languageLabel = document.createElement('label');
@@ -975,275 +969,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       builder.append(suggestions);
     }
 
-    const sharingRow = document.createElement('div');
-    sharingRow.className = 'sharing-row';
-    const shareButton = document.createElement('button');
-    shareButton.type = 'button';
-    shareButton.className = 'secondary-button';
-    shareButton.textContent = t(language, 'copyHuntLink');
-    shareButton.addEventListener('click', async () => {
-      const url = getHuntUrl(selected, includeAdvanced, vocation, level, language);
-      try {
-        if (navigator.clipboard?.writeText) {
-          await navigator.clipboard.writeText(url);
-          shareFeedback = t(language, 'linkCopied');
-        } else {
-          shareFeedback = url;
-        }
-      } catch {
-        shareFeedback = url;
-      }
-      rerender();
-    });
-    sharingRow.append(shareButton);
-    if (shareFeedback) {
-      appendText(sharingRow, 'p', shareFeedback, 'share-feedback');
-    }
-    builder.append(sharingRow);
-
-    const batchSection = document.createElement('section');
-    batchSection.className = 'batch-import';
-    appendText(batchSection, 'h3', t(language, 'bulkImport'), 'section-heading');
-    appendText(batchSection, 'p', t(language, 'bulkImportHint'), 'score-note');
-
-    const batchInputLabel = document.createElement('label');
-    batchInputLabel.className = 'field-label';
-    batchInputLabel.textContent = t(language, 'monsterList');
-    const batchTextarea = document.createElement('textarea');
-    batchTextarea.name = 'batch-import';
-    batchTextarea.placeholder = 'Dragon Lord, Ice Golem\nJuggernaut';
-    batchTextarea.value = batchInput;
-    batchTextarea.rows = 4;
-    batchTextarea.addEventListener('input', () => {
-      batchInput = batchTextarea.value;
-    });
-    batchInputLabel.append(batchTextarea);
-    batchSection.append(batchInputLabel);
-
-    const batchButton = document.createElement('button');
-    batchButton.type = 'button';
-    batchButton.className = 'secondary-button';
-    batchButton.dataset.action = 'import-monsters';
-    batchButton.textContent = t(language, 'importList');
-    batchButton.addEventListener('click', () => {
-      const tokens = parseBatchTokens(batchInput);
-      const duplicates: string[] = [];
-      const missing: string[] = [];
-      let matched = 0;
-      let added = 0;
-
-      for (const token of tokens) {
-        const monster = findMonsterByToken(database, token, includeAdvanced);
-        if (!monster) {
-          missing.push(token);
-          continue;
-        }
-        matched += 1;
-        if (selected.some((entry) => entry.monster.id === monster.id)) {
-          duplicates.push(token);
-          continue;
-        }
-        selected.push({ monster, weight: DEFAULT_WEIGHT });
-        added += 1;
-      }
-
-      batchReport = {
-        total: tokens.length,
-        matched,
-        added,
-        duplicates,
-        missing
-      };
-      shareFeedback = '';
-      rerender();
-    });
-    batchSection.append(batchButton);
-
-    if (batchReport) {
-      appendText(
-        batchSection,
-        'p',
-        t(language, 'processedReport', {
-          total: batchReport.total,
-          matched: batchReport.matched,
-          added: batchReport.added,
-          duplicates: batchReport.duplicates.length,
-          missing: batchReport.missing.length
-        }),
-        'score-note'
-      );
-      if (batchReport.missing.length > 0) {
-        appendText(batchSection, 'p', t(language, 'missingLabel', { items: batchReport.missing.join(', ') }), 'warning-inline');
-      }
-    }
-
-    builder.append(batchSection);
-
-    const playerRules = document.createElement('div');
-    playerRules.className = 'player-rules';
-    appendText(playerRules, 'h3', t(language, 'vocationAndLevel'), 'section-heading');
-
-    const playerFields = document.createElement('div');
-    playerFields.className = 'player-rules-fields';
-
-    const vocationLabel = document.createElement('label');
-    vocationLabel.className = 'field-label';
-    vocationLabel.textContent = t(language, 'vocation');
-    const vocationSelect = document.createElement('select');
-    vocationSelect.name = 'player-vocation';
-    for (const option of vocationOptions) {
-      const node = document.createElement('option');
-      node.value = option.value;
-      node.textContent = option.label;
-      node.selected = option.value === vocation;
-      vocationSelect.append(node);
-    }
-    vocationSelect.addEventListener('change', () => {
-      vocation = isPlayerVocation(vocationSelect.value) ? vocationSelect.value : DEFAULT_VOCATION;
-      shareFeedback = '';
-      rerender();
-    });
-    vocationLabel.append(vocationSelect);
-
-    const levelLabel = document.createElement('label');
-    levelLabel.className = 'field-label';
-    levelLabel.textContent = t(language, 'level');
-    const levelInput = document.createElement('input');
-    levelInput.type = 'number';
-    levelInput.name = 'player-level';
-    levelInput.min = '1';
-    levelInput.max = '2000';
-    levelInput.step = '1';
-    levelInput.value = String(level);
-    levelInput.addEventListener('change', () => {
-      level = clampLevel(Number(levelInput.value));
-      shareFeedback = '';
-      rerender();
-    });
-    levelLabel.append(levelInput);
-
-    playerFields.append(vocationLabel, levelLabel);
-    playerRules.append(playerFields);
-    builder.append(playerRules);
-
-    const adminPanel = document.createElement('details');
-    adminPanel.className = 'admin-panel';
-    if (adminPanelOpen) {
-      adminPanel.setAttribute('open', 'open');
-    }
-    adminPanel.addEventListener('toggle', () => {
-      adminPanelOpen = adminPanel.open;
-    });
-    const adminSummary = document.createElement('summary');
-    adminSummary.textContent = t(language, 'adminTools');
-    adminPanel.append(adminSummary);
-    appendText(
-      adminPanel,
-      'p',
-      t(language, 'adminNote'),
-      'admin-note'
-    );
-
-    const tokenLabel = document.createElement('label');
-    tokenLabel.className = 'field-label';
-    tokenLabel.textContent = t(language, 'githubToken');
-    const tokenInput = document.createElement('input');
-    tokenInput.type = 'password';
-    tokenInput.name = 'admin-token';
-    tokenInput.autocomplete = 'off';
-    tokenInput.placeholder = 'ghp_xxx...';
-    tokenInput.value = adminToken;
-    tokenInput.addEventListener('input', () => {
-      adminToken = tokenInput.value;
-      adminPanelOpen = true;
-      const caret = tokenInput.selectionStart ?? adminToken.length;
-      rerender();
-      const refreshed = container.querySelector<HTMLInputElement>('input[name="admin-token"]');
-      if (refreshed) {
-        refreshed.focus();
-        refreshed.setSelectionRange(caret, caret);
-      }
-    });
-    tokenLabel.append(tokenInput);
-    adminPanel.append(tokenLabel);
-
-    const unlockLabel = document.createElement('label');
-    unlockLabel.className = 'field-label';
-    unlockLabel.textContent = t(language, 'typeUpdateToEnable');
-    const unlockInput = document.createElement('input');
-    unlockInput.type = 'text';
-    unlockInput.name = 'admin-unlock';
-    unlockInput.autocomplete = 'off';
-    unlockInput.placeholder = ADMIN_UNLOCK_PHRASE;
-    unlockInput.value = adminUnlock;
-    unlockInput.addEventListener('input', () => {
-      adminUnlock = unlockInput.value;
-      adminPanelOpen = true;
-      const caret = unlockInput.selectionStart ?? adminUnlock.length;
-      rerender();
-      const refreshed = container.querySelector<HTMLInputElement>('input[name="admin-unlock"]');
-      if (refreshed) {
-        refreshed.focus();
-        refreshed.setSelectionRange(caret, caret);
-      }
-    });
-    unlockLabel.append(unlockInput);
-    adminPanel.append(unlockLabel);
-
-    const adminActionButton = document.createElement('button');
-    adminActionButton.type = 'button';
-    adminActionButton.className = 'secondary-button';
-    adminActionButton.textContent = adminBusy ? t(language, 'updating') : t(language, 'runMonsterDataUpdate');
-    adminActionButton.disabled = adminBusy || adminToken.trim().length < 20 || adminUnlock.trim() !== ADMIN_UNLOCK_PHRASE;
-    adminActionButton.addEventListener('click', async () => {
-      adminBusy = true;
-      adminStatus = '';
-      rerender();
-      try {
-        const response = await fetch(UPDATE_WORKFLOW_ENDPOINT, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/vnd.github+json',
-            Authorization: `Bearer ${adminToken.trim()}`,
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ ref: 'main' })
-        });
-
-        if (response.status === 204 || response.status === 200) {
-          adminStatus = t(language, 'workflowDispatched');
-          adminUnlock = '';
-        } else {
-          const responseText = await response.text();
-          adminStatus = `${t(language, 'dispatchFailed')} (${response.status}): ${responseText || response.statusText}`;
-        }
-      } catch (error) {
-        adminStatus = `${t(language, 'dispatchFailed')}: ${error instanceof Error ? error.message : String(error)}`;
-      } finally {
-        adminBusy = false;
-        rerender();
-      }
-    });
-    adminPanel.append(adminActionButton);
-    if (adminStatus) {
-      appendText(adminPanel, 'p', adminStatus, 'admin-status');
-    }
-    builder.append(adminPanel);
-
-    const advancedLabel = document.createElement('label');
-    advancedLabel.className = 'toggle-row';
-    const advancedInput = document.createElement('input');
-    advancedInput.type = 'checkbox';
-    advancedInput.checked = includeAdvanced;
-    advancedInput.addEventListener('change', () => {
-      includeAdvanced = advancedInput.checked;
-      shareFeedback = '';
-      rerender();
-    });
-    advancedLabel.append(advancedInput, document.createTextNode(t(language, 'includeAdvanced')));
-    builder.append(advancedLabel);
-
     const selectedList = document.createElement('div');
     selectedList.className = 'selected-list';
     if (selected.length === 0) {
@@ -1323,6 +1048,307 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       }
     }
     builder.append(selectedList);
+
+    const sharingRow = document.createElement('div');
+    sharingRow.className = 'sharing-row';
+    const shareButton = document.createElement('button');
+    shareButton.type = 'button';
+    shareButton.className = 'secondary-button';
+    shareButton.textContent = t(language, 'copyHuntLink');
+    shareButton.addEventListener('click', async () => {
+      const url = getHuntUrl(selected, includeAdvanced, vocation, level, language);
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url);
+          shareFeedback = t(language, 'linkCopied');
+        } else {
+          shareFeedback = url;
+        }
+      } catch {
+        shareFeedback = url;
+      }
+      rerender();
+    });
+    sharingRow.append(shareButton);
+    if (shareFeedback) {
+      appendText(sharingRow, 'p', shareFeedback, 'share-feedback');
+    }
+    builder.append(sharingRow);
+
+    const batchAccessRow = document.createElement('div');
+    batchAccessRow.className = 'admin-access-row';
+    const batchAccessButton = document.createElement('button');
+    batchAccessButton.type = 'button';
+    batchAccessButton.className = 'admin-access-link';
+    batchAccessButton.dataset.action = 'batch-access';
+    batchAccessButton.textContent = batchPanelOpen ? t(language, 'hideBatch') : t(language, 'batchAccess');
+    batchAccessButton.addEventListener('click', () => {
+      batchPanelOpen = !batchPanelOpen;
+      rerender();
+    });
+    batchAccessRow.append(batchAccessButton);
+    builder.append(batchAccessRow);
+
+    if (batchPanelOpen) {
+      const batchSection = document.createElement('section');
+      batchSection.className = 'batch-import';
+      appendText(batchSection, 'h3', t(language, 'bulkImport'), 'section-heading');
+      appendText(batchSection, 'p', t(language, 'bulkImportHint'), 'score-note');
+
+      const batchInputLabel = document.createElement('label');
+      batchInputLabel.className = 'field-label';
+      batchInputLabel.textContent = t(language, 'monsterList');
+      const batchTextarea = document.createElement('textarea');
+      batchTextarea.name = 'batch-import';
+      batchTextarea.placeholder = 'Dragon Lord, Ice Golem\nJuggernaut';
+      batchTextarea.value = batchInput;
+      batchTextarea.rows = 4;
+      batchTextarea.addEventListener('input', () => {
+        batchInput = batchTextarea.value;
+      });
+      batchInputLabel.append(batchTextarea);
+      batchSection.append(batchInputLabel);
+
+      const batchButton = document.createElement('button');
+      batchButton.type = 'button';
+      batchButton.className = 'secondary-button';
+      batchButton.dataset.action = 'import-monsters';
+      batchButton.textContent = t(language, 'importList');
+      batchButton.addEventListener('click', () => {
+        const tokens = parseBatchTokens(batchInput);
+        const duplicates: string[] = [];
+        const missing: string[] = [];
+        let matched = 0;
+        let added = 0;
+
+        for (const token of tokens) {
+          const monster = findMonsterByToken(database, token, includeAdvanced);
+          if (!monster) {
+            missing.push(token);
+            continue;
+          }
+          matched += 1;
+          if (selected.some((entry) => entry.monster.id === monster.id)) {
+            duplicates.push(token);
+            continue;
+          }
+          selected.push({ monster, weight: DEFAULT_WEIGHT });
+          added += 1;
+        }
+
+        batchReport = {
+          total: tokens.length,
+          matched,
+          added,
+          duplicates,
+          missing
+        };
+        shareFeedback = '';
+        rerender();
+      });
+      batchSection.append(batchButton);
+
+      if (batchReport) {
+        appendText(
+          batchSection,
+          'p',
+          t(language, 'processedReport', {
+            total: batchReport.total,
+            matched: batchReport.matched,
+            added: batchReport.added,
+            duplicates: batchReport.duplicates.length,
+            missing: batchReport.missing.length
+          }),
+          'score-note'
+        );
+        if (batchReport.missing.length > 0) {
+          appendText(batchSection, 'p', t(language, 'missingLabel', { items: batchReport.missing.join(', ') }), 'warning-inline');
+        }
+      }
+
+      builder.append(batchSection);
+    }
+
+    const playerRules = document.createElement('div');
+    playerRules.className = 'player-rules';
+    appendText(playerRules, 'h3', t(language, 'vocationAndLevel'), 'section-heading');
+
+    const playerFields = document.createElement('div');
+    playerFields.className = 'player-rules-fields';
+
+    const vocationLabel = document.createElement('label');
+    vocationLabel.className = 'field-label';
+    vocationLabel.textContent = t(language, 'vocation');
+    const vocationSelect = document.createElement('select');
+    vocationSelect.name = 'player-vocation';
+    for (const option of vocationOptions) {
+      const node = document.createElement('option');
+      node.value = option.value;
+      node.textContent = option.label;
+      node.selected = option.value === vocation;
+      vocationSelect.append(node);
+    }
+    vocationSelect.addEventListener('change', () => {
+      vocation = isPlayerVocation(vocationSelect.value) ? vocationSelect.value : DEFAULT_VOCATION;
+      shareFeedback = '';
+      rerender();
+    });
+    vocationLabel.append(vocationSelect);
+
+    const levelLabel = document.createElement('label');
+    levelLabel.className = 'field-label';
+    levelLabel.textContent = t(language, 'level');
+    const levelInput = document.createElement('input');
+    levelInput.type = 'number';
+    levelInput.name = 'player-level';
+    levelInput.min = '1';
+    levelInput.max = '2000';
+    levelInput.step = '1';
+    levelInput.value = String(level);
+    levelInput.addEventListener('change', () => {
+      level = clampLevel(Number(levelInput.value));
+      shareFeedback = '';
+      rerender();
+    });
+    levelLabel.append(levelInput);
+
+    playerFields.append(vocationLabel, levelLabel);
+    playerRules.append(playerFields);
+    builder.append(playerRules);
+
+    const adminAccessRow = document.createElement('div');
+    adminAccessRow.className = 'admin-access-row';
+    const adminAccessButton = document.createElement('button');
+    adminAccessButton.type = 'button';
+    adminAccessButton.className = 'admin-access-link';
+    adminAccessButton.dataset.action = 'admin-access';
+    adminAccessButton.textContent = t(language, 'adminAccess');
+    adminAccessButton.addEventListener('click', () => {
+      adminPanelOpen = !adminPanelOpen;
+      rerender();
+    });
+    adminAccessRow.append(adminAccessButton);
+    builder.append(adminAccessRow);
+
+    if (adminPanelOpen) {
+      const adminPanel = document.createElement('div');
+      adminPanel.className = 'admin-panel';
+      const adminHeader = document.createElement('div');
+      adminHeader.className = 'admin-panel-header';
+      appendText(adminHeader, 'h3', t(language, 'adminTools'));
+      const hideAdminButton = document.createElement('button');
+      hideAdminButton.type = 'button';
+      hideAdminButton.className = 'secondary-button';
+      hideAdminButton.textContent = t(language, 'hideAdmin');
+      hideAdminButton.addEventListener('click', () => {
+        adminPanelOpen = false;
+        rerender();
+      });
+      adminHeader.append(hideAdminButton);
+      adminPanel.append(adminHeader);
+      appendText(adminPanel, 'p', t(language, 'adminNote'), 'admin-note');
+
+      const tokenLabel = document.createElement('label');
+      tokenLabel.className = 'field-label';
+      tokenLabel.textContent = t(language, 'githubToken');
+      const tokenInput = document.createElement('input');
+      tokenInput.type = 'password';
+      tokenInput.name = 'admin-token';
+      tokenInput.autocomplete = 'off';
+      tokenInput.placeholder = 'ghp_xxx...';
+      tokenInput.value = adminToken;
+      tokenInput.addEventListener('input', () => {
+        adminToken = tokenInput.value;
+        adminPanelOpen = true;
+        const caret = tokenInput.selectionStart ?? adminToken.length;
+        rerender();
+        const refreshed = container.querySelector<HTMLInputElement>('input[name="admin-token"]');
+        if (refreshed) {
+          refreshed.focus();
+          refreshed.setSelectionRange(caret, caret);
+        }
+      });
+      tokenLabel.append(tokenInput);
+      adminPanel.append(tokenLabel);
+
+      const unlockLabel = document.createElement('label');
+      unlockLabel.className = 'field-label';
+      unlockLabel.textContent = t(language, 'typeUpdateToEnable');
+      const unlockInput = document.createElement('input');
+      unlockInput.type = 'text';
+      unlockInput.name = 'admin-unlock';
+      unlockInput.autocomplete = 'off';
+      unlockInput.placeholder = ADMIN_UNLOCK_PHRASE;
+      unlockInput.value = adminUnlock;
+      unlockInput.addEventListener('input', () => {
+        adminUnlock = unlockInput.value;
+        adminPanelOpen = true;
+        const caret = unlockInput.selectionStart ?? adminUnlock.length;
+        rerender();
+        const refreshed = container.querySelector<HTMLInputElement>('input[name="admin-unlock"]');
+        if (refreshed) {
+          refreshed.focus();
+          refreshed.setSelectionRange(caret, caret);
+        }
+      });
+      unlockLabel.append(unlockInput);
+      adminPanel.append(unlockLabel);
+
+      const adminActionButton = document.createElement('button');
+      adminActionButton.type = 'button';
+      adminActionButton.className = 'secondary-button';
+      adminActionButton.dataset.action = 'admin-run-update';
+      adminActionButton.textContent = adminBusy ? t(language, 'updating') : t(language, 'runMonsterDataUpdate');
+      adminActionButton.disabled = adminBusy || adminToken.trim().length < 20 || adminUnlock.trim() !== ADMIN_UNLOCK_PHRASE;
+      adminActionButton.addEventListener('click', async () => {
+        adminBusy = true;
+        adminStatus = '';
+        rerender();
+        try {
+          const response = await fetch(UPDATE_WORKFLOW_ENDPOINT, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/vnd.github+json',
+              Authorization: `Bearer ${adminToken.trim()}`,
+              'X-GitHub-Api-Version': '2022-11-28',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ref: 'main' })
+          });
+
+          if (response.status === 204 || response.status === 200) {
+            adminStatus = t(language, 'workflowDispatched');
+            adminUnlock = '';
+          } else {
+            const responseText = await response.text();
+            adminStatus = `${t(language, 'dispatchFailed')} (${response.status}): ${responseText || response.statusText}`;
+          }
+        } catch (error) {
+          adminStatus = `${t(language, 'dispatchFailed')}: ${error instanceof Error ? error.message : String(error)}`;
+        } finally {
+          adminBusy = false;
+          rerender();
+        }
+      });
+      adminPanel.append(adminActionButton);
+      if (adminStatus) {
+        appendText(adminPanel, 'p', adminStatus, 'admin-status');
+      }
+      builder.append(adminPanel);
+    }
+
+    const advancedLabel = document.createElement('label');
+    advancedLabel.className = 'toggle-row';
+    const advancedInput = document.createElement('input');
+    advancedInput.type = 'checkbox';
+    advancedInput.checked = includeAdvanced;
+    advancedInput.addEventListener('change', () => {
+      includeAdvanced = advancedInput.checked;
+      shareFeedback = '';
+      rerender();
+    });
+    advancedLabel.append(advancedInput, document.createTextNode(t(language, 'includeAdvanced')));
+    builder.append(advancedLabel);
     layout.append(builder);
 
     const resultPanel = document.createElement('section');
@@ -1338,9 +1364,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     } else {
       const recommendedLabel = getElementLabel(recommendation.recommended.element, language);
       const totalContribution = recommendation.contributions.reduce((sum, item) => sum + item.contribution, 0);
-      const primaryAlternative = recommendation.topAlternatives.find(
-        (item) => item.element !== recommendation.recommended?.element
-      );
       const activeVocationLabel =
         vocationOptions.find((option) => option.value === vocation)?.label ?? vocationOptions[0].label;
       const topRaw = recommendation.ranking[0];
@@ -1360,43 +1383,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
           'score-note'
         );
       }
-
-      appendText(resultPanel, 'h3', t(language, 'whyThisElement'), 'section-heading');
-      const explanation = document.createElement('div');
-      explanation.className = 'explanation-block';
-      if (primaryAlternative) {
-        appendText(
-          explanation,
-          'p',
-          t(language, 'leadsBy', {
-            recommended: recommendedLabel,
-            alternative: getElementLabel(primaryAlternative.element, language),
-            delta: formatScore(primaryAlternative.deltaFromRecommended, language)
-          })
-        );
-      } else {
-        appendText(explanation, 'p', t(language, 'onlyRankedRecommendation', { recommended: recommendedLabel }));
-      }
-      appendText(explanation, 'p', t(language, 'impactFormula'));
-      resultPanel.append(explanation);
-
-      appendText(resultPanel, 'h3', t(language, 'top3Elements'), 'section-heading');
-      const topList = document.createElement('ol');
-      topList.className = 'ranking-list';
-      for (const item of recommendation.topAlternatives) {
-        const topItem = document.createElement('li');
-        const label = document.createElement('span');
-        label.textContent = getElementLabel(item.element, language);
-        const score = document.createElement('strong');
-        const deltaText =
-          item.deltaFromRecommended === 0
-            ? t(language, 'baseline')
-            : t(language, 'behind', { delta: formatScore(item.deltaFromRecommended, language) });
-        score.textContent = `${formatScore(item.score, language)} (${deltaText})`;
-        topItem.append(label, score);
-        topList.append(topItem);
-      }
-      resultPanel.append(topList);
 
       appendText(resultPanel, 'h3', t(language, 'fullRanking'), 'section-heading');
       const rankingList = document.createElement('ol');

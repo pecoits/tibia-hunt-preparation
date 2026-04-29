@@ -299,6 +299,40 @@ button:focus-visible {
   gap: 8px;
 }
 
+.admin-access-row {
+  margin-top: 10px;
+}
+
+.admin-access-link {
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  text-decoration: underline;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.admin-access-link:hover:enabled {
+  background: none;
+  transform: none;
+  color: #d5e0e8;
+}
+
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.admin-panel-header h3 {
+  margin: 0;
+  color: #e3ebf0;
+  font-size: 0.98rem;
+}
+
 .player-rules {
   margin-top: 12px;
 }
@@ -327,12 +361,6 @@ button:focus-visible {
 .warning-inline {
   margin: 0;
   color: #f0cfc7;
-}
-
-.admin-panel summary {
-  cursor: pointer;
-  color: #e3ebf0;
-  font-weight: 700;
 }
 
 .admin-note,

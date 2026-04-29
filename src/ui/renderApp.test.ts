@@ -120,7 +120,8 @@ describe('renderApp', () => {
     expect(root.querySelector('input[name="monster-search"]')).not.toBeNull();
     expect(root.querySelector('button[data-action="add-monster"]')?.textContent).toContain('Add');
     expect(root.textContent).toContain('Copy hunt link');
-    expect(root.textContent).toContain('Admin tools');
+    expect(root.textContent).toContain('Admin access');
+    expect(root.textContent).not.toContain('Admin tools');
     expect(root.textContent).toContain('TibiaWiki/Fandom');
     expect(root.textContent).toContain('Developed by Pecoits');
     expect(root.textContent).toContain('CC BY-NC 4.0 International');
@@ -150,11 +151,12 @@ describe('renderApp', () => {
     const root = document.createElement('main');
     renderApp(root, database);
 
-    const panel = root.querySelector<HTMLElement>('.admin-panel');
-    if (!panel) throw new Error('Expected admin panel.');
-    panel.setAttribute('open', 'open');
+    expect(root.querySelector('.admin-panel')).toBeNull();
+    const accessButton = root.querySelector<HTMLButtonElement>('button[data-action="admin-access"]');
+    if (!accessButton) throw new Error('Expected admin access link.');
+    accessButton.click();
 
-    const actionButton = root.querySelector<HTMLButtonElement>('.admin-panel .secondary-button');
+    const actionButton = root.querySelector<HTMLButtonElement>('button[data-action="admin-run-update"]');
     const tokenInput = root.querySelector<HTMLInputElement>('input[name="admin-token"]');
     const unlockInput = root.querySelector<HTMLInputElement>('input[name="admin-unlock"]');
     if (!actionButton || !tokenInput || !unlockInput) throw new Error('Expected admin controls.');
@@ -165,7 +167,7 @@ describe('renderApp', () => {
     unlockInput.value = 'UPDATE';
     unlockInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-    const refreshedButton = root.querySelector<HTMLButtonElement>('.admin-panel .secondary-button');
+    const refreshedButton = root.querySelector<HTMLButtonElement>('button[data-action="admin-run-update"]');
     expect(refreshedButton?.disabled).toBe(false);
   });
 
@@ -184,13 +186,49 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('Dragon Lord');
     expect(root.textContent).toContain('Recommended');
     expect(root.textContent).toContain('Ice');
-    expect(root.textContent).toContain('Why this element?');
-    expect(root.textContent).toContain('Top 3 elements');
-    expect(root.textContent).toContain('of recommended score');
+    expect(root.textContent).toContain('of recommended total');
     const summaryMonsterLink = root.querySelector<HTMLAnchorElement>('.summary-list a');
     expect(summaryMonsterLink?.textContent).toBe('Dragon Lord');
     expect(summaryMonsterLink?.getAttribute('href')).toBe('https://tibia.fandom.com/wiki/Dragon_Lord');
     expect(summaryMonsterLink?.getAttribute('target')).toBe('_blank');
+  });
+
+  it('adds a second monster by name after the first one', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    const firstInput = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+    const firstButton = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+    if (!firstInput || !firstButton) throw new Error('Expected add controls.');
+
+    firstInput.value = 'Dragon Lord';
+    firstButton.click();
+
+    const secondInput = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+    const secondButton = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+    if (!secondInput || !secondButton) throw new Error('Expected add controls after first insert.');
+
+    secondInput.value = 'Holy Scout';
+    secondButton.click();
+
+    expect(root.querySelectorAll('.selected-monster')).toHaveLength(2);
+    expect(root.textContent).toContain('Dragon Lord');
+    expect(root.textContent).toContain('Holy Scout');
+  });
+
+  it('adds monster from partial query using first autocomplete match', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+    const button = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+    if (!input || !button) throw new Error('Expected add controls.');
+
+    input.value = 'holy';
+    button.click();
+
+    expect(root.querySelectorAll('.selected-monster')).toHaveLength(1);
+    expect(root.textContent).toContain('Holy Scout');
   });
 
   it('shows mobile-friendly autocomplete options while typing', () => {
@@ -271,6 +309,10 @@ describe('renderApp', () => {
   it('imports monsters in batch and reports missing entries', () => {
     const root = document.createElement('main');
     renderApp(root, database);
+
+    const batchAccess = root.querySelector<HTMLButtonElement>('button[data-action="batch-access"]');
+    if (!batchAccess) throw new Error('Expected batch access button.');
+    batchAccess.click();
 
     const textarea = root.querySelector<HTMLTextAreaElement>('textarea[name="batch-import"]');
     const importButton = root.querySelector<HTMLButtonElement>('button[data-action="import-monsters"]');
