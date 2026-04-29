@@ -1,5 +1,6 @@
 import { ELEMENTS, IMPORTANCE_WEIGHTS } from './elements';
 import type { ElementType, Importance, Monster } from './types';
+const NON_RECOMMENDABLE_ELEMENTS: ReadonlySet<ElementType> = new Set(['holy']);
 
 export interface HuntSelection {
   monster: Monster;
@@ -91,7 +92,8 @@ export function calculateRecommendation(selections: HuntSelection[]): Recommenda
     score: scores.get(element) ?? 0
   })).sort((a, b) => b.score - a.score);
 
-  const recommended = validSelections.length > 0 ? ranking[0] : null;
+  const recommended =
+    validSelections.length > 0 ? ranking.find((item) => !NON_RECOMMENDABLE_ELEMENTS.has(item.element)) ?? null : null;
   const contributions: MonsterContribution[] = recommended
     ? validSelections.map((selection) => {
         const modifier = selection.monster.elements[recommended.element] as number;

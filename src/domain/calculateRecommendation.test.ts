@@ -120,6 +120,32 @@ describe('calculateRecommendation', () => {
     expect(firePriority.recommended?.element).toBe('fire');
   });
 
+  it('keeps holy in ranking but skips it in final recommendation', () => {
+    const holyTop: Monster = {
+      id: 'holy-top',
+      name: 'Holy Top',
+      hitpoints: 100,
+      elements: {
+        physical: 100,
+        earth: 100,
+        fire: 100,
+        energy: 100,
+        ice: 100,
+        holy: 220,
+        death: 100
+      },
+      sourceUrl: 'https://example.com/holy-top',
+      huntRelevant: true,
+      special: false,
+      incomplete: false
+    };
+
+    const result = calculateRecommendation([{ monster: holyTop, importance: 'normal' }]);
+
+    expect(result.ranking[0]).toEqual({ element: 'holy', score: 100 * 1 * 220 });
+    expect(result.recommended?.element).toBe('physical');
+  });
+
   it('reports contributions for the recommended element with raw scores and summaries', () => {
     const iceWeak: Monster = {
       id: 'ice-weak',
