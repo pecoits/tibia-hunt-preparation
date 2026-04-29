@@ -165,11 +165,17 @@ a {
   font-size: 1.32rem;
 }
 
+.builder-panel,
+.result-panel {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
 .add-controls {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
-  margin-top: 14px;
   align-items: end;
 }
 
@@ -263,7 +269,7 @@ button:focus-visible {
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  margin: 14px 0 18px;
+  margin: 0;
   color: var(--text-muted);
   font-size: 0.93rem;
 }
@@ -279,7 +285,7 @@ button:focus-visible {
   display: flex;
   gap: 10px;
   align-items: center;
-  margin: 10px 0 0;
+  margin: 0;
   flex-wrap: wrap;
 }
 
@@ -290,7 +296,6 @@ button:focus-visible {
 }
 
 .admin-panel {
-  margin-top: 12px;
   border: 1px solid #3a454d;
   border-radius: 8px;
   padding: 10px;
@@ -334,7 +339,7 @@ button:focus-visible {
 }
 
 .player-rules {
-  margin-top: 12px;
+  margin-top: 0;
 }
 
 .player-rules .section-heading {
@@ -349,7 +354,7 @@ button:focus-visible {
 }
 
 .batch-import {
-  margin-top: 12px;
+  margin-top: 0;
   display: grid;
   gap: 8px;
 }
@@ -508,7 +513,7 @@ button:focus-visible {
 }
 
 .section-heading {
-  margin-top: 22px;
+  margin-top: 10px;
   font-size: 1rem;
   color: #d8e0e6;
 }
@@ -533,8 +538,8 @@ button:focus-visible {
 .ranking-list,
 .summary-list {
   display: grid;
-  gap: 8px;
-  margin: 10px 0 0;
+  gap: 10px;
+  margin: 6px 0 0;
   padding-left: 22px;
 }
 
@@ -554,6 +559,7 @@ button:focus-visible {
 
 .summary-list li {
   overflow-wrap: anywhere;
+  line-height: 1.5;
 }
 
 .warning {
