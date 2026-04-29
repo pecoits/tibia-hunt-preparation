@@ -28,6 +28,42 @@ const database: MonsterDatabase = {
       huntRelevant: true,
       special: false,
       incomplete: false
+    },
+    {
+      id: 'test-raid-boss',
+      name: 'Test Raid Boss',
+      hitpoints: 5000,
+      elements: {
+        physical: 100,
+        earth: 100,
+        fire: 100,
+        energy: 100,
+        ice: 100,
+        holy: 100,
+        death: 100
+      },
+      sourceUrl: 'https://tibia.fandom.com/wiki/Test_Raid_Boss',
+      huntRelevant: true,
+      special: true,
+      incomplete: false
+    },
+    {
+      id: 'test-incomplete-creature',
+      name: 'Test Incomplete Creature',
+      hitpoints: 3000,
+      elements: {
+        physical: 100,
+        earth: 100,
+        fire: 100,
+        energy: 100,
+        ice: 100,
+        holy: 100,
+        death: 100
+      },
+      sourceUrl: 'https://tibia.fandom.com/wiki/Test_Incomplete_Creature',
+      huntRelevant: true,
+      special: false,
+      incomplete: true
     }
   ]
 };
@@ -59,5 +95,83 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('Dragon Lord');
     expect(root.textContent).toContain('Recommended');
     expect(root.textContent).toContain('Ice');
+  });
+
+  it.each(['Test Raid Boss', 'Test Incomplete Creature'])(
+    'prevents hidden monster %s from being added until the advanced toggle is enabled',
+    (monsterName) => {
+      const root = document.createElement('main');
+
+      renderApp(root, database);
+
+      const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+      const button = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+      const advancedToggle = root.querySelector<HTMLInputElement>('.toggle-row input[type="checkbox"]');
+
+      if (!input || !button || !advancedToggle) throw new Error('Expected input, add button, and advanced toggle.');
+
+      input.value = monsterName;
+      button.click();
+
+      expect(root.querySelectorAll('.selected-monster')).toHaveLength(0);
+      expect(root.textContent).not.toContain(monsterName);
+
+      const updatedToggle = root.querySelector<HTMLInputElement>('.toggle-row input[type="checkbox"]');
+      const updatedInput = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+      const updatedButton = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+
+      if (!updatedToggle || !updatedInput || !updatedButton) throw new Error('Expected controls after rerender.');
+
+      updatedToggle.checked = true;
+      updatedToggle.dispatchEvent(new Event('change', { bubbles: true }));
+
+      const advancedInput = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+      const advancedButton = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+
+      if (!advancedInput || !advancedButton) throw new Error('Expected controls with advanced enabled.');
+
+      advancedInput.value = monsterName;
+      advancedButton.click();
+
+      expect(root.querySelectorAll('.selected-monster')).toHaveLength(1);
+      expect(root.textContent).toContain(monsterName);
+    }
+  );
+
+  it.each(['javascript:alert(1)', 'not a valid url'])(
+    'falls back to the TibiaWiki URL for unsafe or malformed source URL %s',
+    (url) => {
+      const root = document.createElement('main');
+      const unsafeDatabase: MonsterDatabase = {
+        ...database,
+        source: {
+          ...database.source,
+          url
+        }
+      };
+
+      renderApp(root, unsafeDatabase);
+
+      const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('.credit-line a'));
+
+      expect(links).toHaveLength(2);
+      expect(links.every((link) => link.getAttribute('href') === 'https://tibia.fandom.com/wiki/Main_Page')).toBe(true);
+    }
+  );
+
+  it('adds a visible monster with the Enter key', () => {
+    const root = document.createElement('main');
+
+    renderApp(root, database);
+
+    const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+
+    if (!input) throw new Error('Expected input.');
+
+    input.value = 'Dragon Lord';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+    expect(root.textContent).toContain('Dragon Lord');
+    expect(root.textContent).toContain('Recommended');
   });
 });

@@ -7,6 +7,7 @@ const IMPORTANCE_OPTIONS: Array<{ value: Importance; label: string }> = [
   { value: 'normal', label: 'Normal' },
   { value: 'high', label: 'High' }
 ];
+const FALLBACK_SOURCE_URL = 'https://tibia.fandom.com/wiki/Main_Page';
 
 interface SelectedMonster {
   monster: Monster;
@@ -25,10 +26,12 @@ function formatScore(score: number): string {
   return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(score);
 }
 
-function findMonster(database: MonsterDatabase, query: string): Monster | undefined {
+function findVisibleMonster(database: MonsterDatabase, query: string, includeAdvanced: boolean): Monster | undefined {
   const normalized = query.trim().toLocaleLowerCase();
   return database.monsters.find(
-    (monster) => monster.name.toLocaleLowerCase() === normalized || monster.id.toLocaleLowerCase() === normalized
+    (monster) =>
+      shouldShowInAutocomplete(monster, includeAdvanced) &&
+      (monster.name.toLocaleLowerCase() === normalized || monster.id.toLocaleLowerCase() === normalized)
   );
 }
 
@@ -37,10 +40,23 @@ function shouldShowInAutocomplete(monster: Monster, includeAdvanced: boolean): b
   return monster.huntRelevant && !monster.special && !monster.incomplete;
 }
 
+function getSafeSourceUrl(url: string): string {
+  try {
+    const parsedUrl = new URL(url);
+    if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+      return parsedUrl.href;
+    }
+  } catch {
+    return FALLBACK_SOURCE_URL;
+  }
+
+  return FALLBACK_SOURCE_URL;
+}
+
 function renderAttribution(parent: HTMLElement, database: MonsterDatabase, className: string): void {
   const paragraph = appendText(parent, 'p', 'Data: ', className);
   const link = document.createElement('a');
-  link.href = database.source.url;
+  link.href = getSafeSourceUrl(database.source.url);
   link.rel = 'noreferrer';
   link.textContent = database.source.name;
   paragraph.append(link, document.createTextNode(`. ${database.source.license}.`));
@@ -86,6 +102,20 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     input.setAttribute('list', 'monster-options');
     input.autocomplete = 'off';
     input.placeholder = 'Type a monster name';
+    const addSelectedMonster = (): void => {
+      const monster = findVisibleMonster(database, input.value, includeAdvanced);
+      if (!monster) return;
+      if (!selected.some((selection) => selection.monster.id === monster.id)) {
+        selected.push({ monster, importance: 'normal' });
+      }
+      input.value = '';
+      rerender();
+    };
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      addSelectedMonster();
+    });
     inputLabel.append(input);
 
     const datalist = document.createElement('datalist');
@@ -100,15 +130,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     addButton.type = 'button';
     addButton.dataset.action = 'add-monster';
     addButton.textContent = 'Add';
-    addButton.addEventListener('click', () => {
-      const monster = findMonster(database, input.value);
-      if (!monster) return;
-      if (!selected.some((selection) => selection.monster.id === monster.id)) {
-        selected.push({ monster, importance: 'normal' });
-      }
-      input.value = '';
-      rerender();
-    });
+    addButton.addEventListener('click', addSelectedMonster);
 
     controls.append(inputLabel, addButton, datalist);
     builder.append(controls);
