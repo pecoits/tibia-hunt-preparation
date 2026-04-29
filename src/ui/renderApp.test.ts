@@ -104,6 +104,7 @@ const database: MonsterDatabase = {
 beforeEach(() => {
   window.history.replaceState({}, '', '/');
   window.localStorage.removeItem('hunt-element-planner-tutorial-v1');
+  window.localStorage.removeItem('hunt-element-planner-language-v1');
 });
 
 describe('renderApp', () => {
@@ -124,6 +125,25 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('Developed by Pecoits');
     expect(root.textContent).toContain('CC BY-NC 4.0 International');
     expect(root.textContent).toContain('Data version:');
+  });
+
+  it('switches UI language without changing monster names', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+    const addButton = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
+    if (!input || !addButton) throw new Error('Expected add controls.');
+    input.value = 'Dragon Lord';
+    addButton.click();
+
+    const languageSelect = root.querySelector<HTMLSelectElement>('select[name="app-language"]');
+    if (!languageSelect) throw new Error('Expected language selector.');
+    languageSelect.value = 'pt';
+    languageSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(root.textContent).toContain('Montar hunt');
+    expect(root.textContent).toContain('Dragon Lord');
   });
 
   it('keeps admin update action disabled until token and unlock phrase are valid', () => {

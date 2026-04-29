@@ -2,11 +2,9 @@ import { calculateRecommendation, type HuntSelection } from '../domain/calculate
 import { ELEMENT_LABELS } from '../domain/elements';
 import type { Monster, MonsterDatabase, PlayerVocation } from '../domain/types';
 
-const WEIGHT_PRESETS = [
-  { label: 'Low', value: 25 },
-  { label: 'Normal', value: 50 },
-  { label: 'High', value: 75 }
-] as const;
+type AppLanguage = 'pt' | 'en' | 'pl';
+
+const WEIGHT_PRESET_VALUES = [25, 50, 75] as const;
 const DEFAULT_WEIGHT = 50;
 const FALLBACK_SOURCE_URL = 'https://tibia.fandom.com/wiki/Main_Page';
 const WIKI_FILE_PATH_URL = 'https://tibia.fandom.com/wiki/Special:FilePath/';
@@ -17,14 +15,13 @@ const ADMIN_UNLOCK_PHRASE = 'UPDATE';
 const UPDATE_WORKFLOW_ENDPOINT =
   'https://api.github.com/repos/pecoits/tibia-hunt-preparation/actions/workflows/update-monsters.yml/dispatches';
 const TUTORIAL_STORAGE_KEY = 'hunt-element-planner-tutorial-v1';
+const LANGUAGE_STORAGE_KEY = 'hunt-element-planner-language-v1';
 const DEFAULT_VOCATION: PlayerVocation = 'any';
 const DEFAULT_LEVEL = 200;
-const VOCATION_OPTIONS: Array<{ value: PlayerVocation; label: string }> = [
-  { value: 'any', label: 'Any vocation' },
-  { value: 'knight', label: 'Knight' },
-  { value: 'paladin', label: 'Paladin' },
-  { value: 'druid', label: 'Druid' },
-  { value: 'sorcerer', label: 'Sorcerer' }
+const LANGUAGE_OPTIONS: Array<{ value: AppLanguage; label: string }> = [
+  { value: 'pt', label: 'Português' },
+  { value: 'en', label: 'English' },
+  { value: 'pl', label: 'Polski' }
 ];
 
 interface SelectedMonster {
@@ -33,11 +30,12 @@ interface SelectedMonster {
 }
 
 interface SharedHuntPayload {
-  v: 1 | 2;
+  v: 1 | 2 | 3;
   a: 0 | 1;
   s: Array<[string, number]>;
   c?: PlayerVocation;
   l?: number;
+  g?: AppLanguage;
 }
 
 interface BatchImportReport {
@@ -72,27 +70,350 @@ function clampLevel(value: number): number {
 }
 
 function isPlayerVocation(value: string): value is PlayerVocation {
-  return VOCATION_OPTIONS.some((option) => option.value === value);
+  return ['any', 'knight', 'paladin', 'druid', 'sorcerer'].includes(value);
 }
 
-function formatScore(score: number): string {
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(score);
+function getLocale(language: AppLanguage): string {
+  if (language === 'pt') return 'pt-BR';
+  if (language === 'pl') return 'pl-PL';
+  return 'en-US';
 }
 
-function formatPercent(value: number): string {
-  return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value)}%`;
+function formatScore(score: number, language: AppLanguage): string {
+  return new Intl.NumberFormat(getLocale(language), { maximumFractionDigits: 0 }).format(score);
 }
 
-function formatDataVersion(value: string): string {
+function formatPercent(value: number, language: AppLanguage): string {
+  return `${new Intl.NumberFormat(getLocale(language), { maximumFractionDigits: 1 }).format(value)}%`;
+}
+
+function formatDataVersion(value: string, language: AppLanguage): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString('en-US', {
+  return date.toLocaleString(getLocale(language), {
     year: 'numeric',
     month: 'short',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit'
   });
+}
+
+const I18N = {
+  pt: {
+    appTitle: 'Hunt Element Planner',
+    appSubtitle: 'Planeje sua hunt com peso por monstro e ranking elemental.',
+    howToUse: 'Como usar',
+    language: 'Idioma',
+    stepLabel: 'Passo {current} de {total}',
+    skip: 'Pular',
+    back: 'Voltar',
+    next: 'Próximo',
+    finishTutorial: 'Concluir tutorial',
+    huntBuilder: 'Montar hunt',
+    monster: 'Monstro',
+    typeMonsterName: 'Digite o nome do monstro',
+    add: 'Adicionar',
+    copyHuntLink: 'Copiar link da hunt',
+    linkCopied: 'Link copiado.',
+    bulkImport: 'Importação em lote',
+    bulkImportHint: 'Cole nomes ou IDs de monstros separados por vírgula ou quebra de linha.',
+    monsterList: 'Lista de monstros',
+    importList: 'Importar lista',
+    processedReport: 'Processados {total}. Encontrados {matched}, adicionados {added}, duplicados {duplicates}, não encontrados {missing}.',
+    missingLabel: 'Não encontrados: {items}.',
+    vocationAndLevel: 'Vocação e nível',
+    vocation: 'Vocação',
+    level: 'Nível',
+    anyVocation: 'Qualquer vocação',
+    adminTools: 'Ferramentas de admin',
+    adminNote: 'Requer token GitHub com actions:write para este repositório. Use apenas para atualização controlada da base.',
+    githubToken: 'Token GitHub',
+    typeUpdateToEnable: 'Digite UPDATE para habilitar',
+    updating: 'Atualizando...',
+    runMonsterDataUpdate: 'Executar atualização da base',
+    workflowDispatched: 'Workflow disparado com sucesso.',
+    dispatchFailed: 'Falha no disparo',
+    includeAdvanced: 'Incluir criaturas especiais e incompletas',
+    noMonstersSelected: 'Nenhum monstro selecionado.',
+    special: 'Especial',
+    incomplete: 'Incompleto',
+    notHuntRelevant: 'Fora de hunt',
+    standardHuntCreature: 'Criatura padrão de hunt',
+    weight: 'Peso',
+    weightLow: 'Baixo',
+    weightNormal: 'Normal',
+    weightHigh: 'Alto',
+    remove: 'Remover',
+    results: 'Resultados',
+    addOneCompleteMonster: 'Adicione ao menos um monstro completo para calcular a recomendação.',
+    recommended: 'Recomendado',
+    topRawScore: 'Melhor score bruto: {score}',
+    profile: 'Perfil: {vocation}, nível {level}.',
+    ineligibleTopRaw: '{element} tem o melhor score bruto, mas não é elegível para este perfil ({reason}).',
+    whyThisElement: 'Por que este elemento?',
+    leadsBy: '{recommended} está à frente de {alternative} por {delta} pontos.',
+    onlyRankedRecommendation: '{recommended} é atualmente a única recomendação ranqueada com dados válidos.',
+    impactFormula: 'Fórmula por monstro: Hitpoints × (Peso / 50) × Modificador Elemental.',
+    top3Elements: 'Top 3 elementos',
+    baseline: 'base',
+    behind: '{delta} atrás',
+    fullRanking: 'Ranking completo',
+    monsterSummary: 'Resumo por monstro',
+    contributionLine:
+      '{modifier}% {summary}, peso {weight} (x{factor}), contribuição {contribution} ({share} do score recomendado).',
+    excludedMonsters: 'Monstros excluídos',
+    dataVersion: 'Versão da base: {version}',
+    dataPrefix: 'Dados: ',
+    developedBy: 'Desenvolvido por Pecoits sob',
+    missingHitpoints: 'HP ausente.',
+    missingModifier: 'Modificador {element} ausente.',
+    incompleteData: 'Dados incompletos do monstro.',
+    favors: 'favorece',
+    neutral: 'neutro',
+    resists: 'resiste',
+    requiresVocation: 'requer vocação',
+    requiresLevel: 'requer nível',
+    tutorialTip: 'Dica: regras atuais {vocation}, nível {level}. Elementos não elegíveis ficam no ranking, mas nunca são recomendados.'
+  },
+  en: {
+    appTitle: 'Hunt Element Planner',
+    appSubtitle: 'Plan your hunt loadout with weighted monster importance and elemental ranking.',
+    howToUse: 'How to use',
+    language: 'Language',
+    stepLabel: 'Step {current} of {total}',
+    skip: 'Skip',
+    back: 'Back',
+    next: 'Next',
+    finishTutorial: 'Finish tutorial',
+    huntBuilder: 'Hunt builder',
+    monster: 'Monster',
+    typeMonsterName: 'Type a monster name',
+    add: 'Add',
+    copyHuntLink: 'Copy hunt link',
+    linkCopied: 'Link copied.',
+    bulkImport: 'Bulk import',
+    bulkImportHint: 'Paste monster names or IDs separated by commas or new lines.',
+    monsterList: 'Monster list',
+    importList: 'Import list',
+    processedReport: 'Processed {total}. Matched {matched}, added {added}, duplicates {duplicates}, missing {missing}.',
+    missingLabel: 'Missing: {items}.',
+    vocationAndLevel: 'Vocation and level',
+    vocation: 'Vocation',
+    level: 'Level',
+    anyVocation: 'Any vocation',
+    adminTools: 'Admin tools',
+    adminNote: 'Requires a GitHub token with actions:write for this repository. Use only for controlled data refresh.',
+    githubToken: 'GitHub token',
+    typeUpdateToEnable: 'Type UPDATE to enable',
+    updating: 'Updating...',
+    runMonsterDataUpdate: 'Run monster data update',
+    workflowDispatched: 'Workflow dispatched successfully.',
+    dispatchFailed: 'Dispatch failed',
+    includeAdvanced: 'Include special and incomplete creatures',
+    noMonstersSelected: 'No monsters selected yet.',
+    special: 'Special',
+    incomplete: 'Incomplete',
+    notHuntRelevant: 'Not hunt relevant',
+    standardHuntCreature: 'Standard hunt creature',
+    weight: 'Weight',
+    weightLow: 'Low',
+    weightNormal: 'Normal',
+    weightHigh: 'High',
+    remove: 'Remove',
+    results: 'Results',
+    addOneCompleteMonster: 'Add at least one complete monster to calculate a recommendation.',
+    recommended: 'Recommended',
+    topRawScore: 'Top raw score: {score}',
+    profile: 'Profile: {vocation}, level {level}.',
+    ineligibleTopRaw: '{element} has the best raw score but is not eligible for this profile ({reason}).',
+    whyThisElement: 'Why this element?',
+    leadsBy: '{recommended} leads {alternative} by {delta} score points.',
+    onlyRankedRecommendation: '{recommended} is currently the only ranked recommendation with valid hunt data.',
+    impactFormula: 'Impact formula used per monster: Hitpoints × (Weight / 50) × Element Modifier.',
+    top3Elements: 'Top 3 elements',
+    baseline: 'baseline',
+    behind: '{delta} behind',
+    fullRanking: 'Full ranking',
+    monsterSummary: 'Monster summary',
+    contributionLine:
+      '{modifier}% {summary}, weight {weight} (x{factor}), contribution {contribution} ({share} of recommended score).',
+    excludedMonsters: 'Excluded monsters',
+    dataVersion: 'Data version: {version}',
+    dataPrefix: 'Data: ',
+    developedBy: 'Developed by Pecoits under',
+    missingHitpoints: 'Missing hitpoints.',
+    missingModifier: 'Missing {element} modifier.',
+    incompleteData: 'Incomplete monster data.',
+    favors: 'favors',
+    neutral: 'neutral',
+    resists: 'resists',
+    requiresVocation: 'requires vocation',
+    requiresLevel: 'requires level',
+    tutorialTip:
+      'Tip: your current rules are {vocation}, level {level}. Ineligible elements stay in ranking but are never recommended.'
+  },
+  pl: {
+    appTitle: 'Hunt Element Planner',
+    appSubtitle: 'Planuj hunta z wagą potworów i rankingiem żywiołów.',
+    howToUse: 'Jak używać',
+    language: 'Język',
+    stepLabel: 'Krok {current} z {total}',
+    skip: 'Pomiń',
+    back: 'Wstecz',
+    next: 'Dalej',
+    finishTutorial: 'Zakończ tutorial',
+    huntBuilder: 'Budowa hunta',
+    monster: 'Potwór',
+    typeMonsterName: 'Wpisz nazwę potwora',
+    add: 'Dodaj',
+    copyHuntLink: 'Kopiuj link hunta',
+    linkCopied: 'Link skopiowany.',
+    bulkImport: 'Import zbiorczy',
+    bulkImportHint: 'Wklej nazwy lub ID potworów oddzielone przecinkami lub nowymi liniami.',
+    monsterList: 'Lista potworów',
+    importList: 'Importuj listę',
+    processedReport: 'Przetworzono {total}. Dopasowano {matched}, dodano {added}, duplikaty {duplicates}, brak {missing}.',
+    missingLabel: 'Brak: {items}.',
+    vocationAndLevel: 'Profesja i poziom',
+    vocation: 'Profesja',
+    level: 'Poziom',
+    anyVocation: 'Dowolna profesja',
+    adminTools: 'Narzędzia admina',
+    adminNote: 'Wymaga tokenu GitHub z actions:write dla tego repozytorium. Używaj tylko do kontrolowanej aktualizacji danych.',
+    githubToken: 'Token GitHub',
+    typeUpdateToEnable: 'Wpisz UPDATE aby włączyć',
+    updating: 'Aktualizacja...',
+    runMonsterDataUpdate: 'Uruchom aktualizację bazy',
+    workflowDispatched: 'Workflow uruchomiony poprawnie.',
+    dispatchFailed: 'Błąd uruchomienia',
+    includeAdvanced: 'Uwzględnij specjalne i niekompletne stwory',
+    noMonstersSelected: 'Nie wybrano jeszcze potworów.',
+    special: 'Specjalny',
+    incomplete: 'Niekompletny',
+    notHuntRelevant: 'Poza huntem',
+    standardHuntCreature: 'Standardowy potwór hunta',
+    weight: 'Waga',
+    weightLow: 'Niska',
+    weightNormal: 'Normalna',
+    weightHigh: 'Wysoka',
+    remove: 'Usuń',
+    results: 'Wyniki',
+    addOneCompleteMonster: 'Dodaj przynajmniej jednego kompletnego potwora, aby obliczyć rekomendację.',
+    recommended: 'Rekomendowane',
+    topRawScore: 'Najlepszy surowy wynik: {score}',
+    profile: 'Profil: {vocation}, poziom {level}.',
+    ineligibleTopRaw: '{element} ma najlepszy surowy wynik, ale nie jest dostępny dla tego profilu ({reason}).',
+    whyThisElement: 'Dlaczego ten żywioł?',
+    leadsBy: '{recommended} wyprzedza {alternative} o {delta} punktów.',
+    onlyRankedRecommendation: '{recommended} to obecnie jedyna sklasyfikowana rekomendacja z prawidłowymi danymi.',
+    impactFormula: 'Wzór wpływu na potwora: Hitpoints × (Waga / 50) × Modyfikator żywiołu.',
+    top3Elements: 'Top 3 żywioły',
+    baseline: 'bazowy',
+    behind: '{delta} mniej',
+    fullRanking: 'Pełny ranking',
+    monsterSummary: 'Podsumowanie potworów',
+    contributionLine:
+      '{modifier}% {summary}, waga {weight} (x{factor}), wkład {contribution} ({share} zalecanego wyniku).',
+    excludedMonsters: 'Wykluczone potwory',
+    dataVersion: 'Wersja danych: {version}',
+    dataPrefix: 'Dane: ',
+    developedBy: 'Stworzone przez Pecoits na licencji',
+    missingHitpoints: 'Brak punktów życia.',
+    missingModifier: 'Brak modyfikatora {element}.',
+    incompleteData: 'Niekompletne dane potwora.',
+    favors: 'korzystny',
+    neutral: 'neutralny',
+    resists: 'odporny',
+    requiresVocation: 'wymaga profesji',
+    requiresLevel: 'wymaga poziomu',
+    tutorialTip:
+      'Wskazówka: aktualne reguły to {vocation}, poziom {level}. Niedozwolone żywioły pozostają w rankingu, ale nie są rekomendowane.'
+  }
+} as const;
+
+type I18nKey = keyof (typeof I18N)['en'];
+
+function applyTemplate(template: string, params: Record<string, string | number> = {}): string {
+  let text = template;
+  for (const [key, value] of Object.entries(params)) {
+    text = text.replaceAll(`{${key}}`, String(value));
+  }
+  return text;
+}
+
+function t(language: AppLanguage, key: I18nKey, params?: Record<string, string | number>): string {
+  return applyTemplate(I18N[language][key], params);
+}
+
+function isAppLanguage(value: string): value is AppLanguage {
+  return LANGUAGE_OPTIONS.some((option) => option.value === value);
+}
+
+function getBrowserLanguage(): AppLanguage {
+  const locale = navigator.language.toLowerCase();
+  if (locale.startsWith('pt')) return 'pt';
+  if (locale.startsWith('pl')) return 'pl';
+  return 'en';
+}
+
+function readLanguage(): AppLanguage {
+  try {
+    const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY) ?? '';
+    if (isAppLanguage(saved)) return saved;
+  } catch {
+    // Ignore storage read errors.
+  }
+  return getBrowserLanguage();
+}
+
+function persistLanguage(language: AppLanguage): void {
+  try {
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+  } catch {
+    // Ignore storage write errors.
+  }
+}
+
+function getVocationOptions(language: AppLanguage): Array<{ value: PlayerVocation; label: string }> {
+  return [
+    { value: 'any', label: t(language, 'anyVocation') },
+    { value: 'knight', label: 'Knight' },
+    { value: 'paladin', label: 'Paladin' },
+    { value: 'druid', label: 'Druid' },
+    { value: 'sorcerer', label: 'Sorcerer' }
+  ];
+}
+
+function getWeightPresetLabel(language: AppLanguage, value: number): string {
+  if (value === 25) return t(language, 'weightLow');
+  if (value === 75) return t(language, 'weightHigh');
+  return t(language, 'weightNormal');
+}
+
+function getElementLabel(element: keyof typeof ELEMENT_LABELS, language: AppLanguage): string {
+  if (language === 'en') return ELEMENT_LABELS[element];
+  const labels = {
+    pt: {
+      physical: 'Físico',
+      earth: 'Terra',
+      fire: 'Fogo',
+      energy: 'Energia',
+      ice: 'Gelo',
+      holy: 'Sagrado',
+      death: 'Morte'
+    },
+    pl: {
+      physical: 'Fizyczny',
+      earth: 'Ziemia',
+      fire: 'Ogień',
+      energy: 'Energia',
+      ice: 'Lód',
+      holy: 'Święty',
+      death: 'Śmierć'
+    }
+  } as const;
+  return labels[language][element];
 }
 
 function readTutorialCompleted(): boolean {
@@ -111,7 +432,47 @@ function persistTutorialCompleted(): void {
   }
 }
 
-function getTutorialSteps(): TutorialStep[] {
+function getTutorialSteps(language: AppLanguage): TutorialStep[] {
+  if (language === 'pt') {
+    return [
+      {
+        title: 'Adicione monstros',
+        body: 'Digite o nome de um monstro e adicione na lista da hunt. Você também pode importar vários nomes em Importação em lote.'
+      },
+      {
+        title: 'Defina o peso',
+        body: 'Ajuste o peso de cada monstro (0-100) para representar frequência ou importância na rota.'
+      },
+      {
+        title: 'Leia a recomendação',
+        body: 'Use o elemento recomendado, o top 3 e a contribuição por monstro para justificar a escolha.'
+      },
+      {
+        title: 'Compartilhe a configuração',
+        body: 'Use Copiar link da hunt para compartilhar composição, pesos e regras de vocação/nível.'
+      }
+    ];
+  }
+  if (language === 'pl') {
+    return [
+      {
+        title: 'Dodaj potwory',
+        body: 'Wpisz nazwę potwora i dodaj go do listy hunta. Możesz też zaimportować wiele nazw przez Import zbiorczy.'
+      },
+      {
+        title: 'Ustaw wagę',
+        body: 'Dostosuj wagę każdego potwora (0-100), aby odzwierciedlić częstotliwość lub znaczenie.'
+      },
+      {
+        title: 'Odczytaj rekomendację',
+        body: 'Użyj rekomendowanego żywiołu, top 3 i wkładu potworów do uzasadnienia wyboru.'
+      },
+      {
+        title: 'Udostępnij konfigurację',
+        body: 'Użyj Kopiuj link hunta, aby udostępnić skład, wagi i zasady profesji/poziomu.'
+      }
+    ];
+  }
   return [
     {
       title: 'Add monsters',
@@ -191,6 +552,38 @@ function shouldShowInAutocomplete(monster: Monster, includeAdvanced: boolean): b
   return monster.huntRelevant && !monster.special && !monster.incomplete;
 }
 
+function localizeContributionSummary(summary: 'favors' | 'neutral' | 'resists', language: AppLanguage): string {
+  if (summary === 'favors') return t(language, 'favors');
+  if (summary === 'resists') return t(language, 'resists');
+  return t(language, 'neutral');
+}
+
+function localizeExclusionReason(reason: string, language: AppLanguage): string {
+  if (reason === 'Missing hitpoints.') return t(language, 'missingHitpoints');
+  if (reason === 'Incomplete monster data.') return t(language, 'incompleteData');
+
+  const missingModifierMatch = reason.match(/^Missing ([a-z]+) modifier\.$/i);
+  if (missingModifierMatch) {
+    const element = missingModifierMatch[1].toLowerCase();
+    return t(language, 'missingModifier', { element: getElementLabel(element as keyof typeof ELEMENT_LABELS, language) });
+  }
+  return reason;
+}
+
+function localizeEligibilityReason(reason: string | null, language: AppLanguage): string {
+  if (!reason) return '-';
+  const lower = reason.toLowerCase();
+  if (lower.startsWith('requires ') && lower.endsWith(' vocation.')) {
+    const profession = reason.replace(/^Requires /, '').replace(/ vocation\.$/, '');
+    return `${t(language, 'requiresVocation')}: ${profession}`;
+  }
+  if (lower.startsWith('requires level ')) {
+    const level = reason.replace(/^Requires level /, '').replace(/\.\s*$/, '');
+    return `${t(language, 'requiresLevel')} ${level}`;
+  }
+  return reason;
+}
+
 function getSafeSourceUrl(url: string): string {
   try {
     const parsedUrl = new URL(url);
@@ -204,8 +597,8 @@ function getSafeSourceUrl(url: string): string {
   return FALLBACK_SOURCE_URL;
 }
 
-function renderAttribution(parent: HTMLElement, database: MonsterDatabase, className: string): void {
-  const paragraph = appendText(parent, 'p', 'Data: ', className);
+function renderAttribution(parent: HTMLElement, database: MonsterDatabase, className: string, language: AppLanguage): void {
+  const paragraph = appendText(parent, 'p', t(language, 'dataPrefix'), className);
   const link = document.createElement('a');
   link.href = getSafeSourceUrl(database.source.url);
   link.target = '_blank';
@@ -260,10 +653,10 @@ function createMonsterSprite(monster: Monster): HTMLElement {
   return frame;
 }
 
-function renderProjectMeta(parent: HTMLElement, className: string): void {
+function renderProjectMeta(parent: HTMLElement, className: string, language: AppLanguage): void {
   const paragraph = document.createElement('p');
   paragraph.className = className;
-  paragraph.append('Developed by Pecoits under ');
+  paragraph.append(`${t(language, 'developedBy')} `);
 
   const license = document.createElement('strong');
   license.textContent = LICENSE_LABEL;
@@ -281,16 +674,26 @@ function serializeHuntState(
   selected: SelectedMonster[],
   includeAdvanced: boolean,
   vocation: PlayerVocation,
-  level: number
+  level: number,
+  language: AppLanguage
 ): string | null {
   const normalizedLevel = clampLevel(level);
-  if (selected.length === 0 && !includeAdvanced && vocation === DEFAULT_VOCATION && normalizedLevel === DEFAULT_LEVEL) return null;
+  if (
+    selected.length === 0 &&
+    !includeAdvanced &&
+    vocation === DEFAULT_VOCATION &&
+    normalizedLevel === DEFAULT_LEVEL &&
+    language === 'en'
+  ) {
+    return null;
+  }
   const payload: SharedHuntPayload = {
-    v: 2,
+    v: 3,
     a: includeAdvanced ? 1 : 0,
     s: selected.map((item) => [item.monster.id, clampWeight(item.weight)]),
     c: vocation,
-    l: normalizedLevel
+    l: normalizedLevel,
+    g: language
   };
   return JSON.stringify(payload);
 }
@@ -298,11 +701,11 @@ function serializeHuntState(
 function parseHuntState(
   database: MonsterDatabase,
   raw: string | null
-): { selected: SelectedMonster[]; includeAdvanced: boolean; vocation: PlayerVocation; level: number } | null {
+): { selected: SelectedMonster[]; includeAdvanced: boolean; vocation: PlayerVocation; level: number; language: AppLanguage } | null {
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw) as SharedHuntPayload;
-    if ((parsed.v !== 1 && parsed.v !== 2) || !Array.isArray(parsed.s)) return null;
+    if ((parsed.v !== 1 && parsed.v !== 2 && parsed.v !== 3) || !Array.isArray(parsed.s)) return null;
 
     const selected: SelectedMonster[] = [];
     const seen = new Set<string>();
@@ -320,16 +723,23 @@ function parseHuntState(
       selected,
       includeAdvanced: parsed.a === 1,
       vocation: isPlayerVocation(parsed.c ?? '') ? (parsed.c as PlayerVocation) : DEFAULT_VOCATION,
-      level: clampLevel(Number(parsed.l ?? DEFAULT_LEVEL))
+      level: clampLevel(Number(parsed.l ?? DEFAULT_LEVEL)),
+      language: isAppLanguage(parsed.g ?? '') ? (parsed.g as AppLanguage) : readLanguage()
     };
   } catch {
     return null;
   }
 }
 
-function getHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean, vocation: PlayerVocation, level: number): string {
+function getHuntUrl(
+  selected: SelectedMonster[],
+  includeAdvanced: boolean,
+  vocation: PlayerVocation,
+  level: number,
+  language: AppLanguage
+): string {
   const url = new URL(window.location.href);
-  const serialized = serializeHuntState(selected, includeAdvanced, vocation, level);
+  const serialized = serializeHuntState(selected, includeAdvanced, vocation, level, language);
   if (serialized) {
     url.searchParams.set(SHARE_PARAM, serialized);
   } else {
@@ -338,9 +748,15 @@ function getHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean, vocat
   return url.toString();
 }
 
-function persistHuntUrl(selected: SelectedMonster[], includeAdvanced: boolean, vocation: PlayerVocation, level: number): void {
+function persistHuntUrl(
+  selected: SelectedMonster[],
+  includeAdvanced: boolean,
+  vocation: PlayerVocation,
+  level: number,
+  language: AppLanguage
+): void {
   try {
-    const url = getHuntUrl(selected, includeAdvanced, vocation, level);
+    const url = getHuntUrl(selected, includeAdvanced, vocation, level, language);
     window.history.replaceState(null, '', url);
   } catch {
     // Ignore environments without writable location/history.
@@ -353,6 +769,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   let includeAdvanced = urlState?.includeAdvanced ?? false;
   let vocation: PlayerVocation = urlState?.vocation ?? DEFAULT_VOCATION;
   let level = clampLevel(urlState?.level ?? DEFAULT_LEVEL);
+  let language: AppLanguage = urlState?.language ?? readLanguage();
   let draftQuery = '';
   let shareFeedback = '';
   let batchInput = '';
@@ -372,19 +789,40 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   }
 
   const rerender = (): void => {
-    persistHuntUrl(selected, includeAdvanced, vocation, level);
+    persistLanguage(language);
+    persistHuntUrl(selected, includeAdvanced, vocation, level, language);
     container.replaceChildren();
+    const vocationOptions = getVocationOptions(language);
 
     const header = document.createElement('header');
     header.className = 'app-header';
-    appendText(header, 'h1', 'Hunt Element Planner');
-    appendText(header, 'p', 'Plan your hunt loadout with weighted monster importance and elemental ranking.');
+    appendText(header, 'h1', t(language, 'appTitle'));
+    appendText(header, 'p', t(language, 'appSubtitle'));
     const headerActions = document.createElement('div');
     headerActions.className = 'header-actions';
+    const languageLabel = document.createElement('label');
+    languageLabel.className = 'field-label compact-field-label';
+    languageLabel.textContent = t(language, 'language');
+    const languageSelect = document.createElement('select');
+    languageSelect.name = 'app-language';
+    for (const option of LANGUAGE_OPTIONS) {
+      const node = document.createElement('option');
+      node.value = option.value;
+      node.textContent = option.label;
+      node.selected = option.value === language;
+      languageSelect.append(node);
+    }
+    languageSelect.addEventListener('change', () => {
+      language = isAppLanguage(languageSelect.value) ? languageSelect.value : 'en';
+      rerender();
+    });
+    languageLabel.append(languageSelect);
+    headerActions.append(languageLabel);
+
     const tutorialButton = document.createElement('button');
     tutorialButton.type = 'button';
     tutorialButton.className = 'secondary-button';
-    tutorialButton.textContent = 'How to use';
+    tutorialButton.textContent = t(language, 'howToUse');
     tutorialButton.addEventListener('click', () => {
       tutorialOpen = true;
       tutorialStepIndex = 0;
@@ -395,19 +833,22 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     container.append(header);
 
     if (tutorialOpen) {
-      const steps = getTutorialSteps();
+      const steps = getTutorialSteps(language);
       const step = steps[Math.min(tutorialStepIndex, steps.length - 1)];
       const tutorial = document.createElement('section');
       tutorial.className = 'tutorial-panel';
       tutorial.setAttribute('aria-live', 'polite');
-      appendText(tutorial, 'p', `Step ${tutorialStepIndex + 1} of ${steps.length}`, 'eyebrow');
+      appendText(tutorial, 'p', t(language, 'stepLabel', { current: tutorialStepIndex + 1, total: steps.length }), 'eyebrow');
       appendText(tutorial, 'h3', step.title);
       appendText(tutorial, 'p', step.body, 'score-note');
       if (vocation !== DEFAULT_VOCATION || level !== DEFAULT_LEVEL) {
         appendText(
           tutorial,
           'p',
-          `Tip: your current rules are ${VOCATION_OPTIONS.find((option) => option.value === vocation)?.label ?? 'Any vocation'} and level ${level}. Ineligible elements stay in ranking but are never recommended.`,
+          t(language, 'tutorialTip', {
+            vocation: vocationOptions.find((option) => option.value === vocation)?.label ?? t(language, 'anyVocation'),
+            level
+          }),
           'score-note'
         );
       }
@@ -418,7 +859,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       const skipButton = document.createElement('button');
       skipButton.type = 'button';
       skipButton.className = 'secondary-button';
-      skipButton.textContent = 'Skip';
+      skipButton.textContent = t(language, 'skip');
       skipButton.addEventListener('click', () => {
         tutorialOpen = false;
         rerender();
@@ -429,7 +870,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         const backButton = document.createElement('button');
         backButton.type = 'button';
         backButton.className = 'secondary-button';
-        backButton.textContent = 'Back';
+        backButton.textContent = t(language, 'back');
         backButton.addEventListener('click', () => {
           tutorialStepIndex = Math.max(0, tutorialStepIndex - 1);
           rerender();
@@ -439,7 +880,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
       const nextButton = document.createElement('button');
       nextButton.type = 'button';
-      nextButton.textContent = tutorialStepIndex >= steps.length - 1 ? 'Finish tutorial' : 'Next';
+      nextButton.textContent = tutorialStepIndex >= steps.length - 1 ? t(language, 'finishTutorial') : t(language, 'next');
       nextButton.addEventListener('click', () => {
         if (tutorialStepIndex >= steps.length - 1) {
           persistTutorialCompleted();
@@ -462,19 +903,19 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const builder = document.createElement('section');
     builder.className = 'tool-panel builder-panel';
     builder.setAttribute('aria-labelledby', 'builder-title');
-    appendText(builder, 'h2', 'Hunt builder').id = 'builder-title';
+    appendText(builder, 'h2', t(language, 'huntBuilder')).id = 'builder-title';
 
     const controls = document.createElement('div');
     controls.className = 'add-controls';
 
     const inputLabel = document.createElement('label');
     inputLabel.className = 'field-label';
-    inputLabel.textContent = 'Monster';
+    inputLabel.textContent = t(language, 'monster');
     const input = document.createElement('input');
     input.name = 'monster-search';
     input.type = 'text';
     input.autocomplete = 'off';
-    input.placeholder = 'Type a monster name';
+    input.placeholder = t(language, 'typeMonsterName');
     input.setAttribute('aria-autocomplete', 'list');
     input.value = draftQuery;
     const addSelectedMonster = (): void => {
@@ -506,7 +947,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
     const suggestions = document.createElement('ul');
     suggestions.className = 'autocomplete-list';
-    suggestions.setAttribute('aria-label', 'Monster suggestions');
+    suggestions.setAttribute('aria-label', `${t(language, 'monster')} suggestions`);
     const matches = findAutocompleteMatches(database, draftQuery, includeAdvanced);
     for (const monster of matches) {
       const item = document.createElement('li');
@@ -525,7 +966,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const addButton = document.createElement('button');
     addButton.type = 'button';
     addButton.dataset.action = 'add-monster';
-    addButton.textContent = 'Add';
+    addButton.textContent = t(language, 'add');
     addButton.addEventListener('click', addSelectedMonster);
 
     controls.append(inputLabel, addButton);
@@ -539,13 +980,13 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const shareButton = document.createElement('button');
     shareButton.type = 'button';
     shareButton.className = 'secondary-button';
-    shareButton.textContent = 'Copy hunt link';
+    shareButton.textContent = t(language, 'copyHuntLink');
     shareButton.addEventListener('click', async () => {
-      const url = getHuntUrl(selected, includeAdvanced, vocation, level);
+      const url = getHuntUrl(selected, includeAdvanced, vocation, level, language);
       try {
         if (navigator.clipboard?.writeText) {
           await navigator.clipboard.writeText(url);
-          shareFeedback = 'Link copied.';
+          shareFeedback = t(language, 'linkCopied');
         } else {
           shareFeedback = url;
         }
@@ -562,12 +1003,12 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
     const batchSection = document.createElement('section');
     batchSection.className = 'batch-import';
-    appendText(batchSection, 'h3', 'Bulk import', 'section-heading');
-    appendText(batchSection, 'p', 'Paste monster names or IDs separated by commas or new lines.', 'score-note');
+    appendText(batchSection, 'h3', t(language, 'bulkImport'), 'section-heading');
+    appendText(batchSection, 'p', t(language, 'bulkImportHint'), 'score-note');
 
     const batchInputLabel = document.createElement('label');
     batchInputLabel.className = 'field-label';
-    batchInputLabel.textContent = 'Monster list';
+    batchInputLabel.textContent = t(language, 'monsterList');
     const batchTextarea = document.createElement('textarea');
     batchTextarea.name = 'batch-import';
     batchTextarea.placeholder = 'Dragon Lord, Ice Golem\nJuggernaut';
@@ -583,7 +1024,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     batchButton.type = 'button';
     batchButton.className = 'secondary-button';
     batchButton.dataset.action = 'import-monsters';
-    batchButton.textContent = 'Import list';
+    batchButton.textContent = t(language, 'importList');
     batchButton.addEventListener('click', () => {
       const tokens = parseBatchTokens(batchInput);
       const duplicates: string[] = [];
@@ -622,11 +1063,17 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       appendText(
         batchSection,
         'p',
-        `Processed ${batchReport.total}. Matched ${batchReport.matched}, added ${batchReport.added}, duplicates ${batchReport.duplicates.length}, missing ${batchReport.missing.length}.`,
+        t(language, 'processedReport', {
+          total: batchReport.total,
+          matched: batchReport.matched,
+          added: batchReport.added,
+          duplicates: batchReport.duplicates.length,
+          missing: batchReport.missing.length
+        }),
         'score-note'
       );
       if (batchReport.missing.length > 0) {
-        appendText(batchSection, 'p', `Missing: ${batchReport.missing.join(', ')}.`, 'warning-inline');
+        appendText(batchSection, 'p', t(language, 'missingLabel', { items: batchReport.missing.join(', ') }), 'warning-inline');
       }
     }
 
@@ -634,17 +1081,17 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
     const playerRules = document.createElement('div');
     playerRules.className = 'player-rules';
-    appendText(playerRules, 'h3', 'Vocation and level', 'section-heading');
+    appendText(playerRules, 'h3', t(language, 'vocationAndLevel'), 'section-heading');
 
     const playerFields = document.createElement('div');
     playerFields.className = 'player-rules-fields';
 
     const vocationLabel = document.createElement('label');
     vocationLabel.className = 'field-label';
-    vocationLabel.textContent = 'Vocation';
+    vocationLabel.textContent = t(language, 'vocation');
     const vocationSelect = document.createElement('select');
     vocationSelect.name = 'player-vocation';
-    for (const option of VOCATION_OPTIONS) {
+    for (const option of vocationOptions) {
       const node = document.createElement('option');
       node.value = option.value;
       node.textContent = option.label;
@@ -660,7 +1107,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
     const levelLabel = document.createElement('label');
     levelLabel.className = 'field-label';
-    levelLabel.textContent = 'Level';
+    levelLabel.textContent = t(language, 'level');
     const levelInput = document.createElement('input');
     levelInput.type = 'number';
     levelInput.name = 'player-level';
@@ -688,18 +1135,18 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       adminPanelOpen = adminPanel.open;
     });
     const adminSummary = document.createElement('summary');
-    adminSummary.textContent = 'Admin tools';
+    adminSummary.textContent = t(language, 'adminTools');
     adminPanel.append(adminSummary);
     appendText(
       adminPanel,
       'p',
-      'Requires a GitHub token with actions:write for this repository. Use only for controlled data refresh.',
+      t(language, 'adminNote'),
       'admin-note'
     );
 
     const tokenLabel = document.createElement('label');
     tokenLabel.className = 'field-label';
-    tokenLabel.textContent = 'GitHub token';
+    tokenLabel.textContent = t(language, 'githubToken');
     const tokenInput = document.createElement('input');
     tokenInput.type = 'password';
     tokenInput.name = 'admin-token';
@@ -722,7 +1169,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
     const unlockLabel = document.createElement('label');
     unlockLabel.className = 'field-label';
-    unlockLabel.textContent = 'Type UPDATE to enable';
+    unlockLabel.textContent = t(language, 'typeUpdateToEnable');
     const unlockInput = document.createElement('input');
     unlockInput.type = 'text';
     unlockInput.name = 'admin-unlock';
@@ -746,7 +1193,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const adminActionButton = document.createElement('button');
     adminActionButton.type = 'button';
     adminActionButton.className = 'secondary-button';
-    adminActionButton.textContent = adminBusy ? 'Updating...' : 'Run monster data update';
+    adminActionButton.textContent = adminBusy ? t(language, 'updating') : t(language, 'runMonsterDataUpdate');
     adminActionButton.disabled = adminBusy || adminToken.trim().length < 20 || adminUnlock.trim() !== ADMIN_UNLOCK_PHRASE;
     adminActionButton.addEventListener('click', async () => {
       adminBusy = true;
@@ -765,14 +1212,14 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         });
 
         if (response.status === 204 || response.status === 200) {
-          adminStatus = 'Workflow dispatched successfully.';
+          adminStatus = t(language, 'workflowDispatched');
           adminUnlock = '';
         } else {
           const responseText = await response.text();
-          adminStatus = `Dispatch failed (${response.status}): ${responseText || response.statusText}`;
+          adminStatus = `${t(language, 'dispatchFailed')} (${response.status}): ${responseText || response.statusText}`;
         }
       } catch (error) {
-        adminStatus = `Dispatch failed: ${error instanceof Error ? error.message : String(error)}`;
+        adminStatus = `${t(language, 'dispatchFailed')}: ${error instanceof Error ? error.message : String(error)}`;
       } finally {
         adminBusy = false;
         rerender();
@@ -794,13 +1241,13 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       shareFeedback = '';
       rerender();
     });
-    advancedLabel.append(advancedInput, document.createTextNode('Include special and incomplete creatures'));
+    advancedLabel.append(advancedInput, document.createTextNode(t(language, 'includeAdvanced')));
     builder.append(advancedLabel);
 
     const selectedList = document.createElement('div');
     selectedList.className = 'selected-list';
     if (selected.length === 0) {
-      appendText(selectedList, 'p', 'No monsters selected yet.', 'empty-state');
+      appendText(selectedList, 'p', t(language, 'noMonstersSelected'), 'empty-state');
     } else {
       for (const selection of selected) {
         const row = document.createElement('article');
@@ -810,11 +1257,11 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         const details = document.createElement('div');
         appendText(details, 'h3', selection.monster.name);
         const flags = [
-          selection.monster.special ? 'Special' : '',
-          selection.monster.incomplete ? 'Incomplete' : '',
-          selection.monster.huntRelevant ? '' : 'Not hunt relevant'
+          selection.monster.special ? t(language, 'special') : '',
+          selection.monster.incomplete ? t(language, 'incomplete') : '',
+          selection.monster.huntRelevant ? '' : t(language, 'notHuntRelevant')
         ].filter(Boolean);
-        appendText(details, 'p', flags.length > 0 ? flags.join(' · ') : 'Standard hunt creature', 'monster-flags');
+        appendText(details, 'p', flags.length > 0 ? flags.join(' · ') : t(language, 'standardHuntCreature'), 'monster-flags');
 
         const actions = document.createElement('div');
         actions.className = 'selected-actions';
@@ -824,7 +1271,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
         const weightLabel = document.createElement('label');
         weightLabel.className = 'weight-label';
-        weightLabel.textContent = 'Weight';
+        weightLabel.textContent = t(language, 'weight');
         const weightInput = document.createElement('input');
         weightInput.type = 'number';
         weightInput.min = '0';
@@ -840,14 +1287,14 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
         const presetRow = document.createElement('div');
         presetRow.className = 'weight-preset-row';
-        for (const preset of WEIGHT_PRESETS) {
+        for (const value of WEIGHT_PRESET_VALUES) {
           const presetButton = document.createElement('button');
           presetButton.type = 'button';
           presetButton.className = 'weight-preset';
-          presetButton.textContent = preset.label;
-          presetButton.disabled = clampWeight(selection.weight) === preset.value;
+          presetButton.textContent = getWeightPresetLabel(language, value);
+          presetButton.disabled = clampWeight(selection.weight) === value;
           presetButton.addEventListener('click', () => {
-            selection.weight = preset.value;
+            selection.weight = value;
             rerender();
           });
           presetRow.append(presetButton);
@@ -855,14 +1302,14 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
         const weightValue = document.createElement('p');
         weightValue.className = 'importance-value';
-        weightValue.textContent = `Weight: ${clampWeight(selection.weight)}`;
+        weightValue.textContent = `${t(language, 'weight')}: ${clampWeight(selection.weight)}`;
 
         weightControl.append(weightLabel, presetRow, weightValue);
 
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
         removeButton.className = 'secondary-button';
-        removeButton.textContent = 'Remove';
+        removeButton.textContent = t(language, 'remove');
         removeButton.addEventListener('click', () => {
           const index = selected.findIndex((item) => item.monster.id === selection.monster.id);
           if (index >= 0) selected.splice(index, 1);
@@ -881,84 +1328,91 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const resultPanel = document.createElement('section');
     resultPanel.className = 'tool-panel result-panel';
     resultPanel.setAttribute('aria-labelledby', 'result-title');
-    appendText(resultPanel, 'h2', 'Results').id = 'result-title';
+    appendText(resultPanel, 'h2', t(language, 'results')).id = 'result-title';
 
     const recommendation = calculateRecommendation(selected as HuntSelection[], {
       player: { vocation, level }
     });
     if (!recommendation.recommended) {
-      appendText(resultPanel, 'p', 'Add at least one complete monster to calculate a recommendation.', 'empty-state');
+      appendText(resultPanel, 'p', t(language, 'addOneCompleteMonster'), 'empty-state');
     } else {
-      const recommendedLabel = ELEMENT_LABELS[recommendation.recommended.element];
+      const recommendedLabel = getElementLabel(recommendation.recommended.element, language);
       const totalContribution = recommendation.contributions.reduce((sum, item) => sum + item.contribution, 0);
       const primaryAlternative = recommendation.topAlternatives.find(
         (item) => item.element !== recommendation.recommended?.element
       );
       const activeVocationLabel =
-        VOCATION_OPTIONS.find((option) => option.value === vocation)?.label ?? VOCATION_OPTIONS[0].label;
+        vocationOptions.find((option) => option.value === vocation)?.label ?? vocationOptions[0].label;
       const topRaw = recommendation.ranking[0];
       const topRawEligibility = recommendation.eligibility.find((item) => item.element === topRaw.element);
-      appendText(resultPanel, 'p', 'Recommended', 'eyebrow');
+      appendText(resultPanel, 'p', t(language, 'recommended'), 'eyebrow');
       appendText(resultPanel, 'h3', recommendedLabel, 'recommended-element');
-      appendText(resultPanel, 'p', `Top raw score: ${formatScore(recommendation.recommended.score)}`, 'score-note');
-      appendText(resultPanel, 'p', `Profile: ${activeVocationLabel}, level ${level}.`, 'score-note');
+      appendText(resultPanel, 'p', t(language, 'topRawScore', { score: formatScore(recommendation.recommended.score, language) }), 'score-note');
+      appendText(resultPanel, 'p', t(language, 'profile', { vocation: activeVocationLabel, level }), 'score-note');
       if (topRaw.element !== recommendation.recommended.element && topRawEligibility && !topRawEligibility.eligible) {
         appendText(
           resultPanel,
           'p',
-          `${ELEMENT_LABELS[topRaw.element]} has the best raw score but is not eligible for this profile (${topRawEligibility.reason ?? 'restricted'}).`,
+          t(language, 'ineligibleTopRaw', {
+            element: getElementLabel(topRaw.element, language),
+            reason: localizeEligibilityReason(topRawEligibility.reason, language)
+          }),
           'score-note'
         );
       }
 
-      appendText(resultPanel, 'h3', 'Why this element?', 'section-heading');
+      appendText(resultPanel, 'h3', t(language, 'whyThisElement'), 'section-heading');
       const explanation = document.createElement('div');
       explanation.className = 'explanation-block';
       if (primaryAlternative) {
         appendText(
           explanation,
           'p',
-          `${recommendedLabel} leads ${ELEMENT_LABELS[primaryAlternative.element]} by ${formatScore(primaryAlternative.deltaFromRecommended)} score points.`
+          t(language, 'leadsBy', {
+            recommended: recommendedLabel,
+            alternative: getElementLabel(primaryAlternative.element, language),
+            delta: formatScore(primaryAlternative.deltaFromRecommended, language)
+          })
         );
       } else {
-        appendText(explanation, 'p', `${recommendedLabel} is currently the only ranked recommendation with valid hunt data.`);
+        appendText(explanation, 'p', t(language, 'onlyRankedRecommendation', { recommended: recommendedLabel }));
       }
-      appendText(explanation, 'p', 'Impact formula used per monster: Hitpoints × (Weight / 50) × Element Modifier.');
+      appendText(explanation, 'p', t(language, 'impactFormula'));
       resultPanel.append(explanation);
 
-      appendText(resultPanel, 'h3', 'Top 3 elements', 'section-heading');
+      appendText(resultPanel, 'h3', t(language, 'top3Elements'), 'section-heading');
       const topList = document.createElement('ol');
       topList.className = 'ranking-list';
       for (const item of recommendation.topAlternatives) {
         const topItem = document.createElement('li');
         const label = document.createElement('span');
-        label.textContent = ELEMENT_LABELS[item.element];
+        label.textContent = getElementLabel(item.element, language);
         const score = document.createElement('strong');
         const deltaText =
           item.deltaFromRecommended === 0
-            ? 'baseline'
-            : `${formatScore(item.deltaFromRecommended)} behind`;
-        score.textContent = `${formatScore(item.score)} (${deltaText})`;
+            ? t(language, 'baseline')
+            : t(language, 'behind', { delta: formatScore(item.deltaFromRecommended, language) });
+        score.textContent = `${formatScore(item.score, language)} (${deltaText})`;
         topItem.append(label, score);
         topList.append(topItem);
       }
       resultPanel.append(topList);
 
-      appendText(resultPanel, 'h3', 'Full ranking', 'section-heading');
+      appendText(resultPanel, 'h3', t(language, 'fullRanking'), 'section-heading');
       const rankingList = document.createElement('ol');
       rankingList.className = 'ranking-list';
       for (const item of recommendation.ranking) {
         const rankingItem = document.createElement('li');
         const label = document.createElement('span');
-        label.textContent = ELEMENT_LABELS[item.element];
+        label.textContent = getElementLabel(item.element, language);
         const score = document.createElement('strong');
-        score.textContent = formatScore(item.score);
+        score.textContent = formatScore(item.score, language);
         rankingItem.append(label, score);
         rankingList.append(rankingItem);
       }
       resultPanel.append(rankingList);
 
-      appendText(resultPanel, 'h3', 'Monster summary', 'section-heading');
+      appendText(resultPanel, 'h3', t(language, 'monsterSummary'), 'section-heading');
       const summaryList = document.createElement('ul');
       summaryList.className = 'summary-list';
       const sourceByMonsterId = new Map<string, string>(selected.map((item) => [item.monster.id, item.monster.sourceUrl]));
@@ -974,7 +1428,14 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         item.append(
           link,
           document.createTextNode(
-            `: ${contribution.recommendedModifier}% ${contribution.summary}, weight ${contribution.selectedWeight} (x${weightFactor.toFixed(2)}), contribution ${formatScore(contribution.contribution)} (${formatPercent(contributionShare)} of recommended score).`
+            `: ${t(language, 'contributionLine', {
+              modifier: contribution.recommendedModifier,
+              summary: localizeContributionSummary(contribution.summary, language),
+              weight: contribution.selectedWeight,
+              factor: weightFactor.toFixed(2),
+              contribution: formatScore(contribution.contribution, language),
+              share: formatPercent(contributionShare, language)
+            })}`
           )
         );
         summaryList.append(item);
@@ -985,25 +1446,25 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     if (recommendation.excludedMonsters.length > 0) {
       const warning = document.createElement('div');
       warning.className = 'warning';
-      appendText(warning, 'h3', 'Excluded monsters');
+      appendText(warning, 'h3', t(language, 'excludedMonsters'));
       const list = document.createElement('ul');
       for (const monster of recommendation.excludedMonsters) {
         const item = document.createElement('li');
-        item.textContent = `${monster.name}: ${monster.reason}`;
+        item.textContent = `${monster.name}: ${localizeExclusionReason(monster.reason, language)}`;
         list.append(item);
       }
       warning.append(list);
       resultPanel.append(warning);
     }
 
-    renderAttribution(resultPanel, database, 'credit-line');
+    renderAttribution(resultPanel, database, 'credit-line', language);
     layout.append(resultPanel);
 
     const footer = document.createElement('footer');
     footer.className = 'app-footer';
-    renderProjectMeta(footer, 'project-meta');
-    appendText(footer, 'p', `Data version: ${formatDataVersion(database.generatedAt)}`, 'project-meta');
-    renderAttribution(footer, database, 'credit-line');
+    renderProjectMeta(footer, 'project-meta', language);
+    appendText(footer, 'p', t(language, 'dataVersion', { version: formatDataVersion(database.generatedAt, language) }), 'project-meta');
+    renderAttribution(footer, database, 'credit-line', language);
     container.append(footer);
   };
 

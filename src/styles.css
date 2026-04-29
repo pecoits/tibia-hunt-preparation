@@ -94,10 +94,23 @@ a {
 
 .header-actions {
   margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: end;
+  flex-wrap: wrap;
 }
 
 .header-actions .secondary-button {
   width: auto;
+}
+
+.compact-field-label {
+  font-size: 0.75rem;
+  min-width: 140px;
+}
+
+.compact-field-label select {
+  min-height: 36px;
 }
 
 .tutorial-panel {
@@ -604,6 +617,12 @@ button:focus-visible {
 
   .tutorial-actions button,
   .tutorial-actions .secondary-button {
+    width: auto;
+  }
+
+  .header-actions .secondary-button,
+  .header-actions .compact-field-label,
+  .header-actions .compact-field-label select {
     width: auto;
   }
 
