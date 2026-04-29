@@ -99,6 +99,9 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('Dragon Lord');
     expect(root.textContent).toContain('Recommended');
     expect(root.textContent).toContain('Ice');
+    const sprite = root.querySelector<HTMLImageElement>('.monster-sprite img');
+    expect(sprite).not.toBeNull();
+    expect(sprite?.getAttribute('src')).toContain('/wiki/Special:FilePath/Dragon_Lord.gif');
   });
 
   it('updates importance via stepper controls and recalculates score', () => {

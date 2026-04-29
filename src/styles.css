@@ -175,13 +175,38 @@ button:focus-visible {
 
 .selected-monster {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
   border: 1px solid #3a454d;
   border-radius: 9px;
   background: var(--bg-surface-2);
   padding: 13px;
+}
+
+.monster-sprite {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #46525d;
+  background: #11161a;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.monster-sprite img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.monster-sprite-fallback {
+  color: #cdd7de;
+  font-weight: 800;
+  font-size: 0.8rem;
 }
 
 .selected-monster h3 {
@@ -331,9 +356,16 @@ button:focus-visible {
 }
 
 @media (max-width: 900px) {
-  .tool-layout,
-  .selected-monster {
+  .tool-layout {
     grid-template-columns: 1fr;
+  }
+
+  .selected-monster {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .selected-actions {
+    grid-column: 1 / -1;
   }
 
   .selected-actions {

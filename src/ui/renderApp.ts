@@ -9,6 +9,7 @@ const IMPORTANCE_LABELS: Record<Importance, string> = {
   high: 'High'
 };
 const FALLBACK_SOURCE_URL = 'https://tibia.fandom.com/wiki/Main_Page';
+const WIKI_FILE_PATH_URL = 'https://tibia.fandom.com/wiki/Special:FilePath/';
 const REPOSITORY_URL = 'https://github.com/pecoits/tibia-hunt-preparation';
 const LICENSE_LABEL = 'CC BY-NC 4.0 International';
 
@@ -63,6 +64,47 @@ function renderAttribution(parent: HTMLElement, database: MonsterDatabase, class
   link.rel = 'noreferrer';
   link.textContent = database.source.name;
   paragraph.append(link, document.createTextNode(`. ${database.source.license}.`));
+}
+
+function getMonsterSpriteCandidates(monster: Monster): string[] {
+  try {
+    const source = new URL(monster.sourceUrl);
+    if (source.hostname !== 'tibia.fandom.com') return [];
+    const title = decodeURIComponent(source.pathname.replace('/wiki/', '').trim());
+    if (!title || title.includes('/')) return [];
+    const normalizedTitle = title.replaceAll(' ', '_');
+    return [`${WIKI_FILE_PATH_URL}${encodeURIComponent(`${normalizedTitle}.gif`)}`];
+  } catch {
+    return [];
+  }
+}
+
+function createMonsterSprite(monster: Monster): HTMLElement {
+  const frame = document.createElement('div');
+  frame.className = 'monster-sprite';
+
+  const image = document.createElement('img');
+  image.alt = `${monster.name} gif`;
+  image.loading = 'lazy';
+  image.decoding = 'async';
+  image.width = 56;
+  image.height = 56;
+
+  const [candidate] = getMonsterSpriteCandidates(monster);
+  if (!candidate) {
+    frame.classList.add('monster-sprite-fallback');
+    frame.textContent = monster.name.slice(0, 2).toLocaleUpperCase();
+    return frame;
+  }
+
+  image.src = candidate;
+  image.addEventListener('error', () => {
+    image.remove();
+    frame.classList.add('monster-sprite-fallback');
+    frame.textContent = monster.name.slice(0, 2).toLocaleUpperCase();
+  });
+  frame.append(image);
+  return frame;
 }
 
 function getNextImportance(current: Importance, direction: -1 | 1): Importance {
@@ -182,6 +224,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         const row = document.createElement('article');
         row.className = 'selected-monster';
 
+        const media = createMonsterSprite(selection.monster);
         const details = document.createElement('div');
         appendText(details, 'h3', selection.monster.name);
         const flags = [
@@ -232,7 +275,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         });
 
         actions.append(importanceControl, removeButton);
-        row.append(details, actions);
+        row.append(media, details, actions);
         selectedList.append(row);
       }
     }
