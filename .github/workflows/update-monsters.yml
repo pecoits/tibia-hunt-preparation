@@ -47,9 +47,6 @@ jobs:
           git commit -m "chore: update monster data"
           git push origin HEAD:main
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
