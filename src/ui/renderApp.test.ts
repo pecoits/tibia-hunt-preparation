@@ -276,29 +276,11 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('Top raw score: 104,500');
   });
 
-  it('updates recommendation when vocation eligibility changes', () => {
+  it('does not render vocation and level controls', () => {
     const root = document.createElement('main');
     renderApp(root, database);
-
-    const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
-    const addButton = root.querySelector<HTMLButtonElement>('button[data-action="add-monster"]');
-    if (!input || !addButton) throw new Error('Expected add controls.');
-
-    input.value = 'Holy Scout';
-    addButton.click();
-
-    expect(root.textContent).toContain('Physical');
-
-    const vocationSelect = root.querySelector<HTMLSelectElement>('select[name="player-vocation"]');
-    const levelInput = root.querySelector<HTMLInputElement>('input[name="player-level"]');
-    if (!vocationSelect || !levelInput) throw new Error('Expected vocation controls.');
-
-    vocationSelect.value = 'paladin';
-    vocationSelect.dispatchEvent(new Event('change', { bubbles: true }));
-    levelInput.value = '200';
-    levelInput.dispatchEvent(new Event('change', { bubbles: true }));
-
-    expect(root.textContent).toContain('Holy');
+    expect(root.querySelector('select[name="player-vocation"]')).toBeNull();
+    expect(root.querySelector('input[name="player-level"]')).toBeNull();
   });
 
   it('imports monsters in batch and reports missing entries', () => {

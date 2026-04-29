@@ -1,6 +1,6 @@
 import { calculateRecommendation, type HuntSelection } from '../domain/calculateRecommendation';
 import { ELEMENT_LABELS } from '../domain/elements';
-import type { Monster, MonsterDatabase, PlayerVocation } from '../domain/types';
+import type { Monster, MonsterDatabase } from '../domain/types';
 
 type AppLanguage = 'pt' | 'en' | 'pl';
 
@@ -16,8 +16,6 @@ const UPDATE_WORKFLOW_ENDPOINT =
   'https://api.github.com/repos/pecoits/tibia-hunt-preparation/actions/workflows/update-monsters.yml/dispatches';
 const TUTORIAL_STORAGE_KEY = 'hunt-element-planner-tutorial-v1';
 const LANGUAGE_STORAGE_KEY = 'hunt-element-planner-language-v1';
-const DEFAULT_VOCATION: PlayerVocation = 'any';
-const DEFAULT_LEVEL = 200;
 const LANGUAGE_OPTIONS: Array<{ value: AppLanguage; label: string }> = [
   { value: 'pt', label: 'Português' },
   { value: 'en', label: 'English' },
@@ -33,8 +31,6 @@ interface SharedHuntPayload {
   v: 1 | 2 | 3;
   a: 0 | 1;
   s: Array<[string, number]>;
-  c?: PlayerVocation;
-  l?: number;
   g?: AppLanguage;
 }
 
@@ -62,15 +58,6 @@ function appendText(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, t
 function clampWeight(value: number): number {
   if (!Number.isFinite(value)) return 0;
   return Math.min(100, Math.max(0, Math.round(value)));
-}
-
-function clampLevel(value: number): number {
-  if (!Number.isFinite(value)) return 1;
-  return Math.min(2000, Math.max(1, Math.floor(value)));
-}
-
-function isPlayerVocation(value: string): value is PlayerVocation {
-  return ['any', 'knight', 'paladin', 'druid', 'sorcerer'].includes(value);
 }
 
 function getLocale(language: AppLanguage): string {
@@ -361,16 +348,6 @@ function persistLanguage(language: AppLanguage): void {
   } catch {
     // Ignore storage write errors.
   }
-}
-
-function getVocationOptions(language: AppLanguage): Array<{ value: PlayerVocation; label: string }> {
-  return [
-    { value: 'any', label: t(language, 'anyVocation') },
-    { value: 'knight', label: 'Knight' },
-    { value: 'paladin', label: 'Paladin' },
-    { value: 'druid', label: 'Druid' },
-    { value: 'sorcerer', label: 'Sorcerer' }
-  ];
 }
 
 function getWeightPresetLabel(language: AppLanguage, value: number): string {
@@ -667,26 +644,15 @@ function renderProjectMeta(parent: HTMLElement, className: string, language: App
 function serializeHuntState(
   selected: SelectedMonster[],
   includeAdvanced: boolean,
-  vocation: PlayerVocation,
-  level: number,
   language: AppLanguage
 ): string | null {
-  const normalizedLevel = clampLevel(level);
-  if (
-    selected.length === 0 &&
-    !includeAdvanced &&
-    vocation === DEFAULT_VOCATION &&
-    normalizedLevel === DEFAULT_LEVEL &&
-    language === 'en'
-  ) {
+  if (selected.length === 0 && !includeAdvanced && language === 'en') {
     return null;
   }
   const payload: SharedHuntPayload = {
     v: 3,
     a: includeAdvanced ? 1 : 0,
     s: selected.map((item) => [item.monster.id, clampWeight(item.weight)]),
-    c: vocation,
-    l: normalizedLevel,
     g: language
   };
   return JSON.stringify(payload);
@@ -695,7 +661,7 @@ function serializeHuntState(
 function parseHuntState(
   database: MonsterDatabase,
   raw: string | null
-): { selected: SelectedMonster[]; includeAdvanced: boolean; vocation: PlayerVocation; level: number; language: AppLanguage } | null {
+): { selected: SelectedMonster[]; includeAdvanced: boolean; language: AppLanguage } | null {
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw) as SharedHuntPayload;
@@ -716,8 +682,6 @@ function parseHuntState(
     return {
       selected,
       includeAdvanced: parsed.a === 1,
-      vocation: isPlayerVocation(parsed.c ?? '') ? (parsed.c as PlayerVocation) : DEFAULT_VOCATION,
-      level: clampLevel(Number(parsed.l ?? DEFAULT_LEVEL)),
       language: isAppLanguage(parsed.g ?? '') ? (parsed.g as AppLanguage) : readLanguage()
     };
   } catch {
@@ -728,12 +692,10 @@ function parseHuntState(
 function getHuntUrl(
   selected: SelectedMonster[],
   includeAdvanced: boolean,
-  vocation: PlayerVocation,
-  level: number,
   language: AppLanguage
 ): string {
   const url = new URL(window.location.href);
-  const serialized = serializeHuntState(selected, includeAdvanced, vocation, level, language);
+  const serialized = serializeHuntState(selected, includeAdvanced, language);
   if (serialized) {
     url.searchParams.set(SHARE_PARAM, serialized);
   } else {
@@ -745,12 +707,10 @@ function getHuntUrl(
 function persistHuntUrl(
   selected: SelectedMonster[],
   includeAdvanced: boolean,
-  vocation: PlayerVocation,
-  level: number,
   language: AppLanguage
 ): void {
   try {
-    const url = getHuntUrl(selected, includeAdvanced, vocation, level, language);
+    const url = getHuntUrl(selected, includeAdvanced, language);
     window.history.replaceState(null, '', url);
   } catch {
     // Ignore environments without writable location/history.
@@ -770,8 +730,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   const adminMode = isAdminMode(currentUrl);
   const selected: SelectedMonster[] = urlState?.selected ?? [];
   let includeAdvanced = urlState?.includeAdvanced ?? false;
-  let vocation: PlayerVocation = urlState?.vocation ?? DEFAULT_VOCATION;
-  let level = clampLevel(urlState?.level ?? DEFAULT_LEVEL);
   let language: AppLanguage = urlState?.language ?? readLanguage();
   let draftQuery = '';
   let shareFeedback = '';
@@ -793,9 +751,8 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
   const rerender = (): void => {
     persistLanguage(language);
-    persistHuntUrl(selected, includeAdvanced, vocation, level, language);
+    persistHuntUrl(selected, includeAdvanced, language);
     container.replaceChildren();
-    const vocationOptions = getVocationOptions(language);
 
     const header = document.createElement('header');
     header.className = 'app-header';
@@ -843,17 +800,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       appendText(tutorial, 'p', t(language, 'stepLabel', { current: tutorialStepIndex + 1, total: steps.length }), 'eyebrow');
       appendText(tutorial, 'h3', step.title);
       appendText(tutorial, 'p', step.body, 'score-note');
-      if (vocation !== DEFAULT_VOCATION || level !== DEFAULT_LEVEL) {
-        appendText(
-          tutorial,
-          'p',
-          t(language, 'tutorialTip', {
-            vocation: vocationOptions.find((option) => option.value === vocation)?.label ?? t(language, 'anyVocation'),
-            level
-          }),
-          'score-note'
-        );
-      }
 
       const tutorialActions = document.createElement('div');
       tutorialActions.className = 'tutorial-actions';
@@ -1064,7 +1010,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     shareButton.className = 'secondary-button';
     shareButton.textContent = t(language, 'copyHuntLink');
     shareButton.addEventListener('click', async () => {
-      const url = getHuntUrl(selected, includeAdvanced, vocation, level, language);
+      const url = getHuntUrl(selected, includeAdvanced, language);
       try {
         if (navigator.clipboard?.writeText) {
           await navigator.clipboard.writeText(url);
@@ -1176,53 +1122,6 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
       builder.append(batchSection);
     }
-
-    const playerRules = document.createElement('div');
-    playerRules.className = 'player-rules';
-    appendText(playerRules, 'h3', t(language, 'vocationAndLevel'), 'section-heading');
-
-    const playerFields = document.createElement('div');
-    playerFields.className = 'player-rules-fields';
-
-    const vocationLabel = document.createElement('label');
-    vocationLabel.className = 'field-label';
-    vocationLabel.textContent = t(language, 'vocation');
-    const vocationSelect = document.createElement('select');
-    vocationSelect.name = 'player-vocation';
-    for (const option of vocationOptions) {
-      const node = document.createElement('option');
-      node.value = option.value;
-      node.textContent = option.label;
-      node.selected = option.value === vocation;
-      vocationSelect.append(node);
-    }
-    vocationSelect.addEventListener('change', () => {
-      vocation = isPlayerVocation(vocationSelect.value) ? vocationSelect.value : DEFAULT_VOCATION;
-      shareFeedback = '';
-      rerender();
-    });
-    vocationLabel.append(vocationSelect);
-
-    const levelLabel = document.createElement('label');
-    levelLabel.className = 'field-label';
-    levelLabel.textContent = t(language, 'level');
-    const levelInput = document.createElement('input');
-    levelInput.type = 'number';
-    levelInput.name = 'player-level';
-    levelInput.min = '1';
-    levelInput.max = '2000';
-    levelInput.step = '1';
-    levelInput.value = String(level);
-    levelInput.addEventListener('change', () => {
-      level = clampLevel(Number(levelInput.value));
-      shareFeedback = '';
-      rerender();
-    });
-    levelLabel.append(levelInput);
-
-    playerFields.append(vocationLabel, levelLabel);
-    playerRules.append(playerFields);
-    builder.append(playerRules);
 
     if (adminMode) {
       const adminPanel = document.createElement('div');
@@ -1339,22 +1238,17 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     resultPanel.setAttribute('aria-labelledby', 'result-title');
     appendText(resultPanel, 'h2', t(language, 'results')).id = 'result-title';
 
-    const recommendation = calculateRecommendation(selected as HuntSelection[], {
-      player: { vocation, level }
-    });
+    const recommendation = calculateRecommendation(selected as HuntSelection[]);
     if (!recommendation.recommended) {
       appendText(resultPanel, 'p', t(language, 'addOneCompleteMonster'), 'empty-state');
     } else {
       const recommendedLabel = getElementLabel(recommendation.recommended.element, language);
       const totalContribution = recommendation.contributions.reduce((sum, item) => sum + item.contribution, 0);
-      const activeVocationLabel =
-        vocationOptions.find((option) => option.value === vocation)?.label ?? vocationOptions[0].label;
       const topRaw = recommendation.ranking[0];
       const topRawEligibility = recommendation.eligibility.find((item) => item.element === topRaw.element);
       appendText(resultPanel, 'p', t(language, 'recommended'), 'eyebrow');
       appendText(resultPanel, 'h3', recommendedLabel, 'recommended-element');
       appendText(resultPanel, 'p', t(language, 'topRawScore', { score: formatScore(recommendation.recommended.score, language) }), 'score-note');
-      appendText(resultPanel, 'p', t(language, 'profile', { vocation: activeVocationLabel, level }), 'score-note');
       if (topRaw.element !== recommendation.recommended.element && topRawEligibility && !topRawEligibility.eligible) {
         appendText(
           resultPanel,
