@@ -16,6 +16,7 @@ const SHARE_PARAM = 'hunt';
 const ADMIN_UNLOCK_PHRASE = 'UPDATE';
 const UPDATE_WORKFLOW_ENDPOINT =
   'https://api.github.com/repos/pecoits/tibia-hunt-preparation/actions/workflows/update-monsters.yml/dispatches';
+const TUTORIAL_STORAGE_KEY = 'hunt-element-planner-tutorial-v1';
 const DEFAULT_VOCATION: PlayerVocation = 'any';
 const DEFAULT_LEVEL = 200;
 const VOCATION_OPTIONS: Array<{ value: PlayerVocation; label: string }> = [
@@ -45,6 +46,11 @@ interface BatchImportReport {
   added: number;
   duplicates: string[];
   missing: string[];
+}
+
+interface TutorialStep {
+  title: string;
+  body: string;
 }
 
 function appendText(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, text: string, className?: string): HTMLElement {
@@ -87,6 +93,43 @@ function formatDataVersion(value: string): string {
     hour: '2-digit',
     minute: '2-digit'
   });
+}
+
+function readTutorialCompleted(): boolean {
+  try {
+    return window.localStorage.getItem(TUTORIAL_STORAGE_KEY) === 'done';
+  } catch {
+    return false;
+  }
+}
+
+function persistTutorialCompleted(): void {
+  try {
+    window.localStorage.setItem(TUTORIAL_STORAGE_KEY, 'done');
+  } catch {
+    // Ignore storage errors.
+  }
+}
+
+function getTutorialSteps(): TutorialStep[] {
+  return [
+    {
+      title: 'Add monsters',
+      body: 'Type a monster name and add it to your hunt list. You can also import multiple names with Bulk import.'
+    },
+    {
+      title: 'Set monster weight',
+      body: 'Adjust each monster weight (0-100) to represent frequency or importance in your route.'
+    },
+    {
+      title: 'Read recommendation',
+      body: 'Use the recommended element, top 3, and monster contribution breakdown to justify your damage choice.'
+    },
+    {
+      title: 'Share your setup',
+      body: 'Use Copy hunt link to share the exact hunt composition, including weights and vocation/level rules.'
+    }
+  ];
 }
 
 function findVisibleMonster(database: MonsterDatabase, query: string, includeAdvanced: boolean): Monster | undefined {
@@ -319,6 +362,8 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   let adminStatus = '';
   let adminBusy = false;
   let adminPanelOpen = false;
+  let tutorialOpen = !readTutorialCompleted();
+  let tutorialStepIndex = 0;
 
   const container = root.tagName.toLocaleLowerCase() === 'main' ? root : document.createElement('main');
   container.className = 'app-shell';
@@ -334,7 +379,81 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     header.className = 'app-header';
     appendText(header, 'h1', 'Hunt Element Planner');
     appendText(header, 'p', 'Plan your hunt loadout with weighted monster importance and elemental ranking.');
+    const headerActions = document.createElement('div');
+    headerActions.className = 'header-actions';
+    const tutorialButton = document.createElement('button');
+    tutorialButton.type = 'button';
+    tutorialButton.className = 'secondary-button';
+    tutorialButton.textContent = 'How to use';
+    tutorialButton.addEventListener('click', () => {
+      tutorialOpen = true;
+      tutorialStepIndex = 0;
+      rerender();
+    });
+    headerActions.append(tutorialButton);
+    header.append(headerActions);
     container.append(header);
+
+    if (tutorialOpen) {
+      const steps = getTutorialSteps();
+      const step = steps[Math.min(tutorialStepIndex, steps.length - 1)];
+      const tutorial = document.createElement('section');
+      tutorial.className = 'tutorial-panel';
+      tutorial.setAttribute('aria-live', 'polite');
+      appendText(tutorial, 'p', `Step ${tutorialStepIndex + 1} of ${steps.length}`, 'eyebrow');
+      appendText(tutorial, 'h3', step.title);
+      appendText(tutorial, 'p', step.body, 'score-note');
+      if (vocation !== DEFAULT_VOCATION || level !== DEFAULT_LEVEL) {
+        appendText(
+          tutorial,
+          'p',
+          `Tip: your current rules are ${VOCATION_OPTIONS.find((option) => option.value === vocation)?.label ?? 'Any vocation'} and level ${level}. Ineligible elements stay in ranking but are never recommended.`,
+          'score-note'
+        );
+      }
+
+      const tutorialActions = document.createElement('div');
+      tutorialActions.className = 'tutorial-actions';
+
+      const skipButton = document.createElement('button');
+      skipButton.type = 'button';
+      skipButton.className = 'secondary-button';
+      skipButton.textContent = 'Skip';
+      skipButton.addEventListener('click', () => {
+        tutorialOpen = false;
+        rerender();
+      });
+      tutorialActions.append(skipButton);
+
+      if (tutorialStepIndex > 0) {
+        const backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'secondary-button';
+        backButton.textContent = 'Back';
+        backButton.addEventListener('click', () => {
+          tutorialStepIndex = Math.max(0, tutorialStepIndex - 1);
+          rerender();
+        });
+        tutorialActions.append(backButton);
+      }
+
+      const nextButton = document.createElement('button');
+      nextButton.type = 'button';
+      nextButton.textContent = tutorialStepIndex >= steps.length - 1 ? 'Finish tutorial' : 'Next';
+      nextButton.addEventListener('click', () => {
+        if (tutorialStepIndex >= steps.length - 1) {
+          persistTutorialCompleted();
+          tutorialOpen = false;
+          rerender();
+          return;
+        }
+        tutorialStepIndex += 1;
+        rerender();
+      });
+      tutorialActions.append(nextButton);
+      tutorial.append(tutorialActions);
+      container.append(tutorial);
+    }
 
     const layout = document.createElement('section');
     layout.className = 'tool-layout';

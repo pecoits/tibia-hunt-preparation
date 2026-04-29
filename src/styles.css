@@ -92,6 +92,39 @@ a {
   font-size: 1rem;
 }
 
+.header-actions {
+  margin-top: 12px;
+}
+
+.header-actions .secondary-button {
+  width: auto;
+}
+
+.tutorial-panel {
+  margin: 0 0 16px;
+  border: 1px solid #3b4650;
+  border-radius: 10px;
+  background: #141a1f;
+  padding: 14px;
+}
+
+.tutorial-panel h3 {
+  margin: 0;
+  color: #f3d6a1;
+  font-family: Cinzel, "Times New Roman", serif;
+}
+
+.tutorial-panel .score-note {
+  margin-top: 8px;
+}
+
+.tutorial-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .tool-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -566,6 +599,11 @@ button:focus-visible {
   }
 
   .sharing-row .secondary-button {
+    width: auto;
+  }
+
+  .tutorial-actions button,
+  .tutorial-actions .secondary-button {
     width: auto;
   }
 

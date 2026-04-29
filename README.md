@@ -38,6 +38,14 @@ The app ships with a lightweight service worker:
 2. `public/data/monsters.json` uses `NetworkFirst` with cache fallback to support unstable mobile networks.
 3. The footer displays `Data version` based on `generatedAt` from the loaded dataset.
 
+## In-app tutorial
+
+The app includes a short guided tutorial for first-time users:
+
+1. It opens automatically on first access.
+2. Users can skip it, reopen it from `How to use`, and complete it later.
+3. After completion, it stays hidden on subsequent visits in the same browser (local storage).
+
 ## Data Attribution
 
 Creature data and damage modifiers are sourced from TibiaWiki/Fandom:

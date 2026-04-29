@@ -103,9 +103,14 @@ const database: MonsterDatabase = {
 
 beforeEach(() => {
   window.history.replaceState({}, '', '/');
+  window.localStorage.removeItem('hunt-element-planner-tutorial-v1');
 });
 
 describe('renderApp', () => {
+  function getButton(root: HTMLElement, text: string): HTMLButtonElement | undefined {
+    return Array.from(root.querySelectorAll<HTMLButtonElement>('button')).find((button) => button.textContent?.trim() === text);
+  }
+
   it('renders autocomplete, share control, and attribution', () => {
     const root = document.createElement('main');
 
@@ -348,5 +353,32 @@ describe('renderApp', () => {
 
     expect(root.textContent).toContain('Dragon Lord');
     expect(root.textContent).toContain('Recommended');
+  });
+
+  it('shows tutorial on first access and allows skip/reopen', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    expect(root.textContent).toContain('Step 1 of 4');
+    getButton(root, 'Skip')?.click();
+    expect(root.textContent).not.toContain('Step 1 of 4');
+
+    getButton(root, 'How to use')?.click();
+    expect(root.textContent).toContain('Step 1 of 4');
+  });
+
+  it('persists tutorial completion and keeps it closed on next render', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    getButton(root, 'Next')?.click();
+    getButton(root, 'Next')?.click();
+    getButton(root, 'Next')?.click();
+    getButton(root, 'Finish tutorial')?.click();
+    expect(window.localStorage.getItem('hunt-element-planner-tutorial-v1')).toBe('done');
+
+    const secondRoot = document.createElement('main');
+    renderApp(secondRoot, database);
+    expect(secondRoot.textContent).not.toContain('Step 1 of 4');
   });
 });
