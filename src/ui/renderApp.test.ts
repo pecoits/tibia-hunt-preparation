@@ -74,7 +74,7 @@ describe('renderApp', () => {
 
     renderApp(root, database);
 
-    expect(root.querySelector('input[list="monster-options"]')).not.toBeNull();
+    expect(root.querySelector('input[name="monster-search"]')).not.toBeNull();
     expect(root.querySelector('button[data-action="add-monster"]')?.textContent).toContain('Add');
     expect(root.textContent).toContain('TibiaWiki/Fandom');
     expect(root.textContent).toContain('Developed by Pecoits');
@@ -99,9 +99,29 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('Dragon Lord');
     expect(root.textContent).toContain('Recommended');
     expect(root.textContent).toContain('Ice');
+    const summaryMonsterLink = root.querySelector<HTMLAnchorElement>('.summary-list a');
+    expect(summaryMonsterLink?.textContent).toBe('Dragon Lord');
+    expect(summaryMonsterLink?.getAttribute('href')).toBe('https://tibia.fandom.com/wiki/Dragon_Lord');
     const sprite = root.querySelector<HTMLImageElement>('.monster-sprite img');
     expect(sprite).not.toBeNull();
     expect(sprite?.getAttribute('src')).toContain('/wiki/Special:FilePath/Dragon_Lord.gif');
+  });
+
+  it('shows mobile-friendly autocomplete options while typing', () => {
+    const root = document.createElement('main');
+
+    renderApp(root, database);
+
+    const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+    if (!input) throw new Error('Expected input.');
+
+    input.value = 'drag';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const options = Array.from(root.querySelectorAll<HTMLButtonElement>('.autocomplete-option')).map((button) =>
+      button.textContent?.trim()
+    );
+    expect(options).toContain('Dragon Lord');
   });
 
   it('updates importance via stepper controls and recalculates score', () => {

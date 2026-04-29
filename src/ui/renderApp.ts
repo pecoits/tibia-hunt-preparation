@@ -39,6 +39,28 @@ function findVisibleMonster(database: MonsterDatabase, query: string, includeAdv
   );
 }
 
+function findAutocompleteMatches(database: MonsterDatabase, query: string, includeAdvanced: boolean): Monster[] {
+  const normalized = query.trim().toLocaleLowerCase();
+  if (!normalized) return [];
+
+  const exact: Monster[] = [];
+  const contains: Monster[] = [];
+  for (const monster of database.monsters) {
+    if (!shouldShowInAutocomplete(monster, includeAdvanced)) continue;
+    const name = monster.name.toLocaleLowerCase();
+    const id = monster.id.toLocaleLowerCase();
+    if (name === normalized || id === normalized) {
+      exact.push(monster);
+      continue;
+    }
+    if (name.includes(normalized) || id.includes(normalized)) {
+      contains.push(monster);
+    }
+  }
+
+  return [...exact, ...contains].slice(0, 8);
+}
+
 function shouldShowInAutocomplete(monster: Monster, includeAdvanced: boolean): boolean {
   if (includeAdvanced) return true;
   return monster.huntRelevant && !monster.special && !monster.incomplete;
@@ -133,6 +155,7 @@ function renderProjectMeta(parent: HTMLElement, className: string): void {
 export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   const selected: SelectedMonster[] = [];
   let includeAdvanced = false;
+  let draftQuery = '';
 
   const container = root.tagName.toLocaleLowerCase() === 'main' ? root : document.createElement('main');
   container.className = 'app-shell';
@@ -167,18 +190,30 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     const input = document.createElement('input');
     input.name = 'monster-search';
     input.type = 'text';
-    input.setAttribute('list', 'monster-options');
     input.autocomplete = 'off';
     input.placeholder = 'Type a monster name';
+    input.setAttribute('aria-autocomplete', 'list');
+    input.value = draftQuery;
     const addSelectedMonster = (): void => {
       const monster = findVisibleMonster(database, input.value, includeAdvanced);
       if (!monster) return;
       if (!selected.some((selection) => selection.monster.id === monster.id)) {
         selected.push({ monster, importance: 'normal' });
       }
+      draftQuery = '';
       input.value = '';
       rerender();
     };
+    input.addEventListener('input', () => {
+      draftQuery = input.value;
+      const caret = input.selectionStart ?? draftQuery.length;
+      rerender();
+      const refreshedInput = container.querySelector<HTMLInputElement>('input[name="monster-search"]');
+      if (refreshedInput) {
+        refreshedInput.focus();
+        refreshedInput.setSelectionRange(caret, caret);
+      }
+    });
     input.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter') return;
       event.preventDefault();
@@ -186,12 +221,23 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     });
     inputLabel.append(input);
 
-    const datalist = document.createElement('datalist');
-    datalist.id = 'monster-options';
-    for (const monster of database.monsters.filter((candidate) => shouldShowInAutocomplete(candidate, includeAdvanced))) {
-      const option = document.createElement('option');
-      option.value = monster.name;
-      datalist.append(option);
+    const suggestions = document.createElement('ul');
+    suggestions.className = 'autocomplete-list';
+    suggestions.setAttribute('aria-label', 'Monster suggestions');
+    const matches = findAutocompleteMatches(database, draftQuery, includeAdvanced);
+    for (const monster of matches) {
+      const item = document.createElement('li');
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'autocomplete-option';
+      button.textContent = monster.name;
+      button.addEventListener('click', () => {
+        draftQuery = monster.name;
+        input.value = monster.name;
+        addSelectedMonster();
+      });
+      item.append(button);
+      suggestions.append(item);
     }
 
     const addButton = document.createElement('button');
@@ -200,8 +246,11 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     addButton.textContent = 'Add';
     addButton.addEventListener('click', addSelectedMonster);
 
-    controls.append(inputLabel, addButton, datalist);
+    controls.append(inputLabel, addButton);
     builder.append(controls);
+    if (matches.length > 0) {
+      builder.append(suggestions);
+    }
 
     const advancedLabel = document.createElement('label');
     advancedLabel.className = 'toggle-row';
@@ -313,9 +362,19 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       appendText(resultPanel, 'h3', 'Monster summary', 'section-heading');
       const summaryList = document.createElement('ul');
       summaryList.className = 'summary-list';
+      const sourceByMonsterId = new Map<string, string>(selected.map((item) => [item.monster.id, item.monster.sourceUrl]));
       for (const contribution of recommendation.contributions) {
         const item = document.createElement('li');
-        item.textContent = `${contribution.monsterName}: ${contribution.recommendedModifier}% ${contribution.summary}, ${contribution.selectedImportance} importance, contribution ${formatScore(contribution.contribution)}.`;
+        const link = document.createElement('a');
+        link.href = getSafeSourceUrl(sourceByMonsterId.get(contribution.monsterId) ?? FALLBACK_SOURCE_URL);
+        link.rel = 'noreferrer';
+        link.textContent = contribution.monsterName;
+        item.append(
+          link,
+          document.createTextNode(
+            `: ${contribution.recommendedModifier}% ${contribution.summary}, ${contribution.selectedImportance} importance, contribution ${formatScore(contribution.contribution)}.`
+          )
+        );
         summaryList.append(item);
       }
       resultPanel.append(summaryList);
