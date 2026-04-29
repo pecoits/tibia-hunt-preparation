@@ -83,7 +83,8 @@ function renderAttribution(parent: HTMLElement, database: MonsterDatabase, class
   const paragraph = appendText(parent, 'p', 'Data: ', className);
   const link = document.createElement('a');
   link.href = getSafeSourceUrl(database.source.url);
-  link.rel = 'noreferrer';
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
   link.textContent = database.source.name;
   paragraph.append(link, document.createTextNode(`. ${database.source.license}.`));
 }
@@ -367,7 +368,8 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         const item = document.createElement('li');
         const link = document.createElement('a');
         link.href = getSafeSourceUrl(sourceByMonsterId.get(contribution.monsterId) ?? FALLBACK_SOURCE_URL);
-        link.rel = 'noreferrer';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
         link.textContent = contribution.monsterName;
         item.append(
           link,

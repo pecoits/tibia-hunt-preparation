@@ -102,6 +102,7 @@ describe('renderApp', () => {
     const summaryMonsterLink = root.querySelector<HTMLAnchorElement>('.summary-list a');
     expect(summaryMonsterLink?.textContent).toBe('Dragon Lord');
     expect(summaryMonsterLink?.getAttribute('href')).toBe('https://tibia.fandom.com/wiki/Dragon_Lord');
+    expect(summaryMonsterLink?.getAttribute('target')).toBe('_blank');
     const sprite = root.querySelector<HTMLImageElement>('.monster-sprite img');
     expect(sprite).not.toBeNull();
     expect(sprite?.getAttribute('src')).toContain('/wiki/Special:FilePath/Dragon_Lord.gif');
