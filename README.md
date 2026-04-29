@@ -13,11 +13,17 @@ npm run dev
 
 ```bash
 npm test
-npm run build
 npm run validate-data
+npm run build
 ```
 
-`npm run validate-data` performs a scaffold-level JSON check until the full monster data validator is added.
+## Updating monster data
+
+Admins can run the `Update monster data` GitHub Action manually. The workflow scrapes TibiaWiki/Fandom, validates `public/data/monsters.json`, runs the build, commits directly to `main` only when validation passes and data changed, then deploys GitHub Pages from `dist`.
+
+## Deployment
+
+The `Deploy GitHub Pages` workflow runs on pushes to `main` and manual runs from `main`. It tests, builds, and publishes the static site from `dist`.
 
 ## Data Attribution
 
