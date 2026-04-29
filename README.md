@@ -1,4 +1,4 @@
-# Tibia Hunt Preparation
+# Hunt Element Planner
 
 Static GitHub Pages tool for comparing preferred elemental damage in Tibia hunts.
 

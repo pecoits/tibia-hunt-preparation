@@ -19,7 +19,7 @@ async function bootstrap(): Promise<void> {
   } catch (error) {
     appRoot.innerHTML = `
       <main class="app-shell">
-        <h1>Tibia Hunt Preparation</h1>
+        <h1>Hunt Element Planner</h1>
         <p class="warning">Could not load monster data. Please try again later.</p>
       </main>
     `;

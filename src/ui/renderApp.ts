@@ -103,7 +103,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
 
     const header = document.createElement('header');
     header.className = 'app-header';
-    appendText(header, 'h1', 'Tibia Hunt Preparation');
+    appendText(header, 'h1', 'Hunt Element Planner');
     appendText(header, 'p', 'Plan your hunt loadout with weighted monster importance and elemental ranking.');
     container.append(header);
 
