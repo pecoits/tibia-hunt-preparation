@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  base: '/tibia-hunt-preparation/',
+  base: './',
   test: {
     environment: 'jsdom',
     globals: true,
