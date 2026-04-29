@@ -45,6 +45,10 @@ function formatScore(score: number): string {
   return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(score);
 }
 
+function formatPercent(value: number): string {
+  return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value)}%`;
+}
+
 function findVisibleMonster(database: MonsterDatabase, query: string, includeAdvanced: boolean): Monster | undefined {
   const normalized = query.trim().toLocaleLowerCase();
   return database.monsters.find(
@@ -566,9 +570,46 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       appendText(resultPanel, 'p', 'Add at least one complete monster to calculate a recommendation.', 'empty-state');
     } else {
       const recommendedLabel = ELEMENT_LABELS[recommendation.recommended.element];
+      const totalContribution = recommendation.contributions.reduce((sum, item) => sum + item.contribution, 0);
+      const primaryAlternative = recommendation.topAlternatives.find(
+        (item) => item.element !== recommendation.recommended?.element
+      );
       appendText(resultPanel, 'p', 'Recommended', 'eyebrow');
       appendText(resultPanel, 'h3', recommendedLabel, 'recommended-element');
       appendText(resultPanel, 'p', `Top raw score: ${formatScore(recommendation.recommended.score)}`, 'score-note');
+
+      appendText(resultPanel, 'h3', 'Why this element?', 'section-heading');
+      const explanation = document.createElement('div');
+      explanation.className = 'explanation-block';
+      if (primaryAlternative) {
+        appendText(
+          explanation,
+          'p',
+          `${recommendedLabel} leads ${ELEMENT_LABELS[primaryAlternative.element]} by ${formatScore(primaryAlternative.deltaFromRecommended)} score points.`
+        );
+      } else {
+        appendText(explanation, 'p', `${recommendedLabel} is currently the only ranked recommendation with valid hunt data.`);
+      }
+      appendText(explanation, 'p', 'Impact formula used per monster: Hitpoints × (Weight / 50) × Element Modifier.');
+      resultPanel.append(explanation);
+
+      appendText(resultPanel, 'h3', 'Top 3 elements', 'section-heading');
+      const topList = document.createElement('ol');
+      topList.className = 'ranking-list';
+      for (const item of recommendation.topAlternatives) {
+        const topItem = document.createElement('li');
+        const label = document.createElement('span');
+        label.textContent = ELEMENT_LABELS[item.element];
+        const score = document.createElement('strong');
+        const deltaText =
+          item.deltaFromRecommended === 0
+            ? 'baseline'
+            : `${formatScore(item.deltaFromRecommended)} behind`;
+        score.textContent = `${formatScore(item.score)} (${deltaText})`;
+        topItem.append(label, score);
+        topList.append(topItem);
+      }
+      resultPanel.append(topList);
 
       appendText(resultPanel, 'h3', 'Full ranking', 'section-heading');
       const rankingList = document.createElement('ol');
@@ -595,10 +636,12 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         link.textContent = contribution.monsterName;
+        const weightFactor = contribution.selectedWeight / 50;
+        const contributionShare = totalContribution > 0 ? (contribution.contribution / totalContribution) * 100 : 0;
         item.append(
           link,
           document.createTextNode(
-            `: ${contribution.recommendedModifier}% ${contribution.summary}, weight ${contribution.selectedWeight}, contribution ${formatScore(contribution.contribution)}.`
+            `: ${contribution.recommendedModifier}% ${contribution.summary}, weight ${contribution.selectedWeight} (x${weightFactor.toFixed(2)}), contribution ${formatScore(contribution.contribution)} (${formatPercent(contributionShare)} of recommended score).`
           )
         );
         summaryList.append(item);

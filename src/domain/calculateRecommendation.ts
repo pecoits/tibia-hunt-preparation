@@ -12,6 +12,10 @@ export interface ElementScore {
   score: number;
 }
 
+export interface RankedElement extends ElementScore {
+  deltaFromRecommended: number;
+}
+
 export interface MonsterContribution {
   monsterId: string;
   monsterName: string;
@@ -30,6 +34,7 @@ export interface ExcludedMonster {
 export interface RecommendationResult {
   recommended: ElementScore | null;
   ranking: ElementScore[];
+  topAlternatives: RankedElement[];
   contributions: MonsterContribution[];
   excludedMonsters: ExcludedMonster[];
 }
@@ -113,10 +118,19 @@ export function calculateRecommendation(selections: HuntSelection[]): Recommenda
         };
       })
     : [];
+  const topAlternatives: RankedElement[] = recommended
+    ? ranking
+        .slice(0, 3)
+        .map((item) => ({
+          ...item,
+          deltaFromRecommended: recommended.score - item.score
+        }))
+    : [];
 
   return {
     recommended,
     ranking,
+    topAlternatives,
     contributions,
     excludedMonsters
   };

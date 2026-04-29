@@ -384,6 +384,23 @@ button:focus-visible {
   color: #d8e0e6;
 }
 
+.explanation-block {
+  margin-top: 10px;
+  border: 1px solid #3a454d;
+  border-radius: 8px;
+  background: #151b1f;
+  padding: 10px 12px;
+  color: #d6e0e7;
+}
+
+.explanation-block p {
+  margin: 0;
+}
+
+.explanation-block p + p {
+  margin-top: 6px;
+}
+
 .ranking-list,
 .summary-list {
   display: grid;

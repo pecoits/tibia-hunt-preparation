@@ -137,6 +137,9 @@ describe('renderApp', () => {
     expect(root.textContent).toContain('Dragon Lord');
     expect(root.textContent).toContain('Recommended');
     expect(root.textContent).toContain('Ice');
+    expect(root.textContent).toContain('Why this element?');
+    expect(root.textContent).toContain('Top 3 elements');
+    expect(root.textContent).toContain('of recommended score');
     const summaryMonsterLink = root.querySelector<HTMLAnchorElement>('.summary-list a');
     expect(summaryMonsterLink?.textContent).toBe('Dragon Lord');
     expect(summaryMonsterLink?.getAttribute('href')).toBe('https://tibia.fandom.com/wiki/Dragon_Lord');

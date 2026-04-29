@@ -220,6 +220,11 @@ describe('calculateRecommendation', () => {
         summary: 'resists'
       }
     ]);
+    expect(result.topAlternatives).toEqual([
+      { element: 'ice', score: 28000, deltaFromRecommended: 0 },
+      { element: 'physical', score: 0, deltaFromRecommended: 28000 },
+      { element: 'earth', score: 0, deltaFromRecommended: 28000 }
+    ]);
   });
 
   it('excludes incomplete monsters with missing hitpoints and reports the missing hitpoints reason', () => {
