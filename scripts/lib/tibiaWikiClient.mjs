@@ -20,12 +20,12 @@ export async function fetchWikiJson(params) {
     try {
       const response = await fetch(url);
       if (response.ok) {
-        return response.json();
+        return await response.json();
       }
 
       lastError = new Error(`TibiaWiki request failed: ${response.status} ${response.statusText}`);
       if (response.status < 500 && response.status !== 429) {
-        throw lastError;
+        break;
       }
     } catch (error) {
       lastError = error;

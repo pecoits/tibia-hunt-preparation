@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-29T01:55:32.369Z",
+  "generatedAt": "2026-04-29T02:06:56.755Z",
   "source": {
     "name": "TibiaWiki/Fandom",
     "url": "https://tibia.fandom.com/wiki/Main_Page",
@@ -64,7 +64,7 @@
     {
       "id": "a-weak-spot",
       "name": "A Weak Spot",
-      "hitpoints": null,
+      "hitpoints": 435000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -75,9 +75,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/A_Weak_Spot",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "abominable-servant",
@@ -478,7 +478,7 @@
     {
       "id": "alchemistical-container",
       "name": "Alchemistical Container",
-      "hitpoints": null,
+      "hitpoints": 1000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -489,9 +489,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Alchemistical_Container",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "allusion",
@@ -838,7 +838,7 @@
     {
       "id": "angry-plant-thing",
       "name": "Angry Plant Thing",
-      "hitpoints": null,
+      "hitpoints": 100000,
       "elements": {
         "physical": 55,
         "earth": 55,
@@ -849,9 +849,9 @@
         "death": 55
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Angry_Plant_Thing",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "angry-sugar-fairy",
@@ -1180,7 +1180,7 @@
     {
       "id": "antenna",
       "name": "Antenna",
-      "hitpoints": null,
+      "hitpoints": 10000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -1191,9 +1191,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Antenna",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "apocalypse",
@@ -1270,7 +1270,7 @@
     {
       "id": "arbaziloth",
       "name": "Arbaziloth",
-      "hitpoints": null,
+      "hitpoints": 360000,
       "elements": {
         "physical": 70,
         "earth": 100,
@@ -1283,7 +1283,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Arbaziloth",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "arctic-faun",
@@ -1416,6 +1416,7 @@
       "name": "Ashes of Burning Hatred",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -1539,7 +1540,7 @@
     {
       "id": "atab",
       "name": "Atab",
-      "hitpoints": null,
+      "hitpoints": 8100,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -1551,8 +1552,8 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Atab",
       "huntRelevant": false,
-      "special": false,
-      "incomplete": true
+      "special": true,
+      "incomplete": false
     },
     {
       "id": "avalanche-creature",
@@ -1593,7 +1594,7 @@
     {
       "id": "ayana-the-crimson-curse",
       "name": "Ayana the Crimson Curse",
-      "hitpoints": null,
+      "hitpoints": 17000,
       "elements": {
         "physical": 100,
         "earth": 70,
@@ -1606,7 +1607,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Ayana_the_Crimson_Curse",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "azarams-soul",
@@ -1719,7 +1720,7 @@
     {
       "id": "bad-thought",
       "name": "Bad Thought",
-      "hitpoints": null,
+      "hitpoints": 500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -1730,9 +1731,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bad_Thought",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "badger",
@@ -1755,7 +1756,7 @@
     {
       "id": "bakragore",
       "name": "Bakragore",
-      "hitpoints": null,
+      "hitpoints": 660000,
       "elements": {
         "physical": 100,
         "earth": 105,
@@ -1767,8 +1768,8 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bakragore",
       "huntRelevant": false,
-      "special": false,
-      "incomplete": true
+      "special": true,
+      "incomplete": false
     },
     {
       "id": "baleful-bunny",
@@ -2043,7 +2044,7 @@
     {
       "id": "bashmu",
       "name": "Bashmu",
-      "hitpoints": null,
+      "hitpoints": 8200,
       "elements": {
         "physical": 95,
         "earth": 80,
@@ -2054,9 +2055,9 @@
         "death": 110
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bashmu",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "bat",
@@ -2387,6 +2388,7 @@
       "name": "Black Mutagen",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -2420,7 +2422,7 @@
     {
       "id": "black-sphinx-acolyte",
       "name": "Black Sphinx Acolyte",
-      "hitpoints": null,
+      "hitpoints": 8100,
       "elements": {
         "physical": 100,
         "earth": 90,
@@ -2431,9 +2433,9 @@
         "death": 0
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Black_Sphinx_Acolyte",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "black-vixen",
@@ -2476,6 +2478,7 @@
       "name": "Blaze of Burning Hatred",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -2509,7 +2512,7 @@
     {
       "id": "blemished-spawn",
       "name": "Blemished Spawn",
-      "hitpoints": null,
+      "hitpoints": 9000,
       "elements": {
         "physical": 100,
         "earth": 90,
@@ -2520,9 +2523,9 @@
         "death": 90
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Blemished_Spawn",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "blight-bug",
@@ -2671,7 +2674,7 @@
     {
       "id": "bloated-man-maggot",
       "name": "Bloated Man-Maggot",
-      "hitpoints": null,
+      "hitpoints": 31700,
       "elements": {
         "physical": 55,
         "earth": 60,
@@ -2682,14 +2685,14 @@
         "death": 95
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bloated_Man-Maggot",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "blocking-stalagmite",
       "name": "Blocking Stalagmite",
-      "hitpoints": null,
+      "hitpoints": 10500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -2700,9 +2703,9 @@
         "death": 0
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Blocking_Stalagmite",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "blood-beast",
@@ -2869,7 +2872,7 @@
     {
       "id": "bloodjaw",
       "name": "Bloodjaw",
-      "hitpoints": null,
+      "hitpoints": 40000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -2880,9 +2883,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bloodjaw",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "bloodpaw",
@@ -2943,6 +2946,7 @@
       "name": "Blooming Tower (Light Blue)",
       "hitpoints": null,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -3104,6 +3108,7 @@
       "name": "Blue Mutagen",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -3155,7 +3160,7 @@
     {
       "id": "bluebeak",
       "name": "Bluebeak",
-      "hitpoints": null,
+      "hitpoints": 2430,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -3166,9 +3171,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bluebeak",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "boar",
@@ -3263,7 +3268,7 @@
     {
       "id": "bone-barrier",
       "name": "Bone Barrier",
-      "hitpoints": null,
+      "hitpoints": 10000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -3274,9 +3279,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bone_Barrier",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "bone-bear",
@@ -3767,7 +3772,7 @@
     {
       "id": "bramble-wyrmling",
       "name": "Bramble Wyrmling",
-      "hitpoints": null,
+      "hitpoints": 2350,
       "elements": {
         "physical": 95,
         "earth": 80,
@@ -3778,9 +3783,9 @@
         "death": 110
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bramble_Wyrmling",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "branchy-crawler",
@@ -3893,7 +3898,7 @@
     {
       "id": "brinebrute-inferniarch",
       "name": "Brinebrute Inferniarch",
-      "hitpoints": null,
+      "hitpoints": 32000,
       "elements": {
         "physical": 80,
         "earth": 110,
@@ -3904,9 +3909,9 @@
         "death": 110
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Brinebrute_Inferniarch",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "brittle-skeleton",
@@ -3965,7 +3970,7 @@
     {
       "id": "broodrider-inferniarch",
       "name": "Broodrider Inferniarch",
-      "hitpoints": null,
+      "hitpoints": 9600,
       "elements": {
         "physical": 100,
         "earth": 90,
@@ -3976,9 +3981,9 @@
         "death": 85
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Broodrider_Inferniarch",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "brother-chill",
@@ -4055,7 +4060,7 @@
     {
       "id": "bruton",
       "name": "Bruton",
-      "hitpoints": null,
+      "hitpoints": 50000,
       "elements": {
         "physical": 0,
         "earth": 100,
@@ -4068,7 +4073,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Bruton",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "brutus-bloodbeard",
@@ -4127,7 +4132,7 @@
     {
       "id": "bulltaur-alchemist",
       "name": "Bulltaur Alchemist",
-      "hitpoints": null,
+      "hitpoints": 5690,
       "elements": {
         "physical": 70,
         "earth": 120,
@@ -4138,14 +4143,14 @@
         "death": 105
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bulltaur_Alchemist",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "bulltaur-brute",
       "name": "Bulltaur Brute",
-      "hitpoints": null,
+      "hitpoints": 6560,
       "elements": {
         "physical": 70,
         "earth": 120,
@@ -4156,14 +4161,14 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bulltaur_Brute",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "bulltaur-forgepriest",
       "name": "Bulltaur Forgepriest",
-      "hitpoints": null,
+      "hitpoints": 6840,
       "elements": {
         "physical": 80,
         "earth": 100,
@@ -4174,9 +4179,9 @@
         "death": 110
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Bulltaur_Forgepriest",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "bullwark",
@@ -4534,8 +4539,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Captured_Versperoth",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -4559,7 +4564,7 @@
     {
       "id": "carnisylvan-sapling",
       "name": "Carnisylvan Sapling",
-      "hitpoints": null,
+      "hitpoints": 750,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -4570,9 +4575,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Carnisylvan_Sapling",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "carnivorous-butterfly",
@@ -4631,8 +4636,9 @@
     {
       "id": "cart-packed-with-gold",
       "name": "Cart Packed with Gold",
-      "hitpoints": null,
+      "hitpoints": 10000,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -4641,9 +4647,9 @@
         "death": 0
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Cart_Packed_with_Gold",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "cat",
@@ -4792,7 +4798,7 @@
     {
       "id": "cellar-rat",
       "name": "Cellar Rat",
-      "hitpoints": null,
+      "hitpoints": 1800,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -4803,9 +4809,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Cellar_Rat",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "centipede",
@@ -4828,7 +4834,7 @@
     {
       "id": "cerebellum",
       "name": "Cerebellum",
-      "hitpoints": null,
+      "hitpoints": 15000,
       "elements": {
         "physical": 100,
         "earth": 150,
@@ -4839,9 +4845,9 @@
         "death": 90
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Cerebellum",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "chagorz",
@@ -5242,7 +5248,7 @@
     {
       "id": "clavius",
       "name": "Clavius",
-      "hitpoints": null,
+      "hitpoints": 40000,
       "elements": {
         "physical": 125,
         "earth": 112,
@@ -5255,7 +5261,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Clavius",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "clay-guardian",
@@ -5332,8 +5338,9 @@
     {
       "id": "clutter",
       "name": "Clutter",
-      "hitpoints": null,
+      "hitpoints": 1000,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -5342,9 +5349,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Clutter",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "cobra",
@@ -6285,7 +6292,7 @@
     {
       "id": "crusader",
       "name": "Crusader",
-      "hitpoints": null,
+      "hitpoints": 3400,
       "elements": {
         "physical": 90,
         "earth": 105,
@@ -6296,14 +6303,14 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Crusader",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "crusader-guardian",
       "name": "Crusader Guardian",
-      "hitpoints": null,
+      "hitpoints": 3400,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -6314,9 +6321,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Crusader_Guardian",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "crustacea-gigantica",
@@ -6663,7 +6670,7 @@
     {
       "id": "cursed-prospector",
       "name": "Cursed Prospector",
-      "hitpoints": null,
+      "hitpoints": 3900,
       "elements": {
         "physical": 40,
         "earth": 100,
@@ -6674,9 +6681,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Cursed_Prospector",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "custodian",
@@ -6692,8 +6699,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Custodian",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -6897,7 +6904,7 @@
     {
       "id": "dark-carnisylvan",
       "name": "Dark Carnisylvan",
-      "hitpoints": null,
+      "hitpoints": 7500,
       "elements": {
         "physical": 100,
         "earth": 90,
@@ -6908,9 +6915,9 @@
         "death": 80
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Dark_Carnisylvan",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "dark-druid",
@@ -7005,7 +7012,7 @@
     {
       "id": "dark-merudri",
       "name": "Dark Merudri",
-      "hitpoints": null,
+      "hitpoints": 6500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -7016,9 +7023,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Dark_Merudri",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "dark-monk",
@@ -7131,7 +7138,7 @@
     {
       "id": "darklight-construct",
       "name": "Darklight Construct",
-      "hitpoints": null,
+      "hitpoints": 32200,
       "elements": {
         "physical": 115,
         "earth": 90,
@@ -7142,9 +7149,9 @@
         "death": 120
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Darklight_Construct",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "darklight-emitter",
@@ -7185,7 +7192,7 @@
     {
       "id": "darklight-source",
       "name": "Darklight Source",
-      "hitpoints": null,
+      "hitpoints": 31550,
       "elements": {
         "physical": 110,
         "earth": 110,
@@ -7196,9 +7203,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Darklight_Source",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "darklight-striker",
@@ -8591,6 +8598,7 @@
       "name": "Domestikion",
       "hitpoints": 750,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -8599,9 +8607,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Domestikion",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "doom-deer",
@@ -8696,7 +8704,7 @@
     {
       "id": "dragolisk",
       "name": "Dragolisk",
-      "hitpoints": null,
+      "hitpoints": 6180,
       "elements": {
         "physical": 85,
         "earth": 110,
@@ -8707,9 +8715,9 @@
         "death": 110
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Dragolisk",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "dragon",
@@ -8786,8 +8794,9 @@
     {
       "id": "dragon-hoard",
       "name": "Dragon Hoard",
-      "hitpoints": null,
+      "hitpoints": 50000,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -8798,7 +8807,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Dragon_Hoard",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "dragon-lord",
@@ -9199,7 +9208,7 @@
     {
       "id": "drowned-deck-hand",
       "name": "Drowned Deck Hand",
-      "hitpoints": null,
+      "hitpoints": 2000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -9210,9 +9219,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Drowned_Deck_Hand",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "druid-familiar",
@@ -9469,7 +9478,7 @@
     {
       "id": "dworc-shadowstalker",
       "name": "Dworc Shadowstalker",
-      "hitpoints": null,
+      "hitpoints": 8900,
       "elements": {
         "physical": 95,
         "earth": 95,
@@ -9480,9 +9489,9 @@
         "death": 60
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Dworc_Shadowstalker",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "dworc-venomsniper",
@@ -9757,7 +9766,7 @@
     {
       "id": "elder-bloodjaw",
       "name": "Elder Bloodjaw",
-      "hitpoints": null,
+      "hitpoints": 86000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -9768,9 +9777,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Elder_Bloodjaw",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "elder-bonelord",
@@ -10711,7 +10720,7 @@
     {
       "id": "evil-prospector",
       "name": "Evil Prospector",
-      "hitpoints": null,
+      "hitpoints": 8500,
       "elements": {
         "physical": 35,
         "earth": 100,
@@ -10722,9 +10731,9 @@
         "death": 110
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Evil_Prospector",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "evil-sheep",
@@ -10855,7 +10864,7 @@
     {
       "id": "eyeless-devourer",
       "name": "Eyeless Devourer",
-      "hitpoints": null,
+      "hitpoints": 10000,
       "elements": {
         "physical": 110,
         "earth": 90,
@@ -10866,9 +10875,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Eyeless_Devourer",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "faceless-bane",
@@ -10999,7 +11008,7 @@
     {
       "id": "fat-porker",
       "name": "Fat Porker",
-      "hitpoints": null,
+      "hitpoints": 20000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -11012,7 +11021,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Fat_Porker",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "fatal-bug",
@@ -11191,7 +11200,7 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Feroxa",
       "huntRelevant": false,
-      "special": false,
+      "special": true,
       "incomplete": true
     },
     {
@@ -11298,8 +11307,8 @@
         "death": 35
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Ferumbras_Mortal_Shell",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -11577,6 +11586,7 @@
       "name": "Flame of Burning Hatred",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -11918,6 +11928,7 @@
       "name": "Food Wagon",
       "hitpoints": null,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -12131,7 +12142,7 @@
     {
       "id": "frenzied-plant-thing",
       "name": "Frenzied Plant Thing",
-      "hitpoints": null,
+      "hitpoints": 100000,
       "elements": {
         "physical": 55,
         "earth": 55,
@@ -12142,9 +12153,9 @@
         "death": 55
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Frenzied_Plant_Thing",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "frenzy",
@@ -12592,8 +12603,8 @@
         "death": 90
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Furyosa",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -12808,8 +12819,8 @@
         "death": 99
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Ghazbaran",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -12871,6 +12882,7 @@
       "name": "Ghost Ship",
       "hitpoints": null,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -12970,7 +12982,7 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Ghulosh",
       "huntRelevant": false,
-      "special": false,
+      "special": true,
       "incomplete": true
     },
     {
@@ -12996,6 +13008,7 @@
       "name": "Giant Beaver",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -13353,7 +13366,7 @@
     {
       "id": "girtablilu-warrior",
       "name": "Girtablilu Warrior",
-      "hitpoints": null,
+      "hitpoints": 8500,
       "elements": {
         "physical": 100,
         "earth": 90,
@@ -13364,9 +13377,9 @@
         "death": 85
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Girtablilu_Warrior",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "gladiator",
@@ -13407,7 +13420,7 @@
     {
       "id": "gloom-maw",
       "name": "Gloom Maw",
-      "hitpoints": null,
+      "hitpoints": 8700,
       "elements": {
         "physical": 100,
         "earth": 110,
@@ -13418,9 +13431,9 @@
         "death": 75
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Gloom_Maw",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "gloom-wolf",
@@ -14037,7 +14050,7 @@
     {
       "id": "gorga",
       "name": "Gorga",
-      "hitpoints": null,
+      "hitpoints": 15000,
       "elements": {
         "physical": 100,
         "earth": 0,
@@ -14050,12 +14063,12 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Gorga",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "gorger-inferniarch",
       "name": "Gorger Inferniarch",
-      "hitpoints": null,
+      "hitpoints": 9450,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -14066,9 +14079,9 @@
         "death": 90
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Gorger_Inferniarch",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "gorgo",
@@ -14102,8 +14115,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Gorzindel",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -14271,7 +14284,7 @@
     {
       "id": "gralvalon",
       "name": "Gralvalon",
-      "hitpoints": null,
+      "hitpoints": 33000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -14284,7 +14297,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Gralvalon",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "grand-canon-dominus",
@@ -14390,8 +14403,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Grandfather_Tridian",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -14523,7 +14536,7 @@
     {
       "id": "greater-energy-elemental",
       "name": "Greater Energy Elemental",
-      "hitpoints": null,
+      "hitpoints": 1100,
       "elements": {
         "physical": 50,
         "earth": 105,
@@ -14534,9 +14547,9 @@
         "death": 80
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Greater_Energy_Elemental",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "greater-fire-elemental",
@@ -14631,7 +14644,7 @@
     {
       "id": "greedok",
       "name": "Greedok",
-      "hitpoints": null,
+      "hitpoints": 50000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -14644,7 +14657,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Greedok",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "green-collector-unit",
@@ -14723,6 +14736,7 @@
       "name": "Green Mutagen",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -15044,7 +15058,7 @@
     {
       "id": "guardian-golem",
       "name": "Guardian Golem",
-      "hitpoints": null,
+      "hitpoints": 2500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -15055,9 +15069,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Guardian_Golem",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "guardian-of-tales",
@@ -15476,7 +15490,7 @@
     {
       "id": "headwalker",
       "name": "Headwalker",
-      "hitpoints": null,
+      "hitpoints": 2460,
       "elements": {
         "physical": 100,
         "earth": 105,
@@ -15487,9 +15501,9 @@
         "death": 110
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Headwalker",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "hell-hole",
@@ -15584,7 +15598,7 @@
     {
       "id": "hellhunter-inferniarch",
       "name": "Hellhunter Inferniarch",
-      "hitpoints": null,
+      "hitpoints": 11300,
       "elements": {
         "physical": 90,
         "earth": 115,
@@ -15595,9 +15609,9 @@
         "death": 115
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Hellhunter_Inferniarch",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "hellspawn",
@@ -15928,6 +15942,7 @@
       "name": "Hoodinion",
       "hitpoints": 800,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -15936,9 +15951,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Hoodinion",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "horadron",
@@ -16087,7 +16102,7 @@
     {
       "id": "hulking-carnisylvan",
       "name": "Hulking Carnisylvan",
-      "hitpoints": null,
+      "hitpoints": 8600,
       "elements": {
         "physical": 100,
         "earth": 80,
@@ -16098,9 +16113,9 @@
         "death": 90
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Hulking_Carnisylvan",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "hulking-prehemoth",
@@ -16573,7 +16588,7 @@
     {
       "id": "iks-yapunac",
       "name": "Iks Yapunac",
-      "hitpoints": null,
+      "hitpoints": 3125,
       "elements": {
         "physical": 85,
         "earth": 90,
@@ -16584,9 +16599,9 @@
         "death": 120
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Iks_Yapunac",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "imp-intruder",
@@ -16627,7 +16642,7 @@
     {
       "id": "imp-warden",
       "name": "Imp Warden",
-      "hitpoints": null,
+      "hitpoints": 10500,
       "elements": {
         "physical": 100,
         "earth": 120,
@@ -16638,9 +16653,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Imp_Warden",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "imperial",
@@ -17419,7 +17434,7 @@
     {
       "id": "juvenile-bashmu",
       "name": "Juvenile Bashmu",
-      "hitpoints": null,
+      "hitpoints": 7500,
       "elements": {
         "physical": 100,
         "earth": 95,
@@ -17430,9 +17445,9 @@
         "death": 95
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Juvenile_Bashmu",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "juvenile-cyclops",
@@ -18121,7 +18136,7 @@
     {
       "id": "lava-puddle-creature",
       "name": "Lava Puddle (Creature)",
-      "hitpoints": null,
+      "hitpoints": 6000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -18132,9 +18147,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Lava_Puddle_(Creature)",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "lavafungus",
@@ -18301,7 +18316,7 @@
     {
       "id": "lesser-magma-crystal",
       "name": "Lesser Magma Crystal",
-      "hitpoints": null,
+      "hitpoints": 15000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -18312,9 +18327,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Lesser_Magma_Crystal",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "lesser-splinter-of-madness",
@@ -18961,7 +18976,7 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Lokathmor",
       "huntRelevant": false,
-      "special": false,
+      "special": true,
       "incomplete": true
     },
     {
@@ -19147,7 +19162,7 @@
     {
       "id": "lord-retro",
       "name": "Lord Retro",
-      "hitpoints": null,
+      "hitpoints": 2500,
       "elements": {
         "physical": 0,
         "earth": 0,
@@ -19160,7 +19175,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Lord_Retro",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "loricate-orger",
@@ -19597,7 +19612,7 @@
     {
       "id": "magma-crystal",
       "name": "Magma Crystal",
-      "hitpoints": null,
+      "hitpoints": 22000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -19608,9 +19623,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Magma_Crystal",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "magma-fiend",
@@ -19723,7 +19738,7 @@
     {
       "id": "major-timedisplaced-anomaly-fiehonja",
       "name": "Major Timedisplaced Anomaly (Fiehonja)",
-      "hitpoints": null,
+      "hitpoints": 75000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -19736,12 +19751,12 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Major_Timedisplaced_Anomaly_(Fiehonja)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "major-timedisplaced-anomaly-issavi",
       "name": "Major Timedisplaced Anomaly (Issavi)",
-      "hitpoints": null,
+      "hitpoints": 70000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -19754,12 +19769,12 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Major_Timedisplaced_Anomaly_(Issavi)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "major-timedisplaced-anomaly-rascacoon",
       "name": "Major Timedisplaced Anomaly (Rascacoon)",
-      "hitpoints": null,
+      "hitpoints": 65000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -19772,7 +19787,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Major_Timedisplaced_Anomaly_(Rascacoon)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "makara",
@@ -19849,7 +19864,7 @@
     {
       "id": "maliz",
       "name": "Maliz",
-      "hitpoints": null,
+      "hitpoints": 50000,
       "elements": {
         "physical": 100,
         "earth": -1000,
@@ -19862,7 +19877,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Maliz",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "malkhar-deathbringer",
@@ -19903,7 +19918,7 @@
     {
       "id": "malvaroth",
       "name": "Malvaroth",
-      "hitpoints": null,
+      "hitpoints": 40000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -19916,7 +19931,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Malvaroth",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "mamma-longlegs",
@@ -20371,7 +20386,7 @@
     {
       "id": "mean-termite",
       "name": "Mean Termite",
-      "hitpoints": null,
+      "hitpoints": 4300,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -20382,14 +20397,14 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mean_Termite",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "meandering-mushroom",
       "name": "Meandering Mushroom",
-      "hitpoints": null,
+      "hitpoints": 29100,
       "elements": {
         "physical": 100,
         "earth": 120,
@@ -20400,15 +20415,16 @@
         "death": 50
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Meandering_Mushroom",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "mearidion",
       "name": "Mearidion",
       "hitpoints": 850,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -20417,9 +20433,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mearidion",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "mechanical-fighter",
@@ -20460,7 +20476,7 @@
     {
       "id": "mega-dragon",
       "name": "Mega Dragon",
-      "hitpoints": null,
+      "hitpoints": 7920,
       "elements": {
         "physical": 100,
         "earth": 110,
@@ -20471,14 +20487,14 @@
         "death": 80
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mega_Dragon",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "megasylvan-sapling-creature",
       "name": "Megasylvan Sapling (Creature)",
-      "hitpoints": null,
+      "hitpoints": 10000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -20489,9 +20505,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Megasylvan_Sapling_(Creature)",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "megasylvan-yselda",
@@ -20856,7 +20872,7 @@
     {
       "id": "memory-of-a-wolf",
       "name": "Memory of a Wolf",
-      "hitpoints": null,
+      "hitpoints": 3640,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -20867,9 +20883,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Memory_of_a_Wolf",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "memory-of-a-yalahari",
@@ -21162,7 +21178,7 @@
     {
       "id": "michael-the-stalwart",
       "name": "Michael the Stalwart",
-      "hitpoints": null,
+      "hitpoints": 60000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -21175,7 +21191,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Michael_the_Stalwart",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "midnight-asura",
@@ -21432,7 +21448,7 @@
     {
       "id": "minor-timedisplaced-anomaly-ankrahmun",
       "name": "Minor Timedisplaced Anomaly (Ankrahmun)",
-      "hitpoints": null,
+      "hitpoints": 48000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -21445,12 +21461,12 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Minor_Timedisplaced_Anomaly_(Ankrahmun)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "minor-timedisplaced-anomaly-greenshore",
       "name": "Minor Timedisplaced Anomaly (Greenshore)",
-      "hitpoints": null,
+      "hitpoints": 44000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -21463,12 +21479,12 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Minor_Timedisplaced_Anomaly_(Greenshore)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "minor-timedisplaced-anomaly-rookgaard",
       "name": "Minor Timedisplaced Anomaly (Rookgaard)",
-      "hitpoints": null,
+      "hitpoints": 40000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -21481,7 +21497,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Minor_Timedisplaced_Anomaly_(Rookgaard)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "minotaur",
@@ -21810,7 +21826,7 @@
     {
       "id": "mirror-image",
       "name": "Mirror Image",
-      "hitpoints": null,
+      "hitpoints": 35000,
       "elements": {
         "physical": 99,
         "earth": 100,
@@ -21821,9 +21837,9 @@
         "death": 101
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mirror_Image",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "misguided-bully",
@@ -21900,7 +21916,7 @@
     {
       "id": "mitmah-scout",
       "name": "Mitmah Scout",
-      "hitpoints": null,
+      "hitpoints": 3940,
       "elements": {
         "physical": 95,
         "earth": 115,
@@ -21911,14 +21927,14 @@
         "death": 85
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mitmah_Scout",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "mitmah-seer",
       "name": "Mitmah Seer",
-      "hitpoints": null,
+      "hitpoints": 4620,
       "elements": {
         "physical": 100,
         "earth": 105,
@@ -21929,14 +21945,14 @@
         "death": 85
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mitmah_Seer",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "mitmah-vanguard",
       "name": "Mitmah Vanguard",
-      "hitpoints": null,
+      "hitpoints": 50000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -21949,7 +21965,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Mitmah_Vanguard",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "modified-gnarlhound",
@@ -22044,7 +22060,7 @@
     {
       "id": "monks-apparition",
       "name": "Monk's Apparition",
-      "hitpoints": null,
+      "hitpoints": 25000,
       "elements": {
         "physical": 80,
         "earth": 100,
@@ -22055,9 +22071,9 @@
         "death": 120
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Monk's_Apparition",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "monstor",
@@ -22163,8 +22179,8 @@
         "death": 20
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Morgaroth",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -22242,7 +22258,7 @@
     {
       "id": "mould-phantom",
       "name": "Mould Phantom",
-      "hitpoints": null,
+      "hitpoints": 28000,
       "elements": {
         "physical": 110,
         "earth": 50,
@@ -22253,9 +22269,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mould_Phantom",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "mountain-troll",
@@ -22496,6 +22512,7 @@
       "name": "Murmillion",
       "hitpoints": 1100,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -22504,9 +22521,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Murmillion",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "muse-of-penciljack",
@@ -22565,7 +22582,7 @@
     {
       "id": "mushroom",
       "name": "Mushroom",
-      "hitpoints": null,
+      "hitpoints": 10000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -22576,9 +22593,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mushroom",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "mushroom-sniffer",
@@ -22691,7 +22708,7 @@
     {
       "id": "mycobiontic-beetle",
       "name": "Mycobiontic Beetle",
-      "hitpoints": null,
+      "hitpoints": 30200,
       "elements": {
         "physical": 75,
         "earth": 40,
@@ -22702,9 +22719,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Mycobiontic_Beetle",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "mystic-energy",
@@ -23303,7 +23320,7 @@
     {
       "id": "norcferatu-heartless",
       "name": "Norcferatu Heartless",
-      "hitpoints": null,
+      "hitpoints": 5700,
       "elements": {
         "physical": 90,
         "earth": 110,
@@ -23314,9 +23331,9 @@
         "death": 70
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Norcferatu_Heartless",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "norcferatu-minion",
@@ -23357,7 +23374,7 @@
     {
       "id": "norcferatu-nightweaver",
       "name": "Norcferatu Nightweaver",
-      "hitpoints": null,
+      "hitpoints": 6100,
       "elements": {
         "physical": 100,
         "earth": 105,
@@ -23368,9 +23385,9 @@
         "death": 75
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Norcferatu_Nightweaver",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "norgle-glacierbeard",
@@ -23681,7 +23698,7 @@
     {
       "id": "oozing-carcass",
       "name": "Oozing Carcass",
-      "hitpoints": null,
+      "hitpoints": 27500,
       "elements": {
         "physical": 100,
         "earth": 120,
@@ -23692,14 +23709,14 @@
         "death": 60
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Oozing_Carcass",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "oozing-corpus",
       "name": "Oozing Corpus",
-      "hitpoints": null,
+      "hitpoints": 28700,
       "elements": {
         "physical": 70,
         "earth": 60,
@@ -23710,9 +23727,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Oozing_Corpus",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "orc",
@@ -24023,7 +24040,7 @@
     {
       "id": "orclops-bloodbreaker",
       "name": "Orclops Bloodbreaker",
-      "hitpoints": null,
+      "hitpoints": 10300,
       "elements": {
         "physical": 95,
         "earth": 100,
@@ -24034,9 +24051,9 @@
         "death": 70
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Orclops_Bloodbreaker",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "orclops-doomhauler",
@@ -24275,7 +24292,7 @@
     {
       "id": "overseer-osverger",
       "name": "Overseer Osverger",
-      "hitpoints": null,
+      "hitpoints": 75000,
       "elements": {
         "physical": 106,
         "earth": 106,
@@ -24288,7 +24305,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Overseer_Osverger",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "owin-creature",
@@ -24725,7 +24742,7 @@
     {
       "id": "pillar-of-dark-energy",
       "name": "Pillar of Dark Energy",
-      "hitpoints": null,
+      "hitpoints": 37500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -24736,9 +24753,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Pillar_of_Dark_Energy",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "pillar-of-death",
@@ -25141,6 +25158,7 @@
       "name": "Pirate Ship",
       "hitpoints": null,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -25473,8 +25491,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Plagirath",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -25492,7 +25510,7 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Plagueroot",
       "huntRelevant": false,
-      "special": false,
+      "special": true,
       "incomplete": true
     },
     {
@@ -26112,6 +26130,7 @@
       "name": "Princess Lumelia",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -26145,7 +26164,7 @@
     {
       "id": "psychic-spirit-elemental",
       "name": "Psychic Spirit Elemental",
-      "hitpoints": null,
+      "hitpoints": 1400,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -26156,9 +26175,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Psychic_Spirit_Elemental",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "pulsating-lava",
@@ -26201,6 +26220,7 @@
       "name": "Purple Mutagen",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -26486,7 +26506,7 @@
     {
       "id": "quara-saboteur",
       "name": "Quara Saboteur",
-      "hitpoints": null,
+      "hitpoints": 7000,
       "elements": {
         "physical": 100,
         "earth": 110,
@@ -26497,9 +26517,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Quara_Saboteur",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "queen-nostalgia-1",
@@ -26648,7 +26668,7 @@
     {
       "id": "radicular-totem",
       "name": "Radicular Totem",
-      "hitpoints": null,
+      "hitpoints": 50000,
       "elements": {
         "physical": 0,
         "earth": 0,
@@ -26659,9 +26679,9 @@
         "death": 0
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Radicular_Totem",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "rage-of-mazoran",
@@ -27037,8 +27057,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Razzagorn",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -27118,6 +27138,7 @@
       "name": "Red Mutagen",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -27450,8 +27471,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Retros_Treasure",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -28080,8 +28101,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Rotspit",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -28105,7 +28126,7 @@
     {
       "id": "rotten-man-maggot",
       "name": "Rotten Man-Maggot",
-      "hitpoints": null,
+      "hitpoints": 31100,
       "elements": {
         "physical": 100,
         "earth": 115,
@@ -28116,14 +28137,14 @@
         "death": 70
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Rotten_Man-Maggot",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "rotten-plant-thing",
       "name": "Rotten Plant Thing",
-      "hitpoints": null,
+      "hitpoints": 100000,
       "elements": {
         "physical": 55,
         "earth": 55,
@@ -28134,9 +28155,9 @@
         "death": 55
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Rotten_Plant_Thing",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "rottie-the-rotworm",
@@ -28260,8 +28281,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Rupture",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -28593,6 +28614,7 @@
       "name": "Scissorion",
       "hitpoints": 950,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -28601,9 +28623,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Scissorion",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "scorn-of-the-emperor",
@@ -29321,8 +29343,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Shulgrax",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -29418,7 +29440,7 @@
     {
       "id": "sineater-inferniarch",
       "name": "Sineater Inferniarch",
-      "hitpoints": null,
+      "hitpoints": 9150,
       "elements": {
         "physical": 105,
         "earth": 100,
@@ -29429,9 +29451,9 @@
         "death": 90
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Sineater_Inferniarch",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "sir-baeloc",
@@ -29472,7 +29494,7 @@
     {
       "id": "sir-leopold",
       "name": "Sir Leopold",
-      "hitpoints": null,
+      "hitpoints": 81000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -29485,7 +29507,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Sir_Leopold",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "sir-nictros",
@@ -29994,7 +30016,7 @@
     {
       "id": "sopping-carcass",
       "name": "Sopping Carcass",
-      "hitpoints": null,
+      "hitpoints": 32700,
       "elements": {
         "physical": 100,
         "earth": 115,
@@ -30005,14 +30027,14 @@
         "death": 40
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Sopping_Carcass",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "sopping-corpus",
       "name": "Sopping Corpus",
-      "hitpoints": null,
+      "hitpoints": 33400,
       "elements": {
         "physical": 60,
         "earth": 50,
@@ -30023,9 +30045,9 @@
         "death": 90
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Sopping_Corpus",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "sorcerer-familiar",
@@ -30276,6 +30298,7 @@
       "name": "Spark of Burning Hatred",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -30453,7 +30476,7 @@
     {
       "id": "spellreaper-inferniarch",
       "name": "Spellreaper Inferniarch",
-      "hitpoints": null,
+      "hitpoints": 11800,
       "elements": {
         "physical": 90,
         "earth": 115,
@@ -30464,9 +30487,9 @@
         "death": 115
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Spellreaper_Inferniarch",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "sphere-of-wrath",
@@ -30705,7 +30728,7 @@
     {
       "id": "spirit-overlord",
       "name": "Spirit Overlord",
-      "hitpoints": null,
+      "hitpoints": 4000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -30718,7 +30741,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Spirit_Overlord",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "spit-nettle",
@@ -31355,6 +31378,7 @@
       "name": "Storm",
       "hitpoints": null,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -31532,7 +31556,7 @@
     {
       "id": "sugar-daddy",
       "name": "Sugar Daddy",
-      "hitpoints": null,
+      "hitpoints": 9500,
       "elements": {
         "physical": 100,
         "earth": 80,
@@ -31545,12 +31569,12 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Sugar_Daddy",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "sugar-mommy",
       "name": "Sugar Mommy",
-      "hitpoints": null,
+      "hitpoints": 6000,
       "elements": {
         "physical": 100,
         "earth": 105,
@@ -31563,7 +31587,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Sugar_Mommy",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "sulphider",
@@ -31964,7 +31988,7 @@
     {
       "id": "tamru-the-black",
       "name": "Tamru the Black",
-      "hitpoints": null,
+      "hitpoints": 15500,
       "elements": {
         "physical": 100,
         "earth": 80,
@@ -31977,7 +32001,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Tamru_the_Black",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "tanjis",
@@ -32029,8 +32053,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Tarbaz",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -32288,7 +32312,7 @@
     {
       "id": "thaians-ghost",
       "name": "Thaian's Ghost",
-      "hitpoints": null,
+      "hitpoints": 5000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -32299,9 +32323,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Thaian's_Ghost",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "thalas",
@@ -32444,7 +32468,7 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Baron_from_Below",
       "huntRelevant": false,
-      "special": false,
+      "special": true,
       "incomplete": true
     },
     {
@@ -32480,7 +32504,7 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Blazing_Rose",
       "huntRelevant": false,
-      "special": false,
+      "special": true,
       "incomplete": true
     },
     {
@@ -32731,8 +32755,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Count_of_the_Core",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -32803,8 +32827,8 @@
         "death": 50
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Diamond_Blossom",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -32876,13 +32900,13 @@
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Duke_of_the_Depths",
       "huntRelevant": false,
-      "special": false,
+      "special": true,
       "incomplete": true
     },
     {
       "id": "the-end-of-days",
       "name": "The End of Days",
-      "hitpoints": null,
+      "hitpoints": 90000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -32893,9 +32917,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_End_of_Days",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "the-enraged-thorn-knight",
@@ -33044,7 +33068,7 @@
     {
       "id": "the-forgemaster-creature",
       "name": "The Forgemaster (Creature)",
-      "hitpoints": null,
+      "hitpoints": 10500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -33055,9 +33079,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Forgemaster_(Creature)",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "the-freezing-time-guardian",
@@ -33116,7 +33140,7 @@
     {
       "id": "the-great-schnitzel",
       "name": "The Great Schnitzel",
-      "hitpoints": null,
+      "hitpoints": 110000,
       "elements": {
         "physical": 0,
         "earth": 0,
@@ -33129,7 +33153,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Great_Schnitzel",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "the-hag",
@@ -33224,7 +33248,7 @@
     {
       "id": "the-horned-fox",
       "name": "The Horned Fox",
-      "hitpoints": null,
+      "hitpoints": 265,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -33237,7 +33261,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Horned_Fox",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "the-hunger",
@@ -33260,7 +33284,7 @@
     {
       "id": "the-hungerer",
       "name": "The Hungerer",
-      "hitpoints": null,
+      "hitpoints": 2000,
       "elements": {
         "physical": 100,
         "earth": 0,
@@ -33273,7 +33297,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Hungerer",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "the-hungry-baron-from-below",
@@ -33361,8 +33385,8 @@
         "death": 0
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Lily_of_Night",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -33379,8 +33403,8 @@
         "death": 0
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Lord_of_the_Lice",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -33487,8 +33511,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Monster",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -33937,8 +33961,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/The_Shatterer",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -34502,7 +34526,7 @@
     {
       "id": "timedisplaced-anomaly-banuta",
       "name": "Timedisplaced Anomaly (Banuta)",
-      "hitpoints": null,
+      "hitpoints": 52500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -34515,12 +34539,12 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Timedisplaced_Anomaly_(Banuta)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "timedisplaced-anomaly-chazorai",
       "name": "Timedisplaced Anomaly (Chazorai)",
-      "hitpoints": null,
+      "hitpoints": 56000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -34533,12 +34557,12 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Timedisplaced_Anomaly_(Chazorai)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "timedisplaced-anomaly-warzone",
       "name": "Timedisplaced Anomaly (Warzone)",
-      "hitpoints": null,
+      "hitpoints": 60000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -34551,7 +34575,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Timedisplaced_Anomaly_(Warzone)",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "timira-the-many-headed",
@@ -34630,6 +34654,7 @@
       "name": "Titano Dragon",
       "hitpoints": null,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -34825,7 +34850,7 @@
     {
       "id": "tremendous-tyrant",
       "name": "Tremendous Tyrant",
-      "hitpoints": null,
+      "hitpoints": 11500,
       "elements": {
         "physical": 100,
         "earth": 120,
@@ -34836,9 +34861,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Tremendous_Tyrant",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "tremor-worm",
@@ -35239,7 +35264,7 @@
     {
       "id": "twisterror",
       "name": "Twisterror",
-      "hitpoints": null,
+      "hitpoints": 35000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -35252,7 +35277,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Twisterror",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "two-headed-turtle",
@@ -35853,6 +35878,7 @@
       "name": "Used Food Wagon",
       "hitpoints": null,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,
@@ -36166,7 +36192,7 @@
     {
       "id": "varg",
       "name": "Varg",
-      "hitpoints": null,
+      "hitpoints": 5400,
       "elements": {
         "physical": 95,
         "earth": 100,
@@ -36177,14 +36203,14 @@
         "death": 75
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Varg",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "varnished-diremaw",
       "name": "Varnished Diremaw",
-      "hitpoints": null,
+      "hitpoints": 9000,
       "elements": {
         "physical": 105,
         "earth": 105,
@@ -36195,9 +36221,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Varnished_Diremaw",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "vashresamun",
@@ -36562,7 +36588,7 @@
     {
       "id": "vortex-spawn",
       "name": "Vortex Spawn",
-      "hitpoints": null,
+      "hitpoints": 500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -36573,9 +36599,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Vortex_Spawn",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "vulcongra",
@@ -36688,7 +36714,7 @@
     {
       "id": "walking-pillar",
       "name": "Walking Pillar",
-      "hitpoints": null,
+      "hitpoints": 38000,
       "elements": {
         "physical": 110,
         "earth": 115,
@@ -36699,14 +36725,14 @@
         "death": 90
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Walking_Pillar",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "wandering-pillar",
       "name": "Wandering Pillar",
-      "hitpoints": null,
+      "hitpoints": 37000,
       "elements": {
         "physical": 115,
         "earth": 100,
@@ -36717,9 +36743,9 @@
         "death": 115
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Wandering_Pillar",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "wandering-prospector",
@@ -36796,7 +36822,7 @@
     {
       "id": "wardragon",
       "name": "Wardragon",
-      "hitpoints": null,
+      "hitpoints": 6960,
       "elements": {
         "physical": 100,
         "earth": 110,
@@ -36807,9 +36833,9 @@
         "death": 85
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Wardragon",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "warlock",
@@ -37912,7 +37938,7 @@
     {
       "id": "worker-imp",
       "name": "Worker Imp",
-      "hitpoints": null,
+      "hitpoints": 13500,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -37923,9 +37949,9 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/Worker_Imp",
-      "huntRelevant": false,
+      "huntRelevant": true,
       "special": false,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "world-devourer",
@@ -37941,8 +37967,8 @@
         "death": 100
       },
       "sourceUrl": "https://tibia.fandom.com/wiki/World_Devourer",
-      "huntRelevant": true,
-      "special": false,
+      "huntRelevant": false,
+      "special": true,
       "incomplete": false
     },
     {
@@ -38020,7 +38046,7 @@
     {
       "id": "wrathful-archivist",
       "name": "Wrathful Archivist",
-      "hitpoints": null,
+      "hitpoints": 15000,
       "elements": {
         "physical": 100,
         "earth": 100,
@@ -38033,7 +38059,7 @@
       "sourceUrl": "https://tibia.fandom.com/wiki/Wrathful_Archivist",
       "huntRelevant": false,
       "special": true,
-      "incomplete": true
+      "incomplete": false
     },
     {
       "id": "wyrm",
@@ -38184,6 +38210,7 @@
       "name": "Yellow Mutagen",
       "hitpoints": null,
       "elements": {
+        "physical": 0,
         "earth": 0,
         "fire": 0,
         "energy": 0,
@@ -38273,6 +38300,7 @@
       "name": "Yorik Youngbook",
       "hitpoints": null,
       "elements": {
+        "physical": 100,
         "earth": 100,
         "fire": 100,
         "energy": 100,

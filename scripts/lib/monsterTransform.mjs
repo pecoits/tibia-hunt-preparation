@@ -48,11 +48,12 @@ function parseTemplateFields(wikitext) {
     fields.set(normalizeKey(match[1]), stripWikiMarkup(match[2]));
   }
 
-  if (fields.size === 0) {
-    for (const part of text.split('|')) {
-      const inlineMatch = part.match(/^\s*([^=]+?)\s*=\s*([\s\S]*?)(?:}})?\s*$/);
-      if (inlineMatch) {
-        fields.set(normalizeKey(inlineMatch[1]), stripWikiMarkup(inlineMatch[2].replace(/}}+$/, '')));
+  for (const part of text.split('|')) {
+    const inlineMatch = part.match(/^\s*([^=]+?)\s*=\s*([\s\S]*?)(?:}})?\s*$/);
+    if (inlineMatch) {
+      const key = normalizeKey(inlineMatch[1]);
+      if (!fields.has(key)) {
+        fields.set(key, stripWikiMarkup(inlineMatch[2].replace(/}}+$/, '')));
       }
     }
   }
@@ -101,7 +102,7 @@ function isSpecialCreature(title, fields, wikitext) {
     .toLowerCase();
 
   if (/\b(boss|event|raid|summon|yes|true)\b/.test(flags)) return true;
-  return /\[\[Category:(?:Bosses|Event Creatures|Summons|Special Creatures)\]\]/i.test(wikitext) || /\(creature\)$/i.test(title) === false && /\(.*\)/.test(title);
+  return /\[\[Category:(?:Bosses|Event Creatures|Summons|Special Creatures)(?:\|[^\]]*)?\]\]/i.test(wikitext) || /\(creature\)$/i.test(title) === false && /\(.*\)/.test(title);
 }
 
 export function transformMonsterPage(title, wikitext) {
