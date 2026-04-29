@@ -21,6 +21,11 @@ npm run build
 
 Admins can run the `Update monster data` GitHub Action manually. The workflow scrapes TibiaWiki/Fandom, validates `public/data/monsters.json`, runs the build, commits directly to `main` only when validation passes and data changed, then deploys GitHub Pages from `dist`.
 
+The app also includes an `Admin tools` panel that can trigger the same workflow directly from the browser. It requires:
+
+1. A GitHub personal access token with `actions:write` for this repository.
+2. Explicit unlock phrase confirmation in the UI.
+
 ## Deployment
 
 The `Deploy GitHub Pages` workflow runs on pushes to `main` and manual runs from `main`. It tests, builds, and publishes the static site from `dist`.

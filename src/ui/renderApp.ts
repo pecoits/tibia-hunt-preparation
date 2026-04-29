@@ -13,6 +13,9 @@ const WIKI_FILE_PATH_URL = 'https://tibia.fandom.com/wiki/Special:FilePath/';
 const REPOSITORY_URL = 'https://github.com/pecoits/tibia-hunt-preparation';
 const LICENSE_LABEL = 'CC BY-NC 4.0 International';
 const SHARE_PARAM = 'hunt';
+const ADMIN_UNLOCK_PHRASE = 'UPDATE';
+const UPDATE_WORKFLOW_ENDPOINT =
+  'https://api.github.com/repos/pecoits/tibia-hunt-preparation/actions/workflows/update-monsters.yml/dispatches';
 
 interface SelectedMonster {
   monster: Monster;
@@ -102,15 +105,20 @@ function renderAttribution(parent: HTMLElement, database: MonsterDatabase, class
 }
 
 function getMonsterSpriteCandidates(monster: Monster): string[] {
+  const candidates = [];
+  if (monster.spriteUrl) {
+    candidates.push(monster.spriteUrl);
+  }
   try {
     const source = new URL(monster.sourceUrl);
-    if (source.hostname !== 'tibia.fandom.com') return [];
+    if (source.hostname !== 'tibia.fandom.com') return candidates;
     const title = decodeURIComponent(source.pathname.replace('/wiki/', '').trim());
-    if (!title || title.includes('/')) return [];
+    if (!title || title.includes('/')) return candidates;
     const normalizedTitle = title.replaceAll(' ', '_');
-    return [`${WIKI_FILE_PATH_URL}${encodeURIComponent(`${normalizedTitle}.gif`)}`];
+    candidates.push(`${WIKI_FILE_PATH_URL}${encodeURIComponent(`${normalizedTitle}.gif`)}`);
+    return candidates;
   } catch {
-    return [];
+    return candidates;
   }
 }
 
@@ -222,6 +230,11 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
   let includeAdvanced = urlState?.includeAdvanced ?? false;
   let draftQuery = '';
   let shareFeedback = '';
+  let adminToken = '';
+  let adminUnlock = '';
+  let adminStatus = '';
+  let adminBusy = false;
+  let adminPanelOpen = false;
 
   const container = root.tagName.toLocaleLowerCase() === 'main' ? root : document.createElement('main');
   container.className = 'app-shell';
@@ -343,6 +356,111 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       appendText(sharingRow, 'p', shareFeedback, 'share-feedback');
     }
     builder.append(sharingRow);
+
+    const adminPanel = document.createElement('details');
+    adminPanel.className = 'admin-panel';
+    if (adminPanelOpen) {
+      adminPanel.setAttribute('open', 'open');
+    }
+    adminPanel.addEventListener('toggle', () => {
+      adminPanelOpen = adminPanel.open;
+    });
+    const adminSummary = document.createElement('summary');
+    adminSummary.textContent = 'Admin tools';
+    adminPanel.append(adminSummary);
+    appendText(
+      adminPanel,
+      'p',
+      'Requires a GitHub token with actions:write for this repository. Use only for controlled data refresh.',
+      'admin-note'
+    );
+
+    const tokenLabel = document.createElement('label');
+    tokenLabel.className = 'field-label';
+    tokenLabel.textContent = 'GitHub token';
+    const tokenInput = document.createElement('input');
+    tokenInput.type = 'password';
+    tokenInput.name = 'admin-token';
+    tokenInput.autocomplete = 'off';
+    tokenInput.placeholder = 'ghp_xxx...';
+    tokenInput.value = adminToken;
+    tokenInput.addEventListener('input', () => {
+      adminToken = tokenInput.value;
+      adminPanelOpen = true;
+      const caret = tokenInput.selectionStart ?? adminToken.length;
+      rerender();
+      const refreshed = container.querySelector<HTMLInputElement>('input[name="admin-token"]');
+      if (refreshed) {
+        refreshed.focus();
+        refreshed.setSelectionRange(caret, caret);
+      }
+    });
+    tokenLabel.append(tokenInput);
+    adminPanel.append(tokenLabel);
+
+    const unlockLabel = document.createElement('label');
+    unlockLabel.className = 'field-label';
+    unlockLabel.textContent = 'Type UPDATE to enable';
+    const unlockInput = document.createElement('input');
+    unlockInput.type = 'text';
+    unlockInput.name = 'admin-unlock';
+    unlockInput.autocomplete = 'off';
+    unlockInput.placeholder = ADMIN_UNLOCK_PHRASE;
+    unlockInput.value = adminUnlock;
+    unlockInput.addEventListener('input', () => {
+      adminUnlock = unlockInput.value;
+      adminPanelOpen = true;
+      const caret = unlockInput.selectionStart ?? adminUnlock.length;
+      rerender();
+      const refreshed = container.querySelector<HTMLInputElement>('input[name="admin-unlock"]');
+      if (refreshed) {
+        refreshed.focus();
+        refreshed.setSelectionRange(caret, caret);
+      }
+    });
+    unlockLabel.append(unlockInput);
+    adminPanel.append(unlockLabel);
+
+    const adminActionButton = document.createElement('button');
+    adminActionButton.type = 'button';
+    adminActionButton.className = 'secondary-button';
+    adminActionButton.textContent = adminBusy ? 'Updating...' : 'Run monster data update';
+    adminActionButton.disabled = adminBusy || adminToken.trim().length < 20 || adminUnlock.trim() !== ADMIN_UNLOCK_PHRASE;
+    adminActionButton.addEventListener('click', async () => {
+      adminBusy = true;
+      adminStatus = '';
+      rerender();
+      try {
+        const response = await fetch(UPDATE_WORKFLOW_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${adminToken.trim()}`,
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ ref: 'main' })
+        });
+
+        if (response.status === 204 || response.status === 200) {
+          adminStatus = 'Workflow dispatched successfully.';
+          adminUnlock = '';
+        } else {
+          const responseText = await response.text();
+          adminStatus = `Dispatch failed (${response.status}): ${responseText || response.statusText}`;
+        }
+      } catch (error) {
+        adminStatus = `Dispatch failed: ${error instanceof Error ? error.message : String(error)}`;
+      } finally {
+        adminBusy = false;
+        rerender();
+      }
+    });
+    adminPanel.append(adminActionButton);
+    if (adminStatus) {
+      appendText(adminPanel, 'p', adminStatus, 'admin-status');
+    }
+    builder.append(adminPanel);
 
     const advancedLabel = document.createElement('label');
     advancedLabel.className = 'toggle-row';

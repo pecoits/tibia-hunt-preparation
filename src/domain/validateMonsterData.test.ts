@@ -9,6 +9,9 @@ const validDatabase = {
     url: 'https://tibia.fandom.com/wiki/Main_Page',
     license: 'CC BY-SA unless otherwise noted'
   },
+  quality: {
+    lastValidatedAt: '2026-04-28T00:00:00.000Z'
+  },
   monsters: [
     {
       id: 'dragon-lord',
@@ -24,6 +27,9 @@ const validDatabase = {
         death: 100
       },
       sourceUrl: 'https://tibia.fandom.com/wiki/Dragon_Lord',
+      spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Dragon_Lord.gif',
+      aliases: ['Dragon Lord'],
+      dataCompletenessScore: 100,
       huntRelevant: true,
       special: false,
       incomplete: false
@@ -78,6 +84,23 @@ describe('validateMonsterDatabase', () => {
 
     expect(result.ok).toBe(false);
     expect(result.errors).toContain('Monster Dragon Lord is missing death modifier.');
+  });
+
+  it('rejects monsters missing sprite and quality fields', () => {
+    const result = validateMonsterDatabase({
+      ...validDatabase,
+      quality: undefined,
+      monsters: [
+        {
+          ...validDatabase.monsters[0],
+          spriteUrl: ''
+        }
+      ]
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toContain('quality.lastValidatedAt is required.');
+    expect(result.errors).toContain('Monster Dragon Lord is missing spriteUrl.');
   });
 
   it('rejects malformed monsters without throwing', () => {

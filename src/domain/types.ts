@@ -10,6 +10,9 @@ export interface Monster {
   hitpoints: number | null;
   elements: Partial<ElementModifiers>;
   sourceUrl: string;
+  spriteUrl: string;
+  aliases: string[];
+  dataCompletenessScore: number;
   huntRelevant: boolean;
   special: boolean;
   incomplete: boolean;
@@ -22,6 +25,9 @@ export interface MonsterDatabase {
     name: string;
     url: string;
     license: string;
+  };
+  quality: {
+    lastValidatedAt: string;
   };
   monsters: Monster[];
 }

@@ -2,7 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { calculateRecommendation } from './calculateRecommendation';
 import type { Monster } from './types';
 
-const dragonLord: Monster = {
+function withMeta(monster: Omit<Monster, 'spriteUrl' | 'aliases' | 'dataCompletenessScore'>): Monster {
+  return {
+    ...monster,
+    spriteUrl: `https://tibia.fandom.com/wiki/Special:FilePath/${monster.name.replaceAll(' ', '_')}.gif`,
+    aliases: [monster.name],
+    dataCompletenessScore: 100
+  };
+}
+
+const dragonLord: Monster = withMeta({
   id: 'dragon-lord',
   name: 'Dragon Lord',
   hitpoints: 1900,
@@ -19,9 +28,9 @@ const dragonLord: Monster = {
   huntRelevant: true,
   special: false,
   incomplete: false
-};
+});
 
-const iceGolem: Monster = {
+const iceGolem: Monster = withMeta({
   id: 'ice-golem',
   name: 'Ice Golem',
   hitpoints: 300,
@@ -38,7 +47,7 @@ const iceGolem: Monster = {
   huntRelevant: true,
   special: false,
   incomplete: false
-};
+});
 
 const neutralElements: Monster['elements'] = {
   physical: 0,
@@ -70,7 +79,7 @@ describe('calculateRecommendation', () => {
   });
 
   it('uses user numeric weights with raw percentage modifiers to change the winner', () => {
-    const iceFocused: Monster = {
+    const iceFocused: Monster = withMeta({
       id: 'ice-focused',
       name: 'Ice Focused',
       hitpoints: 100,
@@ -87,8 +96,8 @@ describe('calculateRecommendation', () => {
       huntRelevant: true,
       special: false,
       incomplete: false
-    };
-    const fireFocused: Monster = {
+    });
+    const fireFocused: Monster = withMeta({
       id: 'fire-focused',
       name: 'Fire Focused',
       hitpoints: 100,
@@ -105,7 +114,7 @@ describe('calculateRecommendation', () => {
       huntRelevant: true,
       special: false,
       incomplete: false
-    };
+    });
 
     const icePriority = calculateRecommendation([
       { monster: iceFocused, weight: 75 },
@@ -121,7 +130,7 @@ describe('calculateRecommendation', () => {
   });
 
   it('keeps holy in ranking but skips it in final recommendation', () => {
-    const holyTop: Monster = {
+    const holyTop: Monster = withMeta({
       id: 'holy-top',
       name: 'Holy Top',
       hitpoints: 100,
@@ -138,7 +147,7 @@ describe('calculateRecommendation', () => {
       huntRelevant: true,
       special: false,
       incomplete: false
-    };
+    });
 
     const result = calculateRecommendation([{ monster: holyTop, weight: 50 }]);
 
@@ -147,7 +156,7 @@ describe('calculateRecommendation', () => {
   });
 
   it('reports contributions for the recommended element with raw scores and summaries', () => {
-    const iceWeak: Monster = {
+    const iceWeak: Monster = withMeta({
       id: 'ice-weak',
       name: 'Ice Weak',
       hitpoints: 100,
@@ -156,8 +165,8 @@ describe('calculateRecommendation', () => {
       huntRelevant: true,
       special: false,
       incomplete: false
-    };
-    const iceNeutral: Monster = {
+    });
+    const iceNeutral: Monster = withMeta({
       id: 'ice-neutral',
       name: 'Ice Neutral',
       hitpoints: 80,
@@ -166,8 +175,8 @@ describe('calculateRecommendation', () => {
       huntRelevant: true,
       special: false,
       incomplete: false
-    };
-    const iceResistant: Monster = {
+    });
+    const iceResistant: Monster = withMeta({
       id: 'ice-resistant',
       name: 'Ice Resistant',
       hitpoints: 50,
@@ -176,7 +185,7 @@ describe('calculateRecommendation', () => {
       huntRelevant: true,
       special: false,
       incomplete: false
-    };
+    });
 
     const result = calculateRecommendation([
       { monster: iceWeak, weight: 75 },

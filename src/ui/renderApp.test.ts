@@ -10,6 +10,9 @@ const database: MonsterDatabase = {
     url: 'https://tibia.fandom.com/wiki/Main_Page',
     license: 'CC BY-SA unless otherwise noted'
   },
+  quality: {
+    lastValidatedAt: '2026-04-28T00:00:00.000Z'
+  },
   monsters: [
     {
       id: 'dragon-lord',
@@ -25,6 +28,9 @@ const database: MonsterDatabase = {
         death: 100
       },
       sourceUrl: 'https://tibia.fandom.com/wiki/Dragon_Lord',
+      spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Dragon_Lord.gif',
+      aliases: ['Dragon Lord'],
+      dataCompletenessScore: 100,
       huntRelevant: true,
       special: false,
       incomplete: false
@@ -43,6 +49,9 @@ const database: MonsterDatabase = {
         death: 100
       },
       sourceUrl: 'https://tibia.fandom.com/wiki/Test_Raid_Boss',
+      spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Test_Raid_Boss.gif',
+      aliases: ['Test Raid Boss'],
+      dataCompletenessScore: 100,
       huntRelevant: true,
       special: true,
       incomplete: false
@@ -61,6 +70,9 @@ const database: MonsterDatabase = {
         death: 100
       },
       sourceUrl: 'https://tibia.fandom.com/wiki/Test_Incomplete_Creature',
+      spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Test_Incomplete_Creature.gif',
+      aliases: ['Test Incomplete Creature'],
+      dataCompletenessScore: 100,
       huntRelevant: true,
       special: false,
       incomplete: true
@@ -81,9 +93,33 @@ describe('renderApp', () => {
     expect(root.querySelector('input[name="monster-search"]')).not.toBeNull();
     expect(root.querySelector('button[data-action="add-monster"]')?.textContent).toContain('Add');
     expect(root.textContent).toContain('Copy hunt link');
+    expect(root.textContent).toContain('Admin tools');
     expect(root.textContent).toContain('TibiaWiki/Fandom');
     expect(root.textContent).toContain('Developed by Pecoits');
     expect(root.textContent).toContain('CC BY-NC 4.0 International');
+  });
+
+  it('keeps admin update action disabled until token and unlock phrase are valid', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    const panel = root.querySelector<HTMLElement>('.admin-panel');
+    if (!panel) throw new Error('Expected admin panel.');
+    panel.setAttribute('open', 'open');
+
+    const actionButton = root.querySelector<HTMLButtonElement>('.admin-panel .secondary-button');
+    const tokenInput = root.querySelector<HTMLInputElement>('input[name="admin-token"]');
+    const unlockInput = root.querySelector<HTMLInputElement>('input[name="admin-unlock"]');
+    if (!actionButton || !tokenInput || !unlockInput) throw new Error('Expected admin controls.');
+
+    expect(actionButton.disabled).toBe(true);
+    tokenInput.value = 'ghp_123456789012345678901234567890123456';
+    tokenInput.dispatchEvent(new Event('input', { bubbles: true }));
+    unlockInput.value = 'UPDATE';
+    unlockInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const refreshedButton = root.querySelector<HTMLButtonElement>('.admin-panel .secondary-button');
+    expect(refreshedButton?.disabled).toBe(false);
   });
 
   it('adds a selected monster and calculates the recommendation', () => {

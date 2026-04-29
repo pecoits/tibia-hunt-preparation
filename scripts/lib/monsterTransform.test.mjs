@@ -33,6 +33,9 @@ describe('transformMonsterPage', () => {
         death: 100
       },
       sourceUrl: 'https://tibia.fandom.com/wiki/Dragon_Lord',
+      spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Dragon_Lord.gif',
+      aliases: ['Dragon Lord'],
+      dataCompletenessScore: 100,
       huntRelevant: true,
       special: false,
       incomplete: false
@@ -71,6 +74,9 @@ describe('transformMonsterPage', () => {
       name: 'Training Dummy',
       hitpoints: null,
       elements: {},
+      spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Training_Dummy.gif',
+      aliases: ['Training Dummy'],
+      dataCompletenessScore: 0,
       huntRelevant: false,
       incomplete: true
     });

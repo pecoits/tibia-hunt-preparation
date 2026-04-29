@@ -9,6 +9,11 @@ function validateMonster(monster: Monster, errors: string[]): void {
   if (!monster.id) errors.push('Monster is missing id.');
   if (!monster.name) errors.push(`Monster ${monster.id || '<unknown>'} is missing name.`);
   if (!monster.sourceUrl) errors.push(`Monster ${monster.name || monster.id} is missing sourceUrl.`);
+  if (!monster.spriteUrl) errors.push(`Monster ${monster.name || monster.id} is missing spriteUrl.`);
+  if (!Array.isArray(monster.aliases)) errors.push(`Monster ${monster.name || monster.id} must have aliases array.`);
+  if (typeof monster.dataCompletenessScore !== 'number' || !Number.isFinite(monster.dataCompletenessScore)) {
+    errors.push(`Monster ${monster.name || monster.id} has invalid dataCompletenessScore.`);
+  }
 
   if (monster.huntRelevant) {
     if (typeof monster.hitpoints !== 'number' || !Number.isFinite(monster.hitpoints) || monster.hitpoints <= 0) {
@@ -36,6 +41,7 @@ export function validateMonsterDatabase(input: unknown): ValidationResult {
   if (database.schemaVersion !== 1) errors.push('schemaVersion must be 1.');
   if (!database.generatedAt) errors.push('generatedAt is required.');
   if (!database.source?.url) errors.push('source.url is required.');
+  if (!database.quality?.lastValidatedAt) errors.push('quality.lastValidatedAt is required.');
   if (!Array.isArray(database.monsters) || database.monsters.length === 0) {
     errors.push('monsters must be a non-empty array.');
   }

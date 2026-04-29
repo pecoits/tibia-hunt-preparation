@@ -23,6 +23,10 @@ function sourceUrlForTitle(title) {
   return `https://tibia.fandom.com/wiki/${encodeURIComponent(title.trim().replaceAll(' ', '_'))}`;
 }
 
+function spriteUrlForTitle(title) {
+  return `https://tibia.fandom.com/wiki/Special:FilePath/${encodeURIComponent(`${title.trim().replaceAll(' ', '_')}.gif`)}`;
+}
+
 function stripWikiMarkup(value) {
   return String(value)
     .replace(/<!--[\s\S]*?-->/g, '')
@@ -105,6 +109,18 @@ function isSpecialCreature(title, fields, wikitext) {
   return /\[\[Category:(?:Bosses|Event Creatures|Summons|Special Creatures)(?:\|[^\]]*)?\]\]/i.test(wikitext) || /\(creature\)$/i.test(title) === false && /\(.*\)/.test(title);
 }
 
+function getAliases(name, title) {
+  const aliases = new Set([stripWikiMarkup(name), stripWikiMarkup(title)].filter(Boolean));
+  return [...aliases].sort((a, b) => a.localeCompare(b, 'en'));
+}
+
+function getDataCompletenessScore(hitpoints, elements) {
+  const elementCount = REQUIRED_ELEMENTS.filter((element) => typeof elements[element] === 'number').length;
+  const hpScore = typeof hitpoints === 'number' && Number.isFinite(hitpoints) && hitpoints > 0 ? 1 : 0;
+  const raw = (hpScore + elementCount) / (1 + REQUIRED_ELEMENTS.length);
+  return Math.round(raw * 100);
+}
+
 export function transformMonsterPage(title, wikitext) {
   const fields = parseTemplateFields(wikitext);
   const name = getFirstField(fields, ['name']) ?? title;
@@ -119,6 +135,9 @@ export function transformMonsterPage(title, wikitext) {
     hitpoints,
     elements,
     sourceUrl: sourceUrlForTitle(title),
+    spriteUrl: spriteUrlForTitle(title),
+    aliases: getAliases(name, title),
+    dataCompletenessScore: getDataCompletenessScore(hitpoints, elements),
     huntRelevant: complete && !special,
     special,
     incomplete: !complete

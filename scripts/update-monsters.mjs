@@ -58,6 +58,9 @@ async function importMonsters() {
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
     source: SOURCE,
+    quality: {
+      lastValidatedAt: new Date().toISOString()
+    },
     monsters
   };
 

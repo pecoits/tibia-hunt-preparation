@@ -172,6 +172,16 @@ input[type="text"] {
   padding: 0 12px;
 }
 
+input[type="password"] {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #44505a;
+  border-radius: 8px;
+  background: #12171a;
+  color: var(--text);
+  padding: 0 12px;
+}
+
 input[type="text"]:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent-strong);
@@ -206,6 +216,29 @@ button:focus-visible {
   margin: 0;
   color: #cad7df;
   font-size: 0.88rem;
+}
+
+.admin-panel {
+  margin-top: 12px;
+  border: 1px solid #3a454d;
+  border-radius: 8px;
+  padding: 10px;
+  background: #13191d;
+  display: grid;
+  gap: 8px;
+}
+
+.admin-panel summary {
+  cursor: pointer;
+  color: #e3ebf0;
+  font-weight: 700;
+}
+
+.admin-note,
+.admin-status {
+  margin: 0;
+  color: #a9b7c2;
+  font-size: 0.85rem;
 }
 
 .selected-list {
