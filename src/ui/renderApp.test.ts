@@ -57,6 +57,27 @@ const database: MonsterDatabase = {
       incomplete: false
     },
     {
+      id: 'dragon-hatchling',
+      name: 'Dragon Hatchling',
+      hitpoints: 135,
+      elements: {
+        physical: 100,
+        earth: 90,
+        fire: 100,
+        energy: 90,
+        ice: 105,
+        holy: 100,
+        death: 100
+      },
+      sourceUrl: 'https://tibia.fandom.com/wiki/Dragon_Hatchling',
+      spriteUrl: 'https://tibia.fandom.com/wiki/Special:FilePath/Dragon_Hatchling.gif',
+      aliases: ['Dragon Hatchling'],
+      dataCompletenessScore: 100,
+      huntRelevant: true,
+      special: false,
+      incomplete: false
+    },
+    {
       id: 'test-raid-boss',
       name: 'Test Raid Boss',
       hitpoints: 5000,
@@ -241,6 +262,25 @@ describe('renderApp', () => {
       button.textContent?.trim()
     );
     expect(options).toContain('Dragon Lord');
+  });
+
+  it('adds the exact monster clicked in autocomplete suggestions', () => {
+    const root = document.createElement('main');
+    renderApp(root, database);
+
+    const input = root.querySelector<HTMLInputElement>('input[name="monster-search"]');
+    if (!input) throw new Error('Expected input.');
+
+    input.value = 'drag';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const options = Array.from(root.querySelectorAll<HTMLButtonElement>('.autocomplete-option'));
+    const hatchlingOption = options.find((option) => option.textContent?.trim() === 'Dragon Hatchling');
+    if (!hatchlingOption) throw new Error('Expected Dragon Hatchling option.');
+    hatchlingOption.click();
+
+    expect(root.textContent).toContain('Dragon Hatchling');
+    expect(root.querySelectorAll('.selected-monster')).toHaveLength(1);
   });
 
   it('updates numeric weight and recalculates score', () => {

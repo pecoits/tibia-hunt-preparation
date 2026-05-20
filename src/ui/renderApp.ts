@@ -866,8 +866,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
     input.placeholder = t(language, 'typeMonsterName');
     input.setAttribute('aria-autocomplete', 'list');
     input.value = draftQuery;
-    const addSelectedMonster = (): void => {
-      const monster = findVisibleMonster(database, input.value, includeAdvanced);
+    const addMonsterToSelection = (monster: Monster | undefined): void => {
       if (!monster) return;
       if (!selected.some((selection) => selection.monster.id === monster.id)) {
         selected.push({ monster, weight: DEFAULT_WEIGHT });
@@ -875,6 +874,10 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       draftQuery = '';
       shareFeedback = '';
       rerender();
+    };
+
+    const addSelectedMonster = (): void => {
+      addMonsterToSelection(findVisibleMonster(database, input.value, includeAdvanced));
     };
     input.addEventListener('input', () => {
       draftQuery = input.value;
@@ -904,8 +907,7 @@ export function renderApp(root: HTMLElement, database: MonsterDatabase): void {
       button.className = 'autocomplete-option';
       button.textContent = monster.name;
       button.addEventListener('click', () => {
-        draftQuery = monster.name;
-        addSelectedMonster();
+        addMonsterToSelection(monster);
       });
       item.append(button);
       suggestions.append(item);
